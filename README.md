@@ -5,7 +5,7 @@ According to Centers for Medicaid and Medicare Services, U.S. health care spendi
 # Dashboard
 
 <p>The snapshot below shows an example PowerBI dashboard that gives insights into the the predicted churn rates across the customer base.
-<a href="https://github.com/Azure/cortana-intelligence-churn-prediction-solution/blob/master/Technical%20Deployment%20Guide/media/customer-churn-dashboard-2.png" target="_blank"><img src="https://github.com/Azure/cortana-intelligence-churn-prediction-solution/raw/master/Technical%20Deployment%20Guide/media/customer-churn-dashboard-2.png" alt="Insights" style="max-width:100%;"></a></p>
+<a href="https://github.com/Azure/cortana-intelligence-churn-prediction-solution/blob/master/Technical%20Deployment%20Guide/media/customer-churn-dashboard-2.png" target="_blank"><img src="https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/TechnicalDeploymentGuide/media/PHMmainpage.PNG?raw=true" alt="Insights" style="max-width:100%;"></a></p>
 
 # Getting Started #
 
