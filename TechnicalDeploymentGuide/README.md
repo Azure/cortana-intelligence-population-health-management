@@ -118,10 +118,12 @@ This section will walk you through the steps to manually create the population h
   will be called by the Azure Data Factory pipeline.  
   - Select the *data* container
   - Click ***Upload*** at the top of the container blade and copy the contents 
-  - Select the 4 files in the **TechnicalDeploymentGuide\rawevents** folder in the project zip file and select **Upload**.
+  - Download the files in the [rawevents folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/rawevents) locally, then choose 
+  the local files and select **Upload**.
   - Select the *scripts* container
   - Click ***Upload*** at the top of the container blade and copy the contents 
-  - Select all of the files in the **TechnicalDeploymentGuide\scripts\datafactory** folder in the project zip file and select **Upload**.
+  - Dowload the files in the [scripts/datafactory folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactory) locally then choose
+  the local files and select **Upload**.
 
   Navigate back to the storage account blade to collect important information that will be required in future steps. 
   - On the storage account blade, select **Access keys** from the menu on the left.
@@ -160,7 +162,9 @@ This section will walk you through the steps to manually create the population h
   - Enter ***healthcareadls*** as the name.
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
   - Click ***Create***  
-  - The creation step may take several minutes.  
+  - The creation step may take several minutes. 
+  - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
+  value which from the Data Lake Store blade which will be in the form adl://****.azuredatalakestore.net 
 
 ##   Create Azure Data Lake Analtytics 
   The Azure Data Lake Analytics is used as to process the raw records and perform the machine learning steps of feature engineering and scoring. 
@@ -206,76 +210,94 @@ This section will walk you through the steps to manually create the population h
         - Encoding: remains UTF-8
         - Click the bottom **Create** button to complete.  
           
- - Navigate back to the Stream Analytics job blade and  Click *Outputs*  
+ - Navigate back to the Stream Analytics job blade and click *Outputs*
+   - **NOTE** for each of the four outputs you will create the only step that differs between them is the *Output alias* and *Path prefix pattern*. Use these steps for
+   each output and look into the following sections for the values to put in for each output.  
    - At the top of the *Outputs* page click ***+ Add***
-	   - Output alias : SeverityOutput  
+	   - Output alias : **Find Value Below**  
          - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
          - Subscription: Should be set correctly
          - Account Name: Choose the Azure Data Lake Store created previously. 
-         - Path prefix pattern: *stream/raw/severity/{date}/{time}_severity*
+         - Path prefix pattern: **Find value below**
          - Date format: *YYYY/MM/DD*
          - Time format: *HH*
          - Event serialization format: CSV
          - Delimiter: remains comma (,)
          - Encoding: remains comma UTF-8
          - Click the **Create** button to complete  
-   - At the top of the *Outputs* page click ***+ Add***
-	   - Output alias : ChargesOutput  
-         - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
-         - Subscription: Should be set correctly
-         - Account Name: Choose the Azure Data Lake Store created previously. 
-         - Path prefix pattern: *stream/raw/charges/{date}/{time}_charges*
-         - Date format: *YYYY/MM/DD*
-         - Time format: *HH*
-         - Event serialization format: CSV
-         - Delimiter: remains comma (,)
-         - Encoding: remains comma UTF-8
-         - Click the **Create** button to complete  
-   - At the top of the *Outputs* page click ***+ Add***
-	   - Output alias : CoreOutput  
-         - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
-         - Subscription: Should be set correctly
-         - Account Name: Choose the Azure Data Lake Store created previously. 
-         - Path prefix pattern: *stream/raw/core/{date}/{time}_core*
-         - Date format: *YYYY/MM/DD*
-         - Time format: *HH*
-         - Event serialization format: CSV
-         - Delimiter: remains comma (,)
-         - Encoding: remains comma UTF-8
-         - Click the **Create** button to complete  
-   - At the top of the *Outputs* page click ***+ Add***
-	   - Output alias : DxprOutput  
-         - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
-         - Subscription: Should be set correctly
-         - Account Name: Choose the Azure Data Lake Store created previously. 
-         - Path prefix pattern: *stream/raw/dxpr/{date}/{time}_dxpr*
-         - Date format: *YYYY/MM/DD*
-         - Time format: *HH*
-         - Event serialization format: CSV
-         - Delimiter: remains comma (,)
-         - Encoding: remains comma UTF-8
-         - Click the **Create** button to complete  
+   - Output 1
+     - *Output alias* : SeverityOutput
+     - *Path prefix pattern* : stream/raw/severity/{date}/{time}_severity
+   - Output 2
+     - *Output alias* : ChargesOutput
+     - *Path prefix pattern* : stream/raw/charges/{date}/{time}_charges
+   - Output 3
+     - *Output alias* : CoreOutput
+     - *Path prefix pattern* : stream/raw/core/{date}/{time}_core
+   - Output 4
+     - *Output alias* : DxprOutput
+     - *Path prefix pattern* : stream/raw/dxpr/{date}/{time}_dxpr
   
-- Click *QUERY*  
-    - Download the file StreamAnalyticsJob.txt from the [resources folder](https://github.com/Azure/cortana-intelligence-quality-assurance-manufacturing/tree/master/Manual%20Deployment%20Guide/resources) of this repository. Copy and paste the content into the query window.  
+  
+- Navigate back to the Stream Analytics job blade and click *Query*  
+    - Download the file StreamAnalyticsJobQuery.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
     - Click *SAVE*  
-- When all inputs, functions, outputs and the query have been entered, click *START* at the top of the Overview page.   
-
-## **TBD Requires Longer Instructions ADLA/ADLS**  Create Azure Data Lake Store
-  The Azure Data Lake store is used as to hold a number of data points
-
-   - Raw streaming data from Event Hub 
-   - Raw stream processed data
-   - Scored results. 
-
-## **TBD Requires Longer Instructions ADLA/ADLS**  Create Azure Data Lake Analytics
-  The Azure Data Lake Analytics service required as a compute resource in Azure Data Factory and is used to process the raw stream data into insights that will be shown in the Power BI dashbaords.
+- When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
+select now, then click on **Start**.   
 
 
-## **TBD Requires Longer Instructions ADLA/ADLS**  Create Azure Data Factory
-  The Azure Data Factory orchestrates the steps neccesary to process raw stream data
+## Create Azure Data Factory
+  The Azure Data Factory orchestrates data movement an other processing steps the steps neccesary to process raw stream data to useful insights. This demo accelerates actual processing
+  time for the sake of useful visualizations in a short amount of time. To accomplish that this demo will utilized overlapping Azure Data Lake activities in the pipeline to produce
+  results approximately every 5 minutes. 
 
+  To produce results every 5 minutes requires that this demo create additional resources that may not be neccesary in an actual enterprise deployment. This is because Azure Data Factory
+  works by allowing pipelines to flow using dependencies. To understand the concept better, read [this](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-scheduling-and-execution) article.
 
+  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
+  - In the left hand menu select *Resource groups*
+  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
+  - At the top of the Resource Group blade click __+Add__.
+  - In the *Search Everything* search box enter ***Data Factory***
+  - Choose ***Data Factory*** from the results then click *Create*
+  - Enter ***healthcareadf*** as the name. 
+  - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
+  - Click ***Create***  
+  - The creation step may take several minutes.  
+
+  This Azure Data Factory is going to require certain servies to work on the raw data and produce insights. These services are a link to the Azure Storage account which
+  contains the USQL scripts for Azure Data Lake Analytics, the Azure Data Lake store where the data resides, and finally the Azure Data Lake analytics instance. 
+  We will set those up first.
+
+  Azure Storage Linked Service
+  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
+  - Under *Actions* select *Author and deploy*
+  - At the top of the blade choose *New data store* and choose **Azure Storage** from the list
+  - You will be presented a draft
+  - At the setting *connectionString* copy the *PRIMARY CONNECTION STRING* value retrieved from the Azure Storage account earlier.
+  - At the top of the blade, click *Deploy*
+
+  Azure Data Lake Store Linked Service
+  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
+  - Under *Actions* select *Author and deploy*
+  - At the top of the blade choose *New data store* and choose **Azure Data Lake Store** from the list
+  - You will be presented a draft
+  - At the setting *dataLakeStoreUri* copy the *ADL URI* value saved during the creation of the Azure Data Lake Store. 
+  - At the top of the page, click **Authorize** and when complete you can remove the properties marked as [Optional]. These will be *accountName*, *resourceGroupName*, 
+  and *subscriptionId*.  
+  - At the top of the blade, click *Deploy*
+
+  Azure Data Lake Analytics Compute Service
+  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
+  - Under *Actions* select *Author and deploy*
+  - At the top of the blade choose *... More* and choose **New compute** and then *Azure Data Lake Analytics* from the list
+  - At the setting *accountName* enter the Azure Data Lake Analytics resource name you provided earlier. 
+  - You will be presented a draft
+  - At the top of the page, click **Authorize** and when complete you can remove the properties marked as [Optional]. These will be *resourceGroupName*, 
+  and *subscriptionId*.  
+  - At the top of the blade, click *Deploy*
+
+  Now that we have the services out of the way, we now need to set up Datasets 
 
   
   

@@ -1,0 +1,15 @@
+{
+    "name": "<replace name with instructions>",
+    "properties": {
+        "published": false,
+        "type": "AzureDataLakeStore",
+        "linkedServiceName": "AzureDataLakeStoreLinkedService",
+        "typeProperties": {
+            "folderPath": "stream/results/"
+        },
+        "availability": {
+            "frequency": "Minute",
+            "interval": 15
+        }
+    }
+}

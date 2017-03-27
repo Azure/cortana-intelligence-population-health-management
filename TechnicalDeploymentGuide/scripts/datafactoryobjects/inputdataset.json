@@ -1,0 +1,23 @@
+{
+    "name": "DataLakeInputSet",
+    "properties": {
+        "published": false,
+        "type": "AzureDataLakeStore",
+        "linkedServiceName": "AzureDataLakeStoreLinkedService",
+        "typeProperties": {
+            "fileName": "dummyadlsinput.csv",
+            "folderPath": "stream/",
+            "format": {
+                "type": "TextFormat",
+                "rowDelimiter": "\n",
+                "columnDelimiter": ","
+            }
+        },
+        "availability": {
+            "frequency": "Minute",
+            "interval": 15
+        },
+        "external": true,
+        "policy": {}
+    }
+}
