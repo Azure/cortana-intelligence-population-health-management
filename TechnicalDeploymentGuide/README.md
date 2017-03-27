@@ -265,6 +265,7 @@ select now, then click on **Start**.
   - Click ***Create***  
   - The creation step may take several minutes.  
 
+### Azure Data Factory Linked Services
   This Azure Data Factory is going to require certain servies to work on the raw data and produce insights. These services are a link to the Azure Storage account which
   contains the USQL scripts for Azure Data Lake Analytics, the Azure Data Lake store where the data resides, and finally the Azure Data Lake analytics instance. 
   We will set those up first.
@@ -297,11 +298,77 @@ select now, then click on **Start**.
   and *subscriptionId*.  
   - At the top of the blade, click *Deploy*
 
-  Now that we have the services out of the way, we now need to set up Datasets 
+### Azure Data Factory Datasets
+  Now that we have the services out of the way, we need to set up Datasets which will act as inputs and outputs to the Data Factory pipeline. For this, we use a single 
+  input to start off the processing.
 
+  Setting up the starting file. This file does not exist, but will be tagged as an *external* file so that Data Factory does not check for it's existence. 
+  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
+  - Under *Actions* select *Author and deploy*
+  - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
+  - The template contains quite a few settings, which we will not cover. Instead download the file *inputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
+  folder.
+  - Replace the content in the editor with the content of the downloaded file. 
+  - At the top of the blade, click *Deploy*
+
+  Setting up the working files is next. These files also don't exist, but with data factory being a dependency flow, they are also required to help orchestrate the 
+  steps of processing in the pipeline.  
+  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
+  - Under *Actions* select *Author and deploy*
+  - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
+  - The template contains quite a few settings, which we will not cover. Instead download the file *outputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
+  folder.
+  - Replace the content in the editor with the content of the downloaded file.
+  - Change the *name* field to *JoinSliceOutputSet1*
+  - At the top of the blade, click *Deploy*
+  - Click on the newly created set *JoinSliceOutputSet1*
+    - Click the *Clone* button at the top of the blade. 
+    - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
+      - JoinSliceOutputSet2
+      - JoinSliceOutputSet3
+      - ScoreSliceOutputSet1
+      - ScoreSliceOutputSet2
+      - ScoreSliceOutputSet3
+   - When finished you will have a total of 7 datasets.
   
+### Azure Data Factory Pipeline
+  With the services and datasets in place it is time to set up a pipeline that will process the data. Again, because we want to process every 5 minutes, and the shortest 
+  execution time of data factory is 15 minutes, we have to set up multiple activities using offsets. 
+
+ - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
+  - Under *Actions* select *Author and deploy*
+  - Right click on *Pipelines* and choose *New pipeline*
+  - The template contains an empty pipeline. Download the file *pipeline.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
+  folder.
+  - Replace the content in the editor with the content of the downloaded file. 
+  - **DO NOT** click  *Deploy* yet
+
+  For simplicity, lets look at one of the activity pairings in the file *First Phase Join* and *First Phase Scoring*. 
+  #### First Phase Join
+  This activity executes a USQL script located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
+  parameters and the exact work going on internally, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result 
+  is a single output file with the results for the 5 minute window this activity should cover. 
+
+  The output of this activity is then tied to the input of the *First Phase Scoring* activity, which will not execute until this activity is complete. 
   
-## **TBD Need full instrutions** Download and configure the data generator  
+  #### First Phase Scoring
+  This activity executes a USQL script located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
+  a single output file with the scoring results for the 5 minute window this activity should cover.
+
+  The output of this activity is what will feed the Power BI dataset.  
+
+  #### Activity Period
+  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
+  properties *start* and *end* located at the bottom of the pipeline editor. 
+
+  These times are UTC. Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your factory will not be 
+  producing data over too long a period of time and we do that only because the generator to be set up next will not run infinitely. 
+
+  Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
+  
+
+## Download and configure the data generator  
  - Download the file ***ManufacturingGenerator.zip*** from the [resources folder](https://github.com/Azure/cortana-intelligence-quality-assurance-manufacturing/tree/master/Manual%20Deployment%20Guide/resources) of this repository.  
  - Unzip this file to the local disk drive of a Windows Machine.  
  - Open the file **ManfuacturingGenerator.exe.config** and modify the following AppSettings  
