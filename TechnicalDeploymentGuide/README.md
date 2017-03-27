@@ -369,22 +369,20 @@ select now, then click on **Start**.
   
 
 ## Download and configure the data generator  
- - Download the file ***ManufacturingGenerator.zip*** from the [resources folder](https://github.com/Azure/cortana-intelligence-quality-assurance-manufacturing/tree/master/Manual%20Deployment%20Guide/resources) of this repository.  
+ - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/datagenerator) of this repository.  
  - Unzip this file to the local disk drive of a Windows Machine.  
- - Open the file **ManfuacturingGenerator.exe.config** and modify the following AppSettings  
-    - EventHubName : ***manufactureeh*** (or whatever you have chosen for the event hub previously).  
-    - EventHubConnectionString : Find this value with these steps  
-	- Log into the [Azure Management Portal](https://ms.portal.azure.com)   
-	- In the left hand menu select *Resource groups*  
-	- Locate the resource group  you created for this project and click on it displaying the resources associated with the group in the resource group blade.  
-	- Select the Event Hubs (service bus namespace) created for this project (***healthcareeehns*** or whatever you have chosen for the **Event Hubs** previously).  
-	- From the menu on the namespace blade select *Shared access policies*  
-	- Select *RootManageSharedAccessKey*  
-	- Copy the content of the **CONNECTION STRING - PRIMARY KEY** (Warning: the string, *not* the plain *PRIMARY KEY*)  
- - Double click the file **ManfuacturingGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **manufactureeh**.  
+ - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
+    - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
+    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* that was collected after creating the Azure Event Hub.
+    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was collected after creating the Azure Storage account.
+    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was collected after creating the Azure Storage account.  
+	- Save and close **HealthCareGenerator.exe.config** 
+ - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **manufactureeh**.  
     ***NOTE:*** The following PowerBI Dashboards will only be dynamically updated when this generator is running.  
     ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
 
+ Raw data will start to appear in the Azure Data Lake Store after approximately 5 minutes. Scored results will start to appear in the Azure Data Lake store after a period of 
+ between 5 and 15 minutes.  
 
 ## Configure a Power BI dashboard
  
