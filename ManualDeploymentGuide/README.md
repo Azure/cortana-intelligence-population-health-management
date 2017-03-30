@@ -1,4 +1,4 @@
-# Population Health Management - Technical Deployment Guide  
+# Population Health Management - Manual Deployment Guide  
 
 Introduction **TBD NEEDS UPDATING**:
 ===============
