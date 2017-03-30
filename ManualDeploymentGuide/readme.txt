@@ -1,1 +1,1 @@
-MaunualDeploymentGuide
+Manual Deployment Guide
