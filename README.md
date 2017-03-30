@@ -19,4 +19,12 @@ For more information on how to tailor Cortana Intelligence to your needs [connec
 
 # Technical Audiences
 
-See the [*Technical Deployment Guide*](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide) folder for a full set of instructions on how to put together Population Health Management Solution using the Cortana Intelligence Suite. 
+For Technical Audiences we have put together a manual deployment guide as well as an automatic deployment guide. The manual deployment guide is geared towards the more technically bent who want to understand how to spin up the different components and how they can be connected together to build an end to end pipeline. The automatic deployment guide is for seeing the entire solution in action without having to do all the wiring manually. 
+
+## [Manual Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide)
+In this folder you will find instructions on how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite.  It will walk you through how to manually set up and deploy all the individual services used in this solution (e.g. Azure Event Hub, Data Lake Store, Azure Stream Analytics etc.). You will also find here a power bi file with pre-created reports with insights from historic data. At the end of your deployment you will replace the data source in the pbi file to the data in Data Lake Store you just deployed. You will also  connect the PowerBI to the real time stream through your Azure Stream Analytics job.
+
+
+## [Automatic Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/AutomaticDeploymentGuide)
+There is also deployable Population Health Management solution in the Cortana Intelligence Gallery. (one click deployment of all services required for this solution!). However there are a few post deployment steps that are required. In this folder you will find instructions on how to monitor the progress of your automatic deployment (takes about 20 minutes to deploy). It will also guide you on how to connect your PowerBI to your real time stream through Azure Stream Analytics in order to visualize the data and predictions in real time.
+ 
