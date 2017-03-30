@@ -5,7 +5,7 @@ According to [Centers for Medicaid and Medicare Services](https://www.cms.gov/re
 # Population Health Report
 
 <p>The snapshot below shows how we use PowerBI for Population Health reporting.
-<a href="https://github.com/Azure/cortana-intelligence-churn-prediction-solution/blob/master/Technical%20Deployment%20Guide/media/customer-churn-dashboard-2.png" target="_blank"><img src="https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/TechnicalDeploymentGuide/media/PHMmainpage.PNG?raw=true" alt="Insights" style="max-width:100%;"></a></p>
+<a href="https://github.com/Azure/cortana-intelligence-churn-prediction-solution/blob/master/Technical%20Deployment%20Guide/media/customer-churn-dashboard-2.png" target="_blank"><img src="https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/PHMmainpage.PNG?raw=true" alt="Insights" style="max-width:100%;"></a></p>
 
 # Getting Started #
 
