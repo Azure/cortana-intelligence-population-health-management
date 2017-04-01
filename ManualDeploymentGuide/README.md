@@ -384,11 +384,9 @@ select now, then click on **Start**.
  Raw data will start to appear in the Azure Data Lake Store after approximately 5 minutes. Scored results will start to appear in the Azure Data Lake store after a period of 
  between 5 and 15 minutes.  
 
-## Configure a Power BI dashboard
- 
- **TBD Need actual instructions**
+## Visualization
 
- You can go to [Power BI Dashboard](https://powerbi.microsoft.com/) and use a Real-time dataset to build reports and dashboards using your data! This section is about creating a real-time dashboard through connecting Azure Stream Analytics queries to Power BI. There is another example of a Power BI Dashboard below in the SQL Data Warehouse section, where it is described how one can build dashboards using Power BI Desktop on top of data sitting in a database.
+ Congratulations! You have successfully deployed a Cortana Intelligence Solution. A picture is worth a thousand words. Lets head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to connect to a Real-time dataset to build reports and dashboards using your data! 
  
   
 
