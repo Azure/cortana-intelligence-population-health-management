@@ -27,7 +27,7 @@ For Technical Audiences we have put together a manual deployment guide as well a
 In this folder you will find instructions on how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite.  It will walk you through how to manually set up and deploy all the individual services used in this solution (e.g. Azure Event Hub, Data Lake Store, Azure Stream Analytics etc.). 
 
 
-## [Automatic Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/AutomaticDeploymentGuide)
+## [Automated Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/AutomatedDeploymentGuide)
 There is also deployable Population Health Management solution in the Cortana Intelligence Gallery. (one click deployment of all services required for this solution!). In this folder you will find instructions on how to monitor the progress of your automatic deployment (takes about 20 minutes to deploy). 
 
 ## [Visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Visualization)
