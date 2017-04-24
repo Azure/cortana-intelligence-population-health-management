@@ -1,4 +1,4 @@
-# Population Health Management - Automatic Deployment Guide  
+# Population Health Management - Automated Deployment Guide  
 
 To see the entire Population Health Management for Health care using Cortana Intelligence Suit in action without having to spin up and connect all the components manually, there is a one click deployment option available [here](https://gallery.cortanaintelligence.com/). This folder contains the post-deployment instructions for the automatic deployable Population Health Management for Health care in the Cortana Intelligence Gallery. The one-click deployment of this solution will provision a number of Azure Services in your subscription. You can view the list of services provisioned by visiting [Azure portal](https://portal.azure.com). You can also look at the architecture diagram below that shows various Azure services that will be deployed by Population Health Management for Health care Solution using Cortana Intelligence Solutions, and how they are connected to each other in the end to end solution.
 
