@@ -3,9 +3,14 @@
 At the end of deployment (whether manual or automatic), we want to visualize the insights from the data and the results of the predictions. Below you will find instructions on how to connect your Power BI to the data in your Data Lake Store and also to your real time stream through Azure Stream Analytics. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard.
 
 # Data
-For this solution we have used data based on Healthcare Cost and Utilization Project ([HCUP](http://www.hcup-us.ahrq.gov/)) state inpatient data ([SID](https://www.hcup-us.ahrq.gov/sidoverview.jsp)). HCUP is a group of related databases that captures information extracted from administrative data (billing records) after a patient is discharged from the hospital. The [schema](https://www.hcup-us.ahrq.gov/db/state/siddist/siddistvarnote2013.jsp) of the data used for this solution follows the HCUP schema. It contains clinical and nonclinical information on all patients regardless of payer. The schema included socio-economic demographic data such as age, gender, income, zip code, payer type, information on admission and discharge, various diagnosis, procedures, charges etc., a total of about six hundred columns. 
+For this solution we have used data based on Healthcare Cost and Utilization Project ([HCUP](http://www.hcup-us.ahrq.gov/)) state inpatient data ([SID](https://www.hcup-us.ahrq.gov/sidoverview.jsp)). The [schema](https://www.hcup-us.ahrq.gov/db/state/siddist/siddistvarnote2013.jsp) of the data used for this solution follows the HCUP schema. It contains clinical and nonclinical information on all patients regardless of payer. The schema included socio-economic demographic data such as age, gender, income, zip code, payer type, information on admission and discharge, various diagnosis, procedures, charges etc., a total of about six hundred columns. 
 
-Population Health Report example
+### About HCUP
+
+HCUP is a group of related databases that captures information extracted from administrative data (billing records) after a patient is discharged from the hospital. 
+
+# Population Health Report
+A population health report lets the health care providers get an insight into the population they server and get actionable intelligence. In this solution we have created some reports for based on data described above. Some of the reports created are below.
 
 
 # Visualize Data from Data Lake Store
