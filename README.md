@@ -9,7 +9,7 @@ Population Health Managementis an important tool that is increasingly being used
 
 ### ***Ingredients for a successful Population Health Management solution***
  
-A successful population health management initiative requires establishing a repository that can collect data from multiple sources and in all and any formats whether it be structured, semi structured or unstructured. By analyzing patient population and getting an insight into the social-economic and demographic constitution of the population and their overall medical condition across different longitudes the health care providers can get an insight into the quality of care being provided and identify areas of improvement and cost savings. The Microsoft Azure Data Lake is one such technology that has all the capabilities required to build a population health management solution. It not only lets you store data of any size, shape and speed, it also has the capability to conduct data processing, advanced analytics, and machine learning modeling with high scalability in a cost-effective way. Using U-SQL, R, Python and .NET, it allows you to run massively parallel data transformation and processing over petabytes of data. It is truly the one stop shop for population health reporting, advanced analytics and predictive modeling. 
+A successful population health management initiative requires establishing a repository that can collect data from multiple sources and in all and any formats whether it be structured, semi structured or unstructured. Furthermore, it needs to be able to integrate the disparate data sources, with a fast time to action to meet the ever evolving and agile healthcare analytics needs. By analyzing patient population and getting an insight into the social-economic and demographic constitution of the population and their overall medical condition across different longitudes the health care providers can get an insight into the quality of care being provided and identify areas of improvement and cost savings. The Microsoft Azure Data Lake is one such technology that has all the capabilities required to build a population health management solution. It not only lets you store data of any size, shape and speed, it also has the capability to conduct data processing, advanced analytics, and machine learning modeling with high scalability in a cost-effective way. Using U-SQL, R, Python and .NET, it allows you to run massively parallel data transformation and processing over petabytes of data. It is truly the one stop shop for population health reporting, advanced analytics and predictive modeling. 
 
 ### ***What's in this solution***
 
@@ -24,20 +24,20 @@ In this Population Health Management solution guide we will be leveraging the cl
 
 This solution package contains materials to help both technical and business audiences understand our Population Health Management solution for Health care built on the [Cortana Intelligence Suite](https://www.microsoft.com/en-us/server-cloud/cortana-intelligence-suite/Overview.aspx).
 
-# Business Audiences
+## Business Audiences
 
 In this repository you will find a folder labeled [*Solution Overview for Business Audiences*](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/SolutionOverviewforBusinessAudiences) which contains a  presentation covering this solution and benefits of using the Cortana Intelligence Suite
 
 For more information on how to tailor Cortana Intelligence to your needs [connect with one of our partners](http://aka.ms/CISFindPartner).
 
-# Technical Audiences
+## Technical Audiences
 
 For Technical Audiences we have put together a manual deployment guide as well as an automated deployment guide. The manual deployment guide is geared towards the more technically bent who want to understand how to spin up the different components and how they can be connected together to build an end to end pipeline. The automated deployment guide is for seeing the entire solution in action without having to do all the wiring manually. 
 
-## [Manual Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide)
+### [Manual Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide)
 In this folder you will find instructions on how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite.  It will walk you through how to manually set up and deploy all the individual services used in this solution (e.g. Azure Event Hub, Data Lake Store, Azure Stream Analytics etc.). 
 
 
-## [Automated Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/AutomatedDeploymentGuide)
+### [Automated Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/AutomatedDeploymentGuide)
 There is also a deployable Population Health Management solution in the Cortana Intelligence Gallery. (one click deployment of all services required for this solution!). In this folder you will find instructions on how to monitor the progress of your automated deployment (takes about 20 minutes to deploy) and carry out some post deployment steps.
  
