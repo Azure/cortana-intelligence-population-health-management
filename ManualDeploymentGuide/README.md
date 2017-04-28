@@ -1,13 +1,6 @@
 # Population Health Management - Manual Deployment Guide  
 
-Introduction **TBD NEEDS UPDATING**:
-===============
-
-The goal of the solution guide presented here is to .....
-
-This tutorial will guide you through the process creating, from the ground up, a Predictive Analytics solution. Other related resources provided here:
- -  a [solution description](https://github.com/Azure/cortana-intelligence-quality-assurance-manufacturing/blob/master/Manual%20Deployment%20Guide/SolutionDescription.md) that includes more details on the machine learning approach and related resources.
- -  [data flow](https://github.com/Azure/cortana-intelligence-quality-assurance-manufacturing/blob/master/Manual%20Deployment%20Guide/DataFlowReport.md) report demonstrating how post deployment monitoring can be used to visualize the timing and work-load of each key components of the solution.
+The goal of the solution guide presented here is to create a Population Health Management solution. It is geared towards hospitals and health care providers to manage and control the health care expenditure through disease prevention and management. This Manual Deployment Guide shows you how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite. It will walk you through how to manually set up and deploy all the individual services used in this solution. In the process you will learn about the underlying technology and function of each component, how to stitch them together to create an end to end solution.
  
 **For technical problems or questions about deploying this solution, please post in the issues tab of the repository.**
 
