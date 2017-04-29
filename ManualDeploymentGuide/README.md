@@ -4,11 +4,11 @@ The goal of the solution guide presented here is to create a Population Health M
  
 **For technical problems or questions about deploying this solution, please post in the issues tab of the repository.**
 
-Solution architecture description **TBD NEEDS UPDATING/IMAGES**:
+Solution architecture description 
 =================================
-![Solution Diagram Picture](https://cloud.githubusercontent.com/assets/16708375/24055289/5e69ddca-0b37-11e7-953e-b2e0d7758cb4.png)
+![Solution Diagram Picture](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/PHMarchitecture.PNG?token=AKE1ne_aUEAvTvRKtZmNm3mwB4DP4tSzks5ZDV2AwA%3D%3D)
 
-<sub>Solution design for Predictive Analytics for Population Helath Management in Manufacturing</sub>
+<sub>Solution design for Population Health Management Solution for Healthcare</sub>
 
 
   

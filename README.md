@@ -5,7 +5,7 @@ According to [Centers for Medicaid and Medicare Services](https://www.cms.gov/re
 
 ### ***What is Population Health Management*** 
 
-Population Health Managementis an important tool that is increasingly being used by Health care providers to manage and control the escalating costs. The crux of Population Health Management is to use data to improve health outcomes. Tracking, monitoring and bench marking are the three bastions of Population Health Management aimed at improving clinical and health outcomes while managing and reducing cost. 
+Population Health Management is an important tool that is increasingly being used by Health care providers to manage and control the escalating costs. The crux of Population Health Management is to use data to improve health outcomes. Tracking, monitoring and bench marking are the three bastions of Population Health Management aimed at improving clinical and health outcomes while managing and reducing cost. 
 
 ### ***Ingredients for a successful Population Health Management solution***
  
