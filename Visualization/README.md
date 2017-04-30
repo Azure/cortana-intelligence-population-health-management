@@ -3,14 +3,14 @@
 At the end of deployment (whether manual or automatic), we want to visualize the insights from the data and the results of the predictions. Below you will find instructions on how to connect your Power BI to the data in your Data Lake Store and also to your real time stream through Azure Stream Analytics. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard.
 
 # Data
-For this solution we have used data based on Healthcare Cost and Utilization Project ([HCUP](http://www.hcup-us.ahrq.gov/)) state inpatient data ([SID](https://www.hcup-us.ahrq.gov/sidoverview.jsp)). The [schema](https://www.hcup-us.ahrq.gov/db/state/siddist/siddistvarnote2013.jsp) of the data used for this solution follows the HCUP schema. It contains clinical and nonclinical information on all patients regardless of payer. The schema included socio-economic demographic data such as age, gender, income, zip code, payer type, information on admission and discharge, various diagnosis, procedures, charges etc., a total of about six hundred columns. 
+For this solution we have used simulated data based on State Inpatient Data ([SID](https://www.hcup-us.ahrq.gov/sidoverview.jsp)) from Healthcare Cost and Utilization Project ([HCUP](http://www.hcup-us.ahrq.gov/)). The [schema](https://www.hcup-us.ahrq.gov/db/state/siddist/siddistvarnote2013.jsp) of the data used for this solution follows the HCUP schema. The data contains clinical and nonclinical information on all patients. It includes the socio-economic demographic information such as age, gender, income, zip code, payer type, information on admission and discharge, various diagnosis, procedures, charges etc., a total of about six hundred  and ten columns. For this solution we simulated one hundred and thirty five of these columns but retained the remaining columns for completeness and to facilitate ease of transporting the codes to real HCUP data!
 
-### About HCUP
+### ***About HCUP and SID***
 
-HCUP is a group of related databases that captures information extracted from administrative data (billing records) after a patient is discharged from the hospital. 
+The Healthcare Cost and Utilization Project (HCUP) is a group of healthcare databases that contain the the largest collection of longitudinal hospital care data in the United States. It is a national information resource for encounter-level health care data. It captures information extracted from administrative data (patients' billing records) after a patient is discharged from the hospital. The State Inpatient Databases (SID) are part of this family of databases and contain inpatient care records from community hospitals in that State. With forty-eight States participating in the SID, it now encompass about 97 percent of all U.S. community hospital discharges. The SID files contain a core set of clinical and nonclinical information on all patients, regardless of payer, providing a unique view of inpatient care over time. 
 
 # Population Health Report
-A population health report lets the health care providers get an insight into the population they server and get actionable intelligence. In this solution we have created some reports for based on data described above. Some of the reports created are below.
+A population health report lets the health care providers get an insight into the population they server and get actionable intelligence. In this solution we have created some reports for you based on data described above. Some of the reports created with a brief description of insights can be found here.
 
 
 # Visualize Data from Data Lake Store
