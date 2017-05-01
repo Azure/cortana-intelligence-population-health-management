@@ -174,8 +174,11 @@ This section will walk you through the steps to manually create the population h
   - The creation step may take several minutes.  
 
 ## Create Azure Stream Analytics Job
-  The Azure Stream Analytics job is used to process events from the Azure Event Hub and store them into the Azure Data Lake Store. For this pattern we will utilized 4
-  outputs, one for each record type, which will all produce output in the Azure Data Lake Store. 
+  Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the Cold Path) and Power BI (the Hot Path). Below we will outline the steps to set up the cold path and the hot path. 
+
+## Cold Path
+  For the cold path, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. For this pattern we will utilized 4 outputs, one for each record type, which will all produce output in the Azure Data Lake Store.
+
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
   - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
@@ -238,6 +241,15 @@ This section will walk you through the steps to manually create the population h
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select now, then click on **Start**.   
 
+## Hot Path
+  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation.
+
+  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
+  - In the left hand menu select *Resource groups*
+  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
+  - ..
+  - ..
+  - 
 
 ## Create Azure Data Factory
   The Azure Data Factory orchestrates data movement an other processing steps the steps neccesary to process raw stream data to useful insights. This demo accelerates actual processing
@@ -379,7 +391,7 @@ select now, then click on **Start**.
 
 ## Visualization
 
- Congratulations! You have successfully deployed a Cortana Intelligence Solution. A picture is worth a thousand words. Lets head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to connect to a Real-time dataset to build reports and dashboards using your data! 
+ Congratulations! You have successfully deployed a Cortana Intelligence Solution. After completion of hot path steps above, the data is being pushed to Power BI for real time visualization. Additionally we also connect to the historic data and predictions in Data Lake Store (cold path) from Power BI for visualization. A picture is worth a thousand words. Lets head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
  
   
 
