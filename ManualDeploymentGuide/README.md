@@ -391,7 +391,7 @@ select now, then click on **Start**.
 
 ## Visualization
 
- Congratulations! You have successfully deployed a Cortana Intelligence Solution. After completion of hot path steps above, the data is being pushed to Power BI for real time visualization. Additionally we also connect to the historic data and predictions in Data Lake Store (cold path) from Power BI for visualization. A picture is worth a thousand words. Lets head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
+ Congratulations! You have successfully deployed a Cortana Intelligence Solution. After completion of hot path steps above, the data is being pushed to Power BI for real time visualization. Additionally we also connect to the streaming data and predictions being stored in the Data Lake Store (cold path) along with historic data from Power BI for visualization. A picture is worth a thousand words. Lets head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
  
   
 
