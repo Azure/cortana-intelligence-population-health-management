@@ -17,19 +17,17 @@ A population health report lets the health care providers get an insight into th
 
 > Note:  1) In this step, the prerequisite is to download and install the free software [Power BI desktop](https://powerbi.microsoft.com/desktop). 2) We recommend you start this process 2-3 hours after you deploy the solution so that you have more data points to visualize.
 
-Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near real time as new patients get admitted to the hospital. The provided PBI file connects to two data files
-1) data4PBI_simulated.csv and
-2) ReadmittanceTarget.csv
-These two files are also downloaded with the .pbix files (confirm). These two files have also been uploaded in your Data Lake Storage. In the exercise below we will change the source of the Power BI file from local to the csv file in ADLS
+Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near real time as new patients get admitted to the hospital. The provided PBI file needs to connect to two data files in Data Lake store: data4PBI_simulated.csv and ReadmittanceTarget.csv. In the exercise below we will change the source of the Power BI file from local to the csv files in ADLS.
 
 #### 1) Get the credentials.
 
   Go to your adls file location through Azure portal and copy the url. The ADLS location URL looks like
 adl://shaheenphmadlsdefault.azuredatalakestore.net/. 
+Screenshot.
 
 #### 2)	Get the query connection string
 
-  -  We will get the connection string by connecting a new Power BI desktop file to our two csv files in ADLS. Click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter ADLS URL. Enter the URL you got in step 1. You will be prompted to sign in. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
+  -  We will get the connection string by connecting a new Power BI desktop file to our two csv files in ADLS. Open  a new Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter ADLS URL. Enter the URL you got in step 1. You will be prompted to sign in. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
 
   -	Locate the file you want to connect to (data4PBI_simulated.csv) and click Load. After the data has been successfully loaded into Power BI, you will see the following fields in the Fields tab. 
   
@@ -69,20 +67,18 @@ adl://shaheenphmadlsdefault.azuredatalakestore.net/.
 
 > Note: A [Power BI online](http://www.powerbi.com/) account is required to perform the following steps. If you don't have an account, you can [create one here](https://powerbi.microsoft.com/pricing).
 
-The essential goal of this part is to get real time overview of the population being admitted. Power BI can connect to a real-time data stream through Azure Stream Analytics. In this section we will show you how to create a real-time dashboard through connecting Azure Stream Analytics queries to Power BI
-
-Earlier we described how Event Hub collects real time data from hospitals. Azure Stream Analytics is used to process the data and directly publish to Power BI for visualization to provide near real-time analytics on the input stream. The steps to add Power BI output to Azure Stream Analytics was described here.
+The essential goal of this part is to get real time overview of the population being admitted. To carry out the steps below you must have successfully completed the 'Hot Path' steps (for both manual and automated deployment) to connect Power BI to your real-time data stream through Azure Stream Analytics.  
 
 
 ### Setup Real-time Power BI
 #### 1) Login on [Power BI online](http://www.powerbi.com)
 
--   Once the Power BI output has been added to stream analytics, log on to Power BI online. On the left panel Datasets section in My Workspace, you should be able to see a new dataset showing on the left panel of Power BI. This is the streaming data you pushed from Azure Stream Analytics in the previous step.
+-   On the left panel Datasets section in My Workspace, you should be able to see a new dataset showing on the left panel of Power BI. This is the streaming data you pushed from Azure Stream Analytics.
 
 -   Make sure the ***Visualizations*** pane is open and is shown on the right side of the screen.
 
 #### 2) Create a visualization on PowerBI online
-With Power BI, you are enabled to create many kinds of visualizations for your business needs. We will use this example to show you how to create the "total patients admitted  by payer type, admit type /age" 
+With Power BI, you are enabled to create many kinds of visualizations for your business needs. We will use this example to show you how to create a visual for the "total patients admitted  by admit type" 
 
 -	Click dataset **core dataset** on the left panel Datasets section.
 
