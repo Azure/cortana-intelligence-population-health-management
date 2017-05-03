@@ -85,6 +85,7 @@ In the Cost Report, we look at the Total Charge , Total cost of chronic disease 
 **Intervention Profile**
 
 In this report we look at Most Readmitted Conditions, Readmittance by Payer and Age. To reduce readmision you get an insight into who to target and intervene to prevent, reduce readmittance.
+![](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbi_InterventionProfile.PNG?token=AKE1naPMkyaxxXmPA026q6rJ_ydYtgn_ks5ZEsZ4wA%3D%3D)
 
 **Readmittance Tracking**
 
@@ -96,4 +97,4 @@ In this report we track Readmittance rate for certain conditions for different h
 In this report, we at geographic distribution of some chronic conditions. By monitoring the progression by location over time, we can identify hot spots for surge in certain conditions. 
 ![](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbi_HotSpots.PNG?token=AKE1nQgOE15-xwSNAfmF_KpN6eS6jCDnks5ZEsRtwA%3D%3D)
 
-Question on Visualization and Data: Contact @Shaheen_Gauher
+Questions on Visualization and Data: Contact @Shaheen_Gauher
