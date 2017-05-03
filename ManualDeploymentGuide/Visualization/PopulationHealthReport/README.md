@@ -59,6 +59,7 @@ Left  <!-- Set Div As your requirement -->
 Right  <!-- Set Div As your requirement -->
 </div>
 
+<img style="float: right;" src="https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png">
 
 Patient Stats 
 In this report we create a snapshot of patient population. We look at Total Admits by Age, Gender, Race, Income, Admit Type and Payer Type. Emergency visits can cost a lot. We also look at Total Admits and Total charge by Payer. We can compare different hospitals and over time.
