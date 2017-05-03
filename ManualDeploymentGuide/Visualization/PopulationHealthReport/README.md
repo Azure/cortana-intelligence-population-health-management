@@ -52,6 +52,14 @@ A population health report lets the health care providers get an insight into th
 
 #### This section will have two columns
 
+<div style="float:left; width:50%;">
+Left  <!-- Set Div As your requirement -->
+</div>
+<div style="float:left; width:50%;">
+Right  <!-- Set Div As your requirement -->
+</div>
+
+
 Patient Stats 
 In this report we create a snapshot of patient population. We look at Total Admits by Age, Gender, Race, Income, Admit Type and Payer Type. Emergency visits can cost a lot. We also look at Total Admits and Total charge by Payer. We can compare different hospitals and over time.
 ![Solution Diagram Picture](https://raw.githubusercontent.com/)
