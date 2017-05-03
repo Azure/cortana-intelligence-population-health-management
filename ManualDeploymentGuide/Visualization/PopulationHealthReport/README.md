@@ -95,3 +95,5 @@ In this report we track Readmittance rate for certain conditions for different h
 
 In this report, we at geographic distribution of some chronic conditions. By monitoring the progression by location over time, we can identify hot spots for surge in certain conditions. 
 ![](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbi_HotSpots.PNG?token=AKE1nQgOE15-xwSNAfmF_KpN6eS6jCDnks5ZEsRtwA%3D%3D)
+
+Question on Visualization and Data: Contact @Shaheen_Gauher
