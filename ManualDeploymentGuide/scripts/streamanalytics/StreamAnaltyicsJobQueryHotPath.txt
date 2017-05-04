@@ -1,0 +1,30 @@
+SELECT
+recordTime,
+[key] as id,
+age,
+ageday,
+amonth,
+atype,
+dispub04,
+dshospid,
+visitlink
+INTO
+  PBIoutputcore
+FROM
+  HotPathInput
+  WHERE class = 'core'
+    
+SELECT
+recordTime,
+[key] as id,
+chron1,
+chronb1,
+dxmccs1,
+e_mccs1,
+pclass1,
+prmccs1
+INTO
+  PBIoutputdxpr
+FROM
+  HotPathInput
+  WHERE class = 'dxpr'
