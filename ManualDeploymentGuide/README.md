@@ -309,6 +309,7 @@ select now, then click on **Start**.
  - Navigate back to the Stream Analytics job blade and click ***Outputs***
    - **NOTE** We will add two output below.  
    - At the top of the *Outputs* page click ***+ Add*** to add the first output
+   - 
 	     - Output alias : PBIoutputcore   
          - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
          - Group Workspace: My Workspace
@@ -316,6 +317,7 @@ select now, then click on **Start**.
          - Table Name: same as Dataset Name above
          - Click the **Create** button to complete  
    - At the top of the *Outputs* page click ***+ Add*** again to add the second output
+   - 
 	     - Output alias : PBIoutputdxpr
          - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
          - Group Workspace: My Workspace
