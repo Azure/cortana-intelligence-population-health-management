@@ -4,16 +4,12 @@ The goal of the solution guide presented here is to create a Population Health M
  
 **For technical problems or questions about deploying this solution, please post in the issues tab of the repository.**
 
-Solution architecture description 
+Solution architecture 
 =================================
 ![Solution Diagram Picture](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/PHMarchitecture.PNG?token=AKE1ne_aUEAvTvRKtZmNm3mwB4DP4tSzks5ZDV2AwA%3D%3D)
 
-<sub>Solution design for Population Health Management Solution for Healthcare</sub>
+The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. 
 
-
-  
-Solution [Lambda](http://social.technet.microsoft.com/wiki/contents/articles/33626.lambda-architecture-implementation-using-microsoft-azure.aspx) architecture uses the hot (upper) path for real time processing and cold (lower) path for distributed processing that can handle complex queries on very large quantities of historical data.  
-   
 Speed Layer:  
  - Event from 4 different connected datasets are ingested using an [Azure Event Hub](https://azure.microsoft.com/en-us/documentation/articles/event-hubs-overview/) 
  which receives the event records sent using an [Azure WebJob](https://azure.microsoft.com/en-us/documentation/articles/web-sites-create-web-jobs/).  
@@ -29,8 +25,20 @@ Batch Layer:
  - Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) files and visualized using [PowerBI](https://powerbi.microsoft.com/).  
  
 
-Deployment Steps:
-====================
+----------
+
+To build the pipeline above for this solution, we will need to carry out the following steps:
+
+- Create an Azure Resource Group for the solution
+- Create Azure Storage Account (Move resources to this storage account)
+- Create an Azure Event Hub (Add two Consumer Groups)
+- Create an Azure Data Lake Store
+- Create Azure Data Lake Analtytics 
+- Create Azure Stream Analytics Job (Cold and Hot Paths)
+- Create Azure Data Factory (Linked Services, Datasets, Pipeline)
+- Download and configure the data generator
+
+Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
 
 ### Prerequisites
 
@@ -54,16 +62,20 @@ user's specific details like name and/or a custom numeric ID:
 
  **healthcare[UI][N]**  
   
-where [UI] is the user's initials, N is a random integer that you choose. Note that all characters must be entered in in lowercase.  
+where [UI] is the user's initials, N is a random integer(01-99) that you choose. Note that all characters must be entered in in lowercase.  
   
-To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. So for example, user Steven **X. Smith** 
-might use a base service name of manufact**xs01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
+To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. So for example, user **Mary Jane** might use a base service name of healthcare**mj01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
 Hub" below: 
- - healthcare***ureehns*** should actually be spelled healthcare***xs01ehns*** 
- - healthcare***ureeh*** should actually be spelled healthcare***xs01eh***  
-  
 
-# Manual Steps
+ - healthcare***ehns*** should actually be spelled healthcare***mj01ehns*** 
+ - healthcare***eh*** should actually be spelled healthcare***mj01eh***  
+  
+----------
+
+Deployment Steps:
+====================
+
+
 This section will walk you through the steps to manually create the population health management solution in your Azure subscription.
 
 ## Create an Azure Resource Group for the solution
@@ -121,9 +133,10 @@ This section will walk you through the steps to manually create the population h
   Navigate back to the storage account blade to collect important information that will be required in future steps. 
   - On the storage account blade, select **Access keys** from the menu on the left.
   - Record the *STORAGE ACCOUNT NAME*, *PRIMARY ACCESS KEY*, and *PRIMARY CONNECTION STRING* values.
+  - You will need these credentials to access the files (usql scripts, R scripts and csv file) in your blob through ADF.
 
 ## Create an Azure Event Hub
-  The Azure Event Hub is the ingestion point of raw records that will be processed in this example pattern.
+  The Azure Event Hub is the ingestion point of raw records that will be processed in this solution. The role of Event Hub in solution architecture is as the "front door" for an event pipeline. It is often called an event ingestor.
 
  - Log into the [Azure Management Portal](https://portal.azure.com) 
  - In the left hand menu select *Resource groups*
@@ -131,21 +144,35 @@ This section will walk you through the steps to manually create the population h
  - At the top of the Resource Group blade click __+Add__.
  - In the *Search Everything* search box enter **Event Hubs**
  - Choose ***Event Hubs*** from the results, then click *Create*, this will create the namespace for the Azure Event Hub.
- - For the name, use ***healthcareeehns***
+ - For the name, use ***healthcareehns***
  - Subscription, resource group, and location should be correctly set.
  - Click ***Create*** 
  - The creation step may take several minutes.  
  - Navigate back to *Resource groups* and choose the resource group for this solution.
- - Click on ***healthcareeehns***, then on the subsequent blade click __+Event Hub__
- - Enter ***healthcareeh*** as the name, move partition count to 16 and click *Create*
+ - Click on ***healthcareehns***, then on the subsequent blade click __+Event Hub__
+ - Enter ***healthcareeh*** as the Even Hub name, move partition count to 16 and click *Create*
+ 
+ Once the Event Hub is created we will create Consumer Groups. In a stream processing architecture, each downstream application equates to a consumer group. We will create two Consumer Groups here corresponding to writing event data to two separate locations: Data Lake Store (cold path) and Power BI (hotpath). (There is always a default consumer group in an event hub)
 
- From the **healthcareehns** you will collect the following information as it will be required in future steps.
+ - Click on the Event Hub ***healthcareeh*** you just created, then on the subsequent blade click __+ Consumer Group__
+ - Enter coldpathcg as Name
+ - Add the second consumer group by clicking on __+ Consumer Group__ again.
+ - Enter hotpathcg as Name 
+ - You will need the names (coldpathcg and hotpathcg) when setting up stream analytics job.
+
+ From the **healthcareehns** you will collect the following information as it will be required in future steps to set up Stream Analytics Jobs.
+
  - On the ***healthcareeehns*** blade choose *Shared access policies* from the menu
  - Select **RootManageSharedAccessKey** and record the value for *CONNECTION STRING -PRIMARY KEY*
- - Return to the ***healthcareeehns*** blade and choose *Overview* from the menu and record the event hub name you created above.
+ - Return to the ***healthcareehns*** blade and choose *Overview* from the menu and record the event hub name you just created above.
+ - Click on ***healthcareeh** and locate Consumer Groups under Entities
+ - Click on Consumer Groups under Entities and it will open a pane contaning the list of Consumer Groups you just added. Copy the names coldpathcg and hotpathcg.
  
+
+
 ##   Create an Azure Data Lake Store
-  The Azure Data Lake store is used as to hold raw and scored results from the raw data points generated by the data generator.
+  The Azure Data Lake store is used as to hold raw and scored results from the raw data points generated by the data generator and streamed in through Stream Analytics job.
+
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
   - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
@@ -157,10 +184,13 @@ This section will walk you through the steps to manually create the population h
   - Click ***Create***  
   - The creation step may take several minutes. 
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
-  value which from the Data Lake Store blade which will be in the form adl://****.azuredatalakestore.net 
+  value which from the Data Lake Store blade which will be in the form **adl://---.azuredatalakestore.net**  e.g. adl://gsciqs1w6yadls.azuredatalakestore.net/
+  - You will need this to connect PBI to the data in your Data Lake Store. 
+
 
 ##   Create Azure Data Lake Analtytics 
   The Azure Data Lake Analytics is used as to process the raw records and perform the machine learning steps of feature engineering and scoring. 
+
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
   - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
@@ -169,15 +199,19 @@ This section will walk you through the steps to manually create the population h
   - Choose ***Data Lake Analytics*** from the results then click *Create*
   - Enter ***healtcahreadla*** as the name.
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
-  - Click on *Data Lake Store* and choose the Azure Data Lake store created in the previous step. 
+  - Click on *Data Lake Store* and choose the Azure Data Lake store created in the previous step. (Data Lake Analytics account has an Azure Data Lake Store account dependency and is referred as the default Data Lake Store account.)
   - Click ***Create***  
-  - The creation step may take several minutes.  
+  - The creation step may take several minutes.
+  - When completed, navigate back to the resource group blade and select the ***healthcareadla*** Data Lake Account.
+  - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
+  - In the Sample Scripts blade, click on Install U-SQL Extensions to install U-SQL Extensions to your account.
+  - This is an important step to enable R (and python) extensions to work with ADLA.
 
-## Create Azure Stream Analytics Job
-  Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the Cold Path) and Power BI (the Hot Path). Below we will outline the steps to set up the cold path and the hot path. 
+## Create Azure Stream Analytics Job - Cold and Hot Paths
+  [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path and the hot path. This solution uses the Hot path for real time processing and Cold path for distributed processing that can handle complex queries on very large quantities of historical data.
 
 ## Cold Path
-  For the cold path, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. For this pattern we will utilized 4 outputs, one for each record type, which will all produce output in the Azure Data Lake Store.
+  For the cold path, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. We will name the Steam Analytics Job that we create for this, **HealthCareColdPath**. 
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
@@ -185,13 +219,13 @@ This section will walk you through the steps to manually create the population h
   - At the top of the Resource Group blade click __+Add__.
   - In the *Search Everything* search box enter ***Stream Analytics job***
   - Choose ***Stream Analytics job*** from the results then click *Create*
-  - Enter ***healthcareasa*** as the name.
+  - Enter ***HealthCareColdPath*** as the Job name.
   - Subscription, resource group, and location should be correctly set.
   - Click *Create*  
   - The creation step may take several minutes.  
   - Return to the resource group blade.
-  - Select the ***healthcareasa*** resource to open the Stream Analytics job to modify the job settings.  
-  - Click *Inputs* on the Stream Analytics job blade  
+  - Select the ***HealthCareColdPath*** resource to open the Stream Analytics job to modify the job settings.  
+  - In the Stream Analytics job blade click *Inputs* 
     - At the top of the *Inputs* page click ***+ Add***
       - Input alias : InputHub
         - Source Type : Data Stream
@@ -236,20 +270,66 @@ This section will walk you through the steps to manually create the population h
   
   
 - Navigate back to the Stream Analytics job blade and click *Query*  
-    - Download the file StreamAnalyticsJobQuery.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
+    - Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
     - Click *SAVE*  
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select now, then click on **Start**.   
 
 ## Hot Path
-  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation.
+  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **HealthCareHotPath**. 
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
   - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
-  - ..
-  - ..
-  - 
+  - At the top of the Resource Group blade click __+Add__.
+  - In the *Search Everything* search box enter ***Stream Analytics job***
+  - Choose ***Stream Analytics job*** from the results then click *Create*
+  - Enter ***HealthCareHotPath*** as the Job name.
+  - Subscription, resource group, and location should be correctly set.
+  - Click *Create*  
+  - The creation step may take several minutes.  
+  - Return to the resource group blade.
+  - Select the ***HealthCareHotPath*** resource to open the Stream Analytics job to modify the job settings (specify Inputs, Outputs and Query).  
+  
+- In the Stream Analytics job blade click ***Inputs*** 
+    - At the top of the *Inputs* page click ***+ Add***
+        - Input alias : **HotPathInput**
+        - Source Type : Data Stream
+        - Source : Event hub
+        - Import Option: Use event hub from current subscription
+        - Service bus namespace: ***healthcareeehns*** (or whatever you have chosen for the __Event Hub**s**__ namespace previously)
+        - Event hub name: ***healthcareeh*** (or whatever you have chosen for the event hub previously, NO it is healthcareeh)
+        - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
+        - Event hub consumer group: **hotpathcg** (we created this above)
+        - Event serialization format : CSV
+        - Delimiter: remains comma(,)
+        - Encoding: remains UTF-8
+        - Click the bottom **Create** button to complete.  
+           
+ - Navigate back to the Stream Analytics job blade and click ***Outputs***
+   - **NOTE** We will add two output below.  
+   - At the top of the *Outputs* page click ***+ Add*** to add the first output
+	     - Output alias : PBIoutputcore   
+         - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
+         - Group Workspace: My Workspace
+         - Dataset Name: **hotpathcore** 
+         - Table Name: same as Dataset Name above
+         - Click the **Create** button to complete  
+   - At the top of the *Outputs* page click ***+ Add*** again to add the second output
+	     - Output alias : PBIoutputdxpr
+         - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
+         - Group Workspace: My Workspace
+         - Dataset Name: **hotpathdxpr** 
+         - Table Name: same as Dataset Name above
+         - Click the **Create** button to complete 
+
+ - Navigate back to the Stream Analytics job blade and click ***Query***  
+    - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window. 
+    - Click *SAVE*  
+- When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
+select Now, then click on **Start**.   
+- After some time in the Datasets section of your PowerBI, this new dataset hotpathcore and hotpathdxpr will appear.
+ 
 
 ## Create Azure Data Factory
   The Azure Data Factory orchestrates data movement an other processing steps the steps neccesary to process raw stream data to useful insights. This demo accelerates actual processing
@@ -276,6 +356,7 @@ select now, then click on **Start**.
   We will set those up first.
 
   Azure Storage Linked Service
+
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade choose *New data store* and choose **Azure Storage** from the list
@@ -284,6 +365,7 @@ select now, then click on **Start**.
   - At the top of the blade, click *Deploy*
 
   Azure Data Lake Store Linked Service
+
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade choose *New data store* and choose **Azure Data Lake Store** from the list
@@ -294,6 +376,7 @@ select now, then click on **Start**.
   - At the top of the blade, click *Deploy*
 
   Azure Data Lake Analytics Compute Service
+
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade choose *... More* and choose **New compute** and then *Azure Data Lake Analytics* from the list
@@ -307,7 +390,8 @@ select now, then click on **Start**.
   Now that we have the services out of the way, we need to set up Datasets which will act as inputs and outputs to the Data Factory pipeline. For this, we use a single 
   input to start off the processing.
 
-  Setting up the starting file. This file does not exist, but will be tagged as an *external* file so that Data Factory does not check for it's existence. 
+  Setting up the starting file. This file does not exist, but will be tagged as an *external* file so that Data Factory does not check for it's existence.
+ 
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
@@ -317,7 +401,8 @@ select now, then click on **Start**.
   - At the top of the blade, click *Deploy*
 
   Setting up the working files is next. These files also don't exist, but with data factory being a dependency flow, they are also required to help orchestrate the 
-  steps of processing in the pipeline.  
+  steps of processing in the pipeline. 
+ 
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
@@ -349,7 +434,9 @@ select now, then click on **Start**.
   - **DO NOT** click  *Deploy* yet
 
   For simplicity, lets look at one of the activity pairings in the file *First Phase Join* and *First Phase Scoring*. 
+
   #### First Phase Join
+
   This activity executes a USQL script located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result 
   is a single output file with the results for the 5 minute window this activity should cover. 
@@ -357,6 +444,7 @@ select now, then click on **Start**.
   The output of this activity is then tied to the input of the *First Phase Scoring* activity, which will not execute until this activity is complete. 
   
   #### First Phase Scoring
+
   This activity executes a USQL script located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
   a single output file with the scoring results for the 5 minute window this activity should cover.
@@ -364,6 +452,7 @@ select now, then click on **Start**.
   The output of this activity is what will feed the Power BI dataset.  
 
   #### Activity Period
+
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
   properties *start* and *end* located at the bottom of the pipeline editor. 
 
