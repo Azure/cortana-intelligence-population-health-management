@@ -6,7 +6,7 @@ The goal of the solution guide presented here is to create a Population Health M
 
 Solution architecture 
 =================================
-![Solution Diagram Picture](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/PHMarchitecture.PNG?token=AKE1ne_aUEAvTvRKtZmNm3mwB4DP4tSzks5ZDV2AwA%3D%3D)
+![Solution Diagram Picture](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/PHMarchitecture.PNG?token=AKE1nXC5BJDaxMRP14WOp2kgGeBpAiOSks5ZF7o1wA%3D%3D)
 
 The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. 
 
