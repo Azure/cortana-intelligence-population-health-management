@@ -372,19 +372,12 @@ There are 3 sets of this activity producing
 "ScoreSliceOutputSet1", "ScoreSliceOutputSet2" and "ScoreSliceOutputSet3"
 
 Activity 3 - Create data for visialization
+
   Once we have the predictions, we want to create a dateset for visualisation. The usql script (hcadfstreamforpbi.usql) that ADF will fire to curate the data for visualisation purpose can be found here. There are 3 sets of this activity producing
 "ForPBISliceOutputSet1", "ForPBISliceOutputSet2" and "ForPBISliceOutputSet3"
 
-The shortest execution time of data factory is 15 minutes. However we want to process every 5 minutes. To achieve this we have to set up multiple activities using offsets ( 3 sets of each activity). This explains the 9 activities instead of 3 in our pipeline.
-
-
-
-This demo accelerates actual processing
-  time for the sake of useful visualizations in a short amount of time. To accomplish that this demo will utilize overlapping Azure Data Lake activities in the pipeline to produce
-  results approximately every 5 minutes. 
-
-  To produce results every 5 minutes requires that this demo create additional resources that may not be neccesary in an actual enterprise deployment. This is because Azure Data Factory
-  works by allowing pipelines to flow using dependencies. To understand the concept better, read [this](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-scheduling-and-execution) article.
+  The shortest execution time of data factory is 15 minutes. However we want to process every 5 minutes. To achieve this we have to set up multiple activities using offsets ( 3 sets of each activity). This explains the 9 activities instead of 3 in our pipeline. This demo accelerates actual processing
+  time for the sake of useful visualizations in a short amount of time. To accomplish that this demo will utilize overlapping Azure Data Lake activities in the pipeline to produce results approximately every 5 minutes. To produce results every 5 minutes requires that this demo create additional resources that may not be neccesary in an actual enterprise deployment. This is because Azure Data Factory works by allowing pipelines to flow using dependencies. To understand the concept better, read [this](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-scheduling-and-execution) article.
 
   Now that we understand the pipeline design, we can get started on creating the Data Factory.
 
