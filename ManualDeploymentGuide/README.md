@@ -186,29 +186,36 @@ This section will walk you through the steps to manually create the population h
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
   value which from the Data Lake Store blade which will be in the form **adl://---.azuredatalakestore.net**  e.g. adl://gsciqs1w6yadls.azuredatalakestore.net/
   - You will need this to connect PBI to the data in your Data Lake Store. 
+  - Next we will create three folders (adfscripts, historicdata and models) in our Data Lake Store and upload files to them.
+     - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
+     - In the next blade, click in Data Explorer at the top.
+     - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter adfscripts.
+     - Create two other new folders the same way and name them historicdata and models.
+     - Select the folder adfscripts and click on Upload at the top. Upload the contents of scripts/datafactory/scripts_adls here.
+     - Select the folder historic data and upload the contents of rawevents/files_historic/ here
+     - Select the folder models and upload the contents of scripts/datafactory/models here. 
 
 
-##   Create Azure Data Lake Analtytics 
-  The Azure Data Lake Analytics is used as to process the raw records and perform the machine learning steps of feature engineering and scoring. 
+##   Start the Generator now 
+  With the data in rawevents/files_datagenerator folder uploaded to storage, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization.
 
-  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
-  - In the left hand menu select *Resource groups*
-  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
-  - At the top of the Resource Group blade click __+Add__.
-  - In the *Search Everything* search box enter ***Data Lake Analytics***
-  - Choose ***Data Lake Analytics*** from the results then click *Create*
-  - Enter ***healtcahreadla*** as the name.
-  - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
-  - Click on *Data Lake Store* and choose the Azure Data Lake store created in the previous step. (Data Lake Analytics account has an Azure Data Lake Store account dependency and is referred as the default Data Lake Store account.)
-  - Click ***Create***  
-  - The creation step may take several minutes.
-  - When completed, navigate back to the resource group blade and select the ***healthcareadla*** Data Lake Account.
-  - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
-  - In the Sample Scripts blade, click on Install U-SQL Extensions to install U-SQL Extensions to your account.
-  - This is an important step to enable R (and python) extensions to work with ADLA.
+## Download and configure the data generator  
+ - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/datagenerator) of this repository.  
+ - Unzip this file to the local disk drive of a Windows Machine.  
+ - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
+    - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
+    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* that was collected after creating the Azure Event Hub.
+    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was collected after creating the Azure Storage account.
+    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was collected after creating the Azure Storage account.  
+	- Save and close **HealthCareGenerator.exe.config** 
+ - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **manufactureeh**.  
+    ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when this generator is running.  
+    ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
+
+
 
 ## Create Azure Stream Analytics Job - Cold and Hot Paths
-  [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path and the hot path. This solution uses the Hot path for real time processing and Cold path for distributed processing that can handle complex queries on very large quantities of historical data.
+  [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path and the hot path. 
 
 ## Cold Path
   For the cold path, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. We will name the Steam Analytics Job that we create for this, **HealthCareColdPath**. 
@@ -275,6 +282,8 @@ This section will walk you through the steps to manually create the population h
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select now, then click on **Start**.   
 
+Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severity/, stream/raw/core/ etc.) after approximately 5 minutes.
+
 ## Hot Path
   For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **HealthCareHotPath**. 
 
@@ -322,16 +331,62 @@ select now, then click on **Start**.
     - Click *SAVE*  
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select Now, then click on **Start**.   
-- After some time in the Datasets section of your PowerBI, this new dataset hotpathcore and hotpathdxpr will appear.
+- After some time in the Datasets section of your PowerBI, this new dataset hotpathcore will appear.
  
+##   Create Azure Data Lake Analtytics 
+  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a usql script. The usql script for various jobs (joining, scoring etc. ) can be found at scripts/datafactory/scripts_storage/ and will need to be uploaded to storage from where the ADF will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (e.g. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store adfscripts/, historicdata/ and models/. We created these folders above and uploaded the contents to these folders.
+
+  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
+  - In the left hand menu select *Resource groups*
+  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
+  - At the top of the Resource Group blade click __+Add__.
+  - In the *Search Everything* search box enter ***Data Lake Analytics***
+  - Choose ***Data Lake Analytics*** from the results then click *Create*
+  - Enter ***healtcahreadla*** as the name.
+  - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
+  - Click on *Data Lake Store* and choose the Azure Data Lake store created in the previous step. (Data Lake Analytics account has an Azure Data Lake Store account dependency and is referred as the default Data Lake Store account.)
+  - Click ***Create***  
+  - The creation step may take several minutes.
+  - When completed, navigate back to the resource group blade and select the ***healthcareadla*** Data Lake Account.
+  - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
+  - In the Sample Scripts blade, click on Install U-SQL Extensions to install U-SQL Extensions to your account.
+  - This is an important step to enable R (and python) extensions to work with ADLA.
+  
 
 ## Create Azure Data Factory
-  The Azure Data Factory orchestrates data movement an other processing steps the steps neccesary to process raw stream data to useful insights. This demo accelerates actual processing
-  time for the sake of useful visualizations in a short amount of time. To accomplish that this demo will utilized overlapping Azure Data Lake activities in the pipeline to produce
+  Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In Azure Data Lake Analytics (ADLA) we use a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script to submit a job. In our pipeline we have essentially 3 activities and three sets of each of these activities.
+  
+  Before we start authoring the ADF, let us get our requirements together and understand the design of the pipeline.
+
+ Activity 1 -  Join
+ If you recall the stream analytics job (ColdPath above) had 4 outputs that were being stored in ADLS. (Note: ASA is independent of ADF and is not part of it). The first activity in this pipeline is an ADLA job that will merge these four files into one. The usql script that ADF will fire to submit this job is called "hcadfstreamjoin.usql". This joining activity will be done every 5 mins. To carry out this activity we will need to specify the location of the input Dataset (DataLakeInputSet) and location to store the output Dataset (JoinSliceOutputSet). We do this by creating 'Datasets' in ADF. A dataset in Data Factory is defined in JSON format. In order for data factory to link to your ADLS, we will need to create a 'LinkedService' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. The Linked Service "AzureDataLakeStoreLinkedService" will link your Data Lake Store to Data Factory. The usql script for this job sits in a storage account that you created above. We will create a second LinkedService  called "AzureStorageLinkedService" for ADF to connect to this storage account to access the usql script. Additionally the ADF will submit this job in Azure Data Lake Analytics account. Hence for ADF to access your ADLA we will create "AzureDataLakeAnalyticsLinkedService" which is actually a compute service.
+
+There are 3 sets of this activity producing  
+"JoinSliceOutputSet1", "JoinSliceOutputSet2" and "JoinSliceOutputSet3"
+
+  
+ Activity 2 - Score
+ The second activity will be taking this merged file and push it through scoring pipeline. The usql script that the ADF will fire can be found here. This usql script will deploy the pre-trained R models and return the predictions as well as the raw data. There are 3 sets of this activity producing  
+"ScoreSliceOutputSet1", "ScoreSliceOutputSet2" and "ScoreSliceOutputSet3"
+
+Activity 3 - Create data for visialization
+  Once we have the predictions, we want to create a dateset for visualisation. The usql script that ADF will fire to curate the data for visualisation purpose can be found here. There are 3 sets of this activity producing
+"ForPBISliceOutputSet1", "ForPBISliceOutputSet2" and "ForPBISliceOutputSet3"
+
+The shortest execution time of data factory is 15 minutes. However we want to process every 5 minutes. To achieve this we have to set up multiple activities using offsets ( 3 sets of each activity). This explains the 9 activities instead of 3 in our pipeline.
+
+
+
+This demo accelerates actual processing
+  time for the sake of useful visualizations in a short amount of time. To accomplish that this demo will utilize overlapping Azure Data Lake activities in the pipeline to produce
   results approximately every 5 minutes. 
 
   To produce results every 5 minutes requires that this demo create additional resources that may not be neccesary in an actual enterprise deployment. This is because Azure Data Factory
   works by allowing pipelines to flow using dependencies. To understand the concept better, read [this](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-scheduling-and-execution) article.
+
+  Now that we understand the pipeline design, we can get started on creating the Data Factory.
+
+### Azure Data Factory - get started
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
@@ -345,8 +400,7 @@ select Now, then click on **Start**.
   - The creation step may take several minutes.  
 
 ### Azure Data Factory Linked Services
-  This Azure Data Factory is going to require certain servies to work on the raw data and produce insights. These services are a link to the Azure Storage account which
-  contains the USQL scripts for Azure Data Lake Analytics, the Azure Data Lake store where the data resides, and finally the Azure Data Lake analytics instance. 
+  This Azure Data Factory is going to require certain services to work on the raw data and produce insights. These services are a link to the Azure Storage account which contains the USQL scripts for Azure Data Lake Analytics, the Azure Data Lake store where the data resides, and finally the Azure Data Lake analytics instance. 
   We will set those up first.
 
   Azure Storage Linked Service
@@ -365,19 +419,21 @@ select Now, then click on **Start**.
   - At the top of the blade choose *New data store* and choose **Azure Data Lake Store** from the list
   - You will be presented a draft
   - At the setting *dataLakeStoreUri* copy the *ADL URI* value saved during the creation of the Azure Data Lake Store. 
-  - At the top of the page, click **Authorize** and when complete you can remove the properties marked as [Optional]. These will be *accountName*, *resourceGroupName*, 
-  and *subscriptionId*.  
+  - At the top of the page, click **Authorize** and when complete you can remove the properties marked as [Optional]. These will be *accountName*, *resourceGroupName*, and *subscriptionId*.  
+  -  what about ? "servicePrincipalId": "<Specify the service principal id>",
+            "servicePrincipalKey": "<Specify the Service principal key>",
+            "tenant": "microsoft.onmicrosoft.com",
   - At the top of the blade, click *Deploy*
 
-  Azure Data Lake Analytics Compute Service
+  Azure Data Lake Analytics Linked Service Compute Service
 
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
-  - At the top of the blade choose *... More* and choose **New compute** and then *Azure Data Lake Analytics* from the list
+  - At the top of the blade instead of *New data store* choose *... More* and choose **New compute** and then *Azure Data Lake Analytics* from the list
   - At the setting *accountName* enter the Azure Data Lake Analytics resource name you provided earlier. 
   - You will be presented a draft
   - At the top of the page, click **Authorize** and when complete you can remove the properties marked as [Optional]. These will be *resourceGroupName*, 
-  and *subscriptionId*.  
+  and *subscriptionId*.  what about ? *"sessionId"* 
   - At the top of the blade, click *Deploy*
 
 ### Azure Data Factory Datasets
@@ -388,11 +444,12 @@ select Now, then click on **Start**.
  
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
-  - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
+  - At the top of the blade instead of *New data store* choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
   - The template contains quite a few settings, which we will not cover. Instead download the file *inputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - At the top of the blade, click *Deploy*
+  - You should see 'DataLakeInputSet' appear under Datasets.
 
   Setting up the working files is next. These files also don't exist, but with data factory being a dependency flow, they are also required to help orchestrate the 
   steps of processing in the pipeline. 
@@ -405,6 +462,7 @@ select Now, then click on **Start**.
   - Replace the content in the editor with the content of the downloaded file.
   - Change the *name* field to *JoinSliceOutputSet1*
   - At the top of the blade, click *Deploy*
+  - You should see 'JoinSliceOutputSet1' appear under Datasets
   - Click on the newly created set *JoinSliceOutputSet1*
     - Click the *Clone* button at the top of the blade. 
     - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
@@ -413,7 +471,10 @@ select Now, then click on **Start**.
       - ScoreSliceOutputSet1
       - ScoreSliceOutputSet2
       - ScoreSliceOutputSet3
-   - When finished you will have a total of 7 datasets.
+      - ForPBISliceOutputSet1
+      - ForPBISliceOutputSet2
+      - ForPBISliceOutputSet3
+   - When finished you will have a total of 10 datasets.
   
 ### Azure Data Factory Pipeline
   With the services and datasets in place it is time to set up a pipeline that will process the data. Again, because we want to process every 5 minutes, and the shortest 
@@ -427,7 +488,7 @@ select Now, then click on **Start**.
   - Replace the content in the editor with the content of the downloaded file. 
   - **DO NOT** click  *Deploy* yet
 
-  For simplicity, lets look at one of the activity pairings in the file *First Phase Join* and *First Phase Scoring*. 
+  For simplicity, lets look at one of the activity pairings in the file *First Phase Join*, *First Phase Scoring* and *First Phase ForPBI*. 
 
   #### First Phase Join
 
@@ -443,7 +504,14 @@ select Now, then click on **Start**.
   parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
   a single output file with the scoring results for the 5 minute window this activity should cover.
 
-  The output of this activity is what will feed the Power BI dataset.  
+  The output of this activity is then tied to the input of the *First Phase ForPBI* activity, which will not execute until this activity is complete.  
+
+  #### First Phase ForPBI
+
+  This activity executes a USQL script located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  parameters and the exact work going on internally, but the effect is to create data for visualization, and output the results of that work to
+  a single output file for the 5 minute window this activity should cover.
+ 
 
   #### Activity Period
 
@@ -451,26 +519,14 @@ select Now, then click on **Start**.
   properties *start* and *end* located at the bottom of the pipeline editor. 
 
   These times are UTC. Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your factory will not be 
-  producing data over too long a period of time and we do that only because the generator to be set up next will not run infinitely. 
+  producing data over too long a period of time and we do that only because the generator (to be set up next) will not run infinitely. 
 
   Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
   
 
-## Download and configure the data generator  
- - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/datagenerator) of this repository.  
- - Unzip this file to the local disk drive of a Windows Machine.  
- - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
-    - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
-    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* that was collected after creating the Azure Event Hub.
-    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was collected after creating the Azure Storage account.
-    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was collected after creating the Azure Storage account.  
-	- Save and close **HealthCareGenerator.exe.config** 
- - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **manufactureeh**.  
-    ***NOTE:*** The following PowerBI Dashboards will only be dynamically updated when this generator is running.  
-    ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
 
- Raw data will start to appear in the Azure Data Lake Store after approximately 5 minutes. Scored results will start to appear in the Azure Data Lake store after a period of 
- between 5 and 15 minutes.  
+
+ Scored results will start to appear in the Azure Data Lake store after a period of between 5 and 15 minutes.  
 
 ## Visualization
 
