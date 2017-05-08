@@ -334,7 +334,7 @@ select Now, then click on **Start**.
 - After some time in the Datasets section of your PowerBI, this new dataset hotpathcore will appear.
  
 ##   Create Azure Data Lake Analtytics 
-  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a usql script. The usql script for various jobs (joining, scoring etc. ) can be found at scripts/datafactory/scripts_storage/ and will need to be uploaded to storage from where the ADF will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (e.g. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store adfscripts/, historicdata/ and models/. We created these folders above and uploaded the contents to these folders.
+  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The usql script for various jobs (joining, scoring etc. ) can be found at scripts/datafactory/scripts_storage/ and will need to be uploaded to storage from where the ADF will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (e.g. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store adfscripts/, historicdata/ and models/. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders.
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
@@ -354,23 +354,25 @@ select Now, then click on **Start**.
   
 
 ## Create Azure Data Factory
-  Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In Azure Data Lake Analytics (ADLA) we use a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script to submit a job. In our pipeline we have essentially 3 activities and three sets of each of these activities.
+  Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In our pipeline we have essentially three activities and three sets of each of these activities.
   
   Before we start authoring the ADF, let us get our requirements together and understand the design of the pipeline.
 
  Activity 1 -  Join
- If you recall the stream analytics job (ColdPath above) had 4 outputs that were being stored in ADLS. (Note: ASA is independent of ADF and is not part of it). The first activity in this pipeline is an ADLA job that will merge these four files into one. The usql script that ADF will fire to submit this job is called "hcadfstreamjoin.usql". This joining activity will be done every 5 mins. To carry out this activity we will need to specify the location of the input Dataset (DataLakeInputSet) and location to store the output Dataset (JoinSliceOutputSet). We do this by creating 'Datasets' in ADF. A dataset in Data Factory is defined in JSON format. In order for data factory to link to your ADLS, we will need to create a 'LinkedService' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. The Linked Service "AzureDataLakeStoreLinkedService" will link your Data Lake Store to Data Factory. The usql script for this job sits in a storage account that you created above. We will create a second LinkedService  called "AzureStorageLinkedService" for ADF to connect to this storage account to access the usql script. Additionally the ADF will submit this job in Azure Data Lake Analytics account. Hence for ADF to access your ADLA we will create "AzureDataLakeAnalyticsLinkedService" which is actually a compute service.
+
+ If you recall the stream analytics job (ColdPath above) had 4 outputs that were being stored in ADLS. (Note: ASA is independent of ADF and is not part of it). The first activity in this pipeline is an ADLA job that will merge these four files into one. The usql script that ADF will fire to submit this job is called "hcadfstreamjoin.usql". This joining activity will be done every 5 mins. To carry out this activity we will need to specify the location of the input Dataset (DataLakeInputSet) and location to store the output Dataset (JoinSliceOutputSet). We do this by creating 'Datasets' in ADF. A dataset in Data Factory is defined in JSON format. In order for data factory to link to your Data Lake Store, we will need to create a 'LinkedService' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. The Linked Service "AzureDataLakeStoreLinkedService" will link your Data Lake Store to Data Factory. The usql script for this job sits in a storage account that you created above. We will create a second LinkedService  called "AzureStorageLinkedService" for ADF to connect to this storage account to access the usql script. Additionally the ADF will submit this job in Azure Data Lake Analytics account. Hence for ADF to access your ADLA we will create "AzureDataLakeAnalyticsLinkedService" which is actually a compute service.
 
 There are 3 sets of this activity producing  
 "JoinSliceOutputSet1", "JoinSliceOutputSet2" and "JoinSliceOutputSet3"
 
   
  Activity 2 - Score
- The second activity will be taking this merged file and push it through scoring pipeline. The usql script that the ADF will fire can be found here. This usql script will deploy the pre-trained R models and return the predictions as well as the raw data. There are 3 sets of this activity producing  
+
+ The second activity will be taking this merged file and push it through scoring pipeline. The usql script (hcadfstreamjoin.usql) that the ADF will fire can be found here. This usql script will deploy the pre-trained R models and return the predictions as well as the raw data. There are 3 sets of this activity producing  
 "ScoreSliceOutputSet1", "ScoreSliceOutputSet2" and "ScoreSliceOutputSet3"
 
 Activity 3 - Create data for visialization
-  Once we have the predictions, we want to create a dateset for visualisation. The usql script that ADF will fire to curate the data for visualisation purpose can be found here. There are 3 sets of this activity producing
+  Once we have the predictions, we want to create a dateset for visualisation. The usql script (hcadfstreamforpbi.usql) that ADF will fire to curate the data for visualisation purpose can be found here. There are 3 sets of this activity producing
 "ForPBISliceOutputSet1", "ForPBISliceOutputSet2" and "ForPBISliceOutputSet3"
 
 The shortest execution time of data factory is 15 minutes. However we want to process every 5 minutes. To achieve this we have to set up multiple activities using offsets ( 3 sets of each activity). This explains the 9 activities instead of 3 in our pipeline.
@@ -526,7 +528,7 @@ This demo accelerates actual processing
 
 
 
- Scored results will start to appear in the Azure Data Lake store after a period of between 5 and 15 minutes.  
+ Azure Data Factory is deployed now. Scored results will start to appear in the Azure Data Lake store after a period of between 5 and 15 minutes. 
 
 ## Visualization
 
