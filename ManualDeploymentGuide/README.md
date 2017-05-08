@@ -354,7 +354,7 @@ select Now, then click on **Start**.
   
 
 ## Create Azure Data Factory
-  Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In our pipeline we have essentially three activities and three sets of each of these activities.
+  Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In our pipeline we have essentially four activities.
   
   Before we start authoring the ADF, let us get our requirements together and understand the design of the pipeline.
 
@@ -362,22 +362,17 @@ select Now, then click on **Start**.
 
  If you recall the stream analytics job (ColdPath above) had 4 outputs that were being stored in ADLS. (Note: ASA is independent of ADF and is not part of it). The first activity in this pipeline is an ADLA job that will merge these four files into one. The usql script that ADF will fire to submit this job is called "hcadfstreamjoin.usql". This joining activity will be done every 5 mins. To carry out this activity we will need to specify the location of the input Dataset (DataLakeInputSet) and location to store the output Dataset (JoinSliceOutputSet). We do this by creating 'Datasets' in ADF. A dataset in Data Factory is defined in JSON format. In order for data factory to link to your Data Lake Store, we will need to create a 'LinkedService' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. The Linked Service "AzureDataLakeStoreLinkedService" will link your Data Lake Store to Data Factory. The usql script for this job sits in a storage account that you created above. We will create a second LinkedService  called "AzureStorageLinkedService" for ADF to connect to this storage account to access the usql script. Additionally the ADF will submit this job in Azure Data Lake Analytics account. Hence for ADF to access your ADLA we will create "AzureDataLakeAnalyticsLinkedService" which is actually a compute service.
 
-There are 3 sets of this activity producing  
-"JoinSliceOutputSet1", "JoinSliceOutputSet2" and "JoinSliceOutputSet3"
 
   
  Activity 2 - Score
 
- The second activity will be taking this merged file and push it through scoring pipeline. The usql script (hcadfstreamjoin.usql) that the ADF will fire can be found here. This usql script will deploy the pre-trained R models and return the predictions as well as the raw data. There are 3 sets of this activity producing  
-"ScoreSliceOutputSet1", "ScoreSliceOutputSet2" and "ScoreSliceOutputSet3"
+ The second activity will be taking this merged file and push it through scoring pipeline. The usql script (hcadfstreamjoin.usql) that the ADF will fire can be found here. This usql script will deploy the pre-trained R models and return the predictions as well as the raw data. 
 
-Activity 3 - Create data for visialization
+  Activity 3 - Create data for visialization
 
-  Once we have the predictions, we want to create a dateset for visualisation. The usql script (hcadfstreamforpbi.usql) that ADF will fire to curate the data for visualisation purpose can be found here. There are 3 sets of this activity producing
-"ForPBISliceOutputSet1", "ForPBISliceOutputSet2" and "ForPBISliceOutputSet3"
+  Once we have the predictions, we want to create a dateset for visualisation. The usql script (hcadfstreamforpbi.usql) that ADF will fire to curate the data for visualisation purpose can be found here. 
 
-  The shortest execution time of data factory is 15 minutes. However we want to process every 5 minutes. To achieve this we have to set up multiple activities using offsets ( 3 sets of each activity). This explains the 9 activities instead of 3 in our pipeline. This demo accelerates actual processing
-  time for the sake of useful visualizations in a short amount of time. To accomplish that this demo will utilize overlapping Azure Data Lake activities in the pipeline to produce results approximately every 5 minutes. To produce results every 5 minutes requires that this demo create additional resources that may not be neccesary in an actual enterprise deployment. This is because Azure Data Factory works by allowing pipelines to flow using dependencies. To understand the concept better, read [this](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-scheduling-and-execution) article.
+  Activity 4 - Append to historic data
 
   Now that we understand the pipeline design, we can get started on creating the Data Factory.
 
@@ -461,15 +456,13 @@ Activity 3 - Create data for visialization
   - Click on the newly created set *JoinSliceOutputSet1*
     - Click the *Clone* button at the top of the blade. 
     - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
-      - JoinSliceOutputSet2
-      - JoinSliceOutputSet3
+      
       - ScoreSliceOutputSet1
-      - ScoreSliceOutputSet2
-      - ScoreSliceOutputSet3
+      
       - ForPBISliceOutputSet1
-      - ForPBISliceOutputSet2
-      - ForPBISliceOutputSet3
-   - When finished you will have a total of 10 datasets.
+      
+      - name
+   - When finished you will have a total of 4 datasets.
   
 ### Azure Data Factory Pipeline
   With the services and datasets in place it is time to set up a pipeline that will process the data. Again, because we want to process every 5 minutes, and the shortest 
