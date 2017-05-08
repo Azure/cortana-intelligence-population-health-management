@@ -307,7 +307,7 @@ select now, then click on **Start**.
         - Click the bottom **Create** button to complete.  
            
  - Navigate back to the Stream Analytics job blade and click ***Outputs***
-    - **NOTE** We will add two output below.  
+    - **NOTE** We will add one output below. To add more you would simply repeat the steps below with different names for your Output alias and Dataset name.
     - At the top of the *Outputs* page click ***+ Add*** to add the first output
    
 	    - Output alias : PBIoutputcore   
@@ -316,15 +316,7 @@ select now, then click on **Start**.
         - Dataset Name: **hotpathcore** 
         - Table Name: same as Dataset Name above
         - Click the **Create** button to complete  
-   - At the top of the *Outputs* page click ***+ Add*** again to add the second output
    
-	   - Output alias : PBIoutputdxpr
-       - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
-       - Group Workspace: My Workspace
-       - Dataset Name: **hotpathdxpr** 
-       - Table Name: same as Dataset Name above
-       - Click the **Create** button to complete 
-
  - Navigate back to the Stream Analytics job blade and click ***Query***  
     - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window. 
     - Click *SAVE*  
