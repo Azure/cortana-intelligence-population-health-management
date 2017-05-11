@@ -194,8 +194,7 @@ This section will walk you through the steps to manually create the population h
      - Create three more folders the same way and name them historic_meta, models and pbifile. Folder historic_meta will contain the historic data and some other files required for schema specification and mapping (.csv files). The model folder will contain the pretrained models (.rds files). The pbifile folder will contain data for visualisation.
      - Select the folder adfrscripts and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls]() here.
      - Select the folder historic data and upload the contents of [rawevents/files_historic]() here
-     - Select the folder models and upload the contents of [scripts/datafactory/models]() here.
-     -   
+     - Select the folder models and upload the contents of [scripts/datafactory/models]() here.  
 
 
 ##   Start the Generator now 
@@ -352,9 +351,6 @@ select Now, then click on **Start**.
   - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
   - In the Sample Scripts blade, click on Install U-SQL Extensions to install U-SQL Extensions to your account.
   - This is an important step to enable R (and python) extensions to work with ADLA.
-  -  
-  - 
-  
 
 ## Create Azure Data Factory
   Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In our pipeline we have essentially four activities.
