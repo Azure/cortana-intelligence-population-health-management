@@ -1,28 +1,33 @@
-# Purpose: Input data is raw data plus 1 additional column 'LOS_pred'
-#          Read the colnames from 'R_schema_with_data_type_phm_data.csv'
-#          Select subset of columns that are needed for visualization
-#          Rename the levels .. for e.g. for PAY1=1 replace 1 with 'Medicare' etc.
-#          Also requires - Single-LevelCCS-Diagnoses_csv.csv , Single-LevelCCS-Procedures_csv.csv for mapping
-#          
+# Purpose: Read scored data and create curated data for visualisation. 
+#          Scored data contains the raw data plus one additional column 'LOS_pred'
+#          Requires:
+#          - 'R_schema_with_data_type_phm_data.csv' to get the schema
+#          - 'Single_LevelCCS_Diagnoses_csv.csv' , 'Single_LevelCCS_Procedures_csv.csv' for mapping
+#          We will do the following tasks:
+#          - Select subset of columns that are needed for visualization
+#          - Rename the levels in some columns.. for e.g. for PAY1=1 replace 1 with 'Medicare' etc.
+#          - Create readmitted columns etc.
+#          The output will be curated data. The PBI will connect to this file for visualisation.        
 # Author:  @Shaheen_Gauher   gshaheen@microsoft.com
-
 #====================================================================================
 
+
 #####################################################################
+#   Function fun_addcols()
+#####################################################################
+
 fun_addcols <- function(dat){
-  #scoredData has 2 cols
-  #inputFromUSQL (hccostadls__stream_results_2017_03_22_12_00.csv with headers has)
+  
   #===========================================================
   dat$myrownum = NA  #seq(1:nrow(dat)) 
   #===========================================================
   #Relabelling DXCCS1 -- #create a column DXCCS_name
   #Reading mapping data
-  #DXCCSlistall=read.csv('C:/Users/shaheen/Documents/Healthcare/adla/Single_LevelCCS_Diagnoses_csv_adla.csv',header=F,stringsAsFactors = F)
   DXCCSlistall=read.csv('Single_LevelCCS_Diagnoses_csv.csv',header=F,stringsAsFactors = F)
   names(DXCCSlistall) = c("CCS_Diag","Label")
   DXCCSlistnow = data.frame(CCS_Diag=unique(dat$DXCCS1))
   DXCCSlist = merge(DXCCSlistnow,DXCCSlistall,by='CCS_Diag',all.x=T)
-  #str(DXCCSlist) #263 obs. of  2 variables:
+  
   DXCCSlist$Label = as.character(DXCCSlist$Label)
   DXCCSlist$Label[DXCCSlist$CCS_Diag<0] = 'None' 
   #
@@ -30,12 +35,11 @@ fun_addcols <- function(dat){
   dat$DXCCS_name = dat$DXCCS1
   dat$DXCCS_name = as.factor(dat$DXCCS_name)
   levels(dat$DXCCS_name) = DXCCSlist$Label #levels(dat$DXCCS1) should be same as DXCCSlist$CCS_Diag
-  #dim(rawdatapluspredcol)
+  
   #===========================================================
   #Relabelling PRCCS1 -#create a column PRCCS_name
   #Reading mapping data
-  #PRCCSlistall=read.csv('C:/Users/shaheen/Documents/Healthcare/adla/Single-LevelCCS-Procedures_csv_adla.csv',header=F, stringsAsFactors = F)
-  PRCCSlistall = read.csv('Single-LevelCCS-Procedures_csv.csv',header=T)
+  PRCCSlistall = read.csv('Single_LevelCCS_Procedures_csv.csv',header=T)
   names(PRCCSlistall) = c("CCS_Proc","Label")
   PRCCSlistnow = data.frame(CCS_Proc=unique(dat$PRCCS1)) #there is NA, it should be -99
   
@@ -47,7 +51,7 @@ fun_addcols <- function(dat){
   ##create a column PRCCS_name
   dat$PRCCS_name = dat$PRCCS1
   dat$PRCCS_name = as.factor(dat$PRCCS_name)
-  #levels(dat$PRCCS_name)
+  
   #Rename levels
   levels(dat$PRCCS_name) = PRCCSlist$Label #PRCCSlist$CCS_Proc
   #===========================================================
@@ -376,39 +380,27 @@ fun_addcols <- function(dat){
   #===========================================================
   #reorder to make it consistent with the schema for data4PBI_simulated
   myorder = c('DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
-  dat = dat[,myorder]
+  dat     = dat[,myorder]
   return(dat)
 }
-#######################################################################
+
+#####################################################################
+#   End of function
+#####################################################################
+
+# inputFromUSQL and outputToUSQL are dedicated named data frames respectively to pass data between USQL and R. 
+# Input and output DataFrame identifier names are fixed 
+# (i.e. users cannot change these predefined names of input and output DataFrame identifiers).
+
+# dropping the first column with usql partition info
+my_inputFromUSQL <- inputFromUSQL[, -1]
 
 
-
-allcolnames = read.csv('C:/Users/shaheen/Documents/Healthcare/R_schema_with_data_type_phm_data.csv',stringsAsFactors = F,header=T) #"colname"   "data_type" 611X2
-allcolnames <- read.csv('R_schema_with_data_type_phm_data.csv',stringsAsFactors = F,header=T)
-names(allcolnames) = c("colname","data_type")
+# Read the schema file
+allcolnames         = read.csv('R_schema_with_data_type_phm_data.csv',stringsAsFactors = F,header=T)
+names(allcolnames)  = c("colname","data_type")
 allcolnames$colname = toupper(allcolnames$colname)
 
-# mmy_inputFromUSQL = read.csv('C:/Users/shaheen/Downloads/hccostadls__stream_results_2017_03_22_12_00LOSPrediction_StreamedData.csv',header = F,stringsAsFactors = F) #3000 X 612
-mmy_inputFromUSQL = read.csv('C:/Users/shaheen/Documents/Healthcare/hccostadls__stream_results_2017_03_22_12_00_forpbitest.csv',header = F,stringsAsFactors = F)
-
-dim(mmy_inputFromUSQL) #3000  612
-names(mmy_inputFromUSQL) = c(allcolnames$colname,'LOS_pred')
-unique(mmy_inputFromUSQL$ATYPE)
-head(mmy_inputFromUSQL$LOS_pred)
-my_inputFromUSQL = mmy_inputFromUSQL
-# 
-# my_inputFromUSQL = read.csv('C:/Users/shaheen/Downloads/3functions_out.csv',header = F,stringsAsFactors = F) # 3000 X 613
-# dim(my_inputFromUSQL) #3000  613
-# my_inputFromUSQL = my_inputFromUSQL[2:ncol(my_inputFromUSQL)]
-# names(my_inputFromUSQL) = c(allcolnames$colname,'LOS_pred')
-# unique(my_inputFromUSQL$ATYPE)
-# dim(my_inputFromUSQL) #3000  612
-# head(my_inputFromUSQL$LOS_pred)
-
-my_inputFromUSQL = inputFromUSQL
-#1st col is Par
-
-my_inputFromUSQL = my_inputFromUSQL[2:ncol(my_inputFromUSQL)] #drop only 1st col
 names(my_inputFromUSQL) = c(allcolnames$colname,'LOS_pred')
 
 #unique(my_inputFromUSQL$ATYPE)  #check if col names assigned correctly
@@ -421,55 +413,35 @@ names(my_inputFromUSQL)[names(my_inputFromUSQL)=='HOMELESS']          = 'Homeles
 # 
 #Get data for visualisation- just select the columns that we will visualise
 demogsocioethnic = c('AGE','FEMALE','RACE','Homeless','PSTATE','MEDINCSTQ','ZIP')
-hosp = c('KEY','DSHOSPID','VisitLink','HOSPST','PAY1','TRAN_IN')
-admitdischg = c('AYEAR','AMONTH','ATYPE','PointOfOriginUB04','DISPUB04','LOS') #
-diagproc1 = c('MDC','DRG')
-diagproc2 = c('DX1','DXCCS1','DXMCCS1','PR1','PRCCS1','PRMCCS1') # add 'PRMCCS1n','DXMCCS1n' not 'ECODE1','E_CCS1','E_MCCS1'
-cost = c('TOTCHG') #'CHGperday','TOTCHG_bin'
-LOSmodeloutput = c('LOS_pred')
+hosp             = c('KEY','DSHOSPID','VisitLink','HOSPST','PAY1','TRAN_IN')
+admitdischg      = c('AYEAR','AMONTH','ATYPE','PointOfOriginUB04','DISPUB04','LOS') #
+diagproc1        = c('MDC','DRG')
+diagproc2        = c('DX1','DXCCS1','DXMCCS1','PR1','PRCCS1','PRMCCS1') # add 'PRMCCS1n','DXMCCS1n' not 'ECODE1','E_CCS1','E_MCCS1'
+cost             = c('TOTCHG') #'CHGperday','TOTCHG_bin'
+LOSmodeloutput   = c('LOS_pred')
 # 
-cols2keep = c(demogsocioethnic,hosp,admitdischg,diagproc1,diagproc2,cost,LOSmodeloutput) 
-length(cols2keep) #29
-#dat = my_inputFromUSQL[names(my_inputFromUSQL) %in% cols2keep]
-#dim(dat) #1103172      29
+cols2keep        = c("DATE", demogsocioethnic,hosp,admitdischg,diagproc1,diagproc2,cost,LOSmodeloutput) #28
 
-dat = my_inputFromUSQL[,cols2keep]
-#dim(dat) #3000   29
-#----------------------
-# create additional columns
+#######################################################################
+# get a subset of relevant columns
+#######################################################################
+dat              = my_inputFromUSQL[,cols2keep]
+
+#######################################################################
+#  calling function fun_addcols()
+#######################################################################
+
 dat <- fun_addcols(dat)
-dim(dat) #3000   54
 
-
-# temp2 = my_inputFromUSQL[,cols2keep]
-# temp3<- fun_addcols(temp2)
-# dim(temp3) #3000   54
-# names(temp3)
-
-
-
-#-----------------------------------
 
 #######################################################################
 #for all to be string for output
-dt3 = data.frame(lapply(dat,as.character))
-
-
-# #now that they are all characters, can add the names at the top? lets see
-# dfwheaders = dt3[1,]  # a data frame with 1 row and many cols
-# dfwheaders = dfwheaders[-1,]
-# dfwheaders = data.frame(lapply(dfwheaders,as.numeric)) #to get rid of factor type, worked
-# #now fill this row with names
-# 
-# headers2add = names(dat)
-# dfwheaders[1,1:ncol(dt3)] = headers2add[1:ncol(dt3)]
-# 
-# #now rbind
-# dt3 = rbind(dfwheaders,dt3)
+dat = data.frame(lapply(dat,as.character))
 
 
 #rename the colnames for usql..make then V1 V2...
-#names(dt3) = paste('V',1:ncol(dt3),sep='')
+names(dat) = paste('V',1:ncol(dat),sep='')
+outputToUSQL <-  dat
 
-outputToUSQL <-  dt3
+
 

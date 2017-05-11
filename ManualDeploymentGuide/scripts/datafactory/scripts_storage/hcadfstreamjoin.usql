@@ -1,5 +1,13 @@
+/// hcadfstreamjoin.usql
+/// Script summary:
+/// This usql script is used to submit ADLA job that constitutes the first activity in ADF pipeline
+/// In this usql script, we will merge the four sets of datasets and create a flat file.
+
+/// inputFile and outputFile variables are used in the script but not explicitly declared!!
+/// This is because these are defined by activities parameters of the adf pipeline json definition (source).
+
 /// Script is run against all of the incoming streams for the LOS solution.
-/// There are several expected inputs:
+/// There are several expected inputs: these are passed to the script via ADF (in the pipeline json)
 /// 
 /// @sliceTime : String representation of a DateTime object representing ADF slice end
 /// @minutesOffset : Minutes from the slice time back to start the query
@@ -8,44 +16,37 @@
 ///               and should be constant across each of the files to have a consistent resting
 ///               place for all result (join) data.
 
-// DEBUG
-/* Debug Parameters - ADF simply includes the parameters as extra declares, to debug use these params instead 
-DECLARE @queryTime string = "2017-03-20T21:25:00.0000000"; // Use UTC in string without Z
-DECLARE @queryLength string = "5";
-DECLARE @outputFile string = "/stream/results/debugResults.csv";
-*/
-// DEBUG
-
 //////////////////////////////////////////////////////////////////////////////////////
-// Stream Analytics raw input locations
+//  Stream Analytics raw input locations
 //  Using a virtual column "date" we can then apply a filter to the results file sets to 
 //  ensure we only capture the files we are likely interested in.
 //////////////////////////////////////////////////////////////////////////////////////
+
 DECLARE @Severity_Relative_Input_File_Set string = "/stream/raw/severity/{date:yyyy}/{date:MM}/{date:dd}/{date:HH}_severity_{*}.csv";
 DECLARE @Charges_Relative_Input_File_Set  string = "/stream/raw/charges/{date:yyyy}/{date:MM}/{date:dd}/{date:HH}_charges_{*}.csv";
-DECLARE @Core_Relative_Input_File_Set string = "/stream/raw/core/{date:yyyy}/{date:MM}/{date:dd}/{date:HH}_core_{*}.csv";
-DECLARE @Dxpr_Relative_Input_File_Set string = "/stream/raw/dxpr/{date:yyyy}/{date:MM}/{date:dd}/{date:HH}_dxpr_{*}.csv";
+DECLARE @Core_Relative_Input_File_Set string     = "/stream/raw/core/{date:yyyy}/{date:MM}/{date:dd}/{date:HH}_core_{*}.csv";
+DECLARE @Dxpr_Relative_Input_File_Set string     = "/stream/raw/dxpr/{date:yyyy}/{date:MM}/{date:dd}/{date:HH}_dxpr_{*}.csv";
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Execution Times calculated on input parameters
 //////////////////////////////////////////////////////////////////////////////////////
 
 // The length of time the query should be pulling data from the source
-DECLARE @searchLength int = int.Parse(@queryLength);
+DECLARE @searchLength int        = int.Parse(@queryLength);
 
 // Obtain the SliceEnd time provided by ADF. This will have a standardized form that is UTC time, without the trailing Z for zulu time
-DECLARE @baseTime DateTime = DateTime.Parse(@queryTime);
+DECLARE @baseTime DateTime       = DateTime.Parse(@queryTime);
 // Force the incoming time to UTC
-DECLARE @baseUtcTime DateTime = new DateTime(@baseTime.Year, @baseTime.Month, @baseTime.Day, @baseTime.Hour, @baseTime.Minute, 0, DateTimeKind.Utc);
+DECLARE @baseUtcTime DateTime    = new DateTime(@baseTime.Year, @baseTime.Month, @baseTime.Day, @baseTime.Hour, @baseTime.Minute, 0, DateTimeKind.Utc);
 // Get the incoming UTC time into local time for queries.
-DECLARE @baseLocalTime DateTime = @baseUtcTime.ToLocalTime();
+DECLARE @baseLocalTime DateTime  = @baseUtcTime.ToLocalTime();
 
 // The start query is used to identify records in a select statment that start on/later than the provided date.
 // However, since times are read out of ADLS files in PST, we have to use local time.
-DECLARE @startQuery DateTime = @baseLocalTime;
+DECLARE @startQuery DateTime     = @baseLocalTime;
 // The end query is used to identify records in a select statment that start on/before the provided date
 // However, since times are read out of ADLS files in PST, we have to use local time.
-DECLARE @endQuery DateTime = @baseLocalTime.AddMinutes(@searchLength);
+DECLARE @endQuery DateTime       = @baseLocalTime.AddMinutes(@searchLength);
 // The fileFormatTime is used to filter out the files we want. At most we want two hours worth of files
 // so we first make sure we push the hour back by one so that we at least get the current file. Note that
 // here we use universal time as the directory structure in ADLS is created by Stream Analytics using a 
@@ -752,7 +753,7 @@ DECLARE @fileFormatTime DateTime = @baseUtcTime.AddHours(-1);
 //----------------------------------------------------
 @combinedResult = 
     SELECT 
-        A.date,
+        A.recordTime,
 		A.id,
 		A.cm_aids,
 		A.cm_alcohol,
@@ -1376,7 +1377,7 @@ DECLARE @fileFormatTime DateTime = @baseUtcTime.AddHours(-1);
 		 
 		 
 //----------------------------------------------------
-// Output the joined data to a location known by ML
+// Output the joined data to a location specified by outputFile (passed through ADF)
 //----------------------------------------------------
 OUTPUT @combinedResult 
     TO @outputFile

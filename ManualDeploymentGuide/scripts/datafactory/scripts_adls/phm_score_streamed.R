@@ -1,144 +1,95 @@
-#############################################################################################
-# Purpose: In this R script we push the streaming data through a function for scoring
-#          The function doLOSPrediction() accepts the transformed data that can be fed to the models for prediction.
-#          It also accepts as input the model location. It returns 2 cols - KEY and LOS_pred
-#          Before passing this output to usql we change the data types to string.
-#          Author: @Shaheen_Gauher  gshaheen@microsoft.com
-#############################################################################################
+############################################################
+# Purpose: This script will accept the joined  data and return the raw data plus predictions
+#          Requires:
+#          "R_schema_with_data_type_phm_data.csv" and 
+#          "phmLOSPrediction_HCUPDataProcessing.R"
+#          We will source phmLOSPrediction_HCUPDataProcessing.R which will load four functions in the workspace
+#          
 
-#############################################################################################
-#                 Function doLOSPrediction()
-#############################################################################################
+############################################################
 
-# define function doLOSPrediction
-doLOSPrediction <-function(dat_str, modelsLocation){
-  
-  selected_hosp = c('hosp_1','hosp_2','hosp_3','hosp_4','hosp_5','hosp_6','hosp_7','hosp_8','hosp_9','hosp_10')
-  
-  #number of hospitals in the streaming data
-  #length(unique(dat_str$DSHOSPID))
-  allstr_hosp = unique(dat_str$DSHOSPID)
-  #do these belong to selected_hosp
-  individ = allstr_hosp[allstr_hosp %in% selected_hosp]   # use individual models
-  allother = allstr_hosp[!allstr_hosp %in% selected_hosp] #use 'allotherhosp_LOSmodel'
-  
-  #create a df to store raw and predictions
-  dat_str_wpred = dat_str[1,]
-  dat_str_wpred$LOS_pred = NA
-  dat_str_wpred = dat_str_wpred[-1,]   #25 cols
-  
-  #for (m in 1:1){
-  for (m in 1:(length(individ)+1)){
-    #chek which hospital the data is from to invoke the correct model
+############################################################
+#    function setColumnNamesAndTypes()
+############################################################
+
+setColumnNamesAndTypes <- function(dfWithoutColumnNames, colClassFilename) {
+    # colClasses info in colClassFilename comes in 2 col format, so we reshape it to a df with names and values
+    # Values are class type, e.g. character, integer, logical
+    colClasses <- read.csv(colClassFilename)
+    colClasses <- as.data.frame(t(colClasses))
+    colnames(colClasses) <-
+      as.character(unlist(colClasses[c("colname"), ]))
+    colClasses <-
+      colClasses[c("data_type"), ]# drop 2nd row with columns names
     
-    cat('m=',m,'\n')
-    if(m==(length(individ)+1)){
-      cat('allother',allother,'\n')
-      sub_dat_str = subset(dat_str,dat_str$DSHOSPID %in% allother)
-      cat(unique(as.character(sub_dat_str$DSHOSPID)),'\n')
-      model_name = paste('allotherhosp','_LOSmodel.rds',sep='')
-      model_name <- paste0(modelsLocation, model_name)
-      cat('model_name=',model_name,'\n')
-      # load model to R
-      model_lm = readRDS(model_name)
-      
-    } else {
-      cat('individ[m]',individ[m],'\n')
-      sub_dat_str = subset(dat_str,dat_str$DSHOSPID %in% individ[m])
-      cat(unique(as.character(sub_dat_str$DSHOSPID)),'\n')
-      model_name = paste(unique(as.character(sub_dat_str$DSHOSPID)),'_LOSmodel.rds',sep='')
-      model_name <- paste0(modelsLocation, model_name)
-      cat('model_name=',model_name,'\n')
-      # load  model to R 
-      model_lm = readRDS(model_name)
+    # set df col names
+    colnames(dfWithoutColumnNames) <- colnames(colClasses)
+    
+    #set df col class/types
+    colClasses <- unlist(colClasses)
+    for (crtColumnIndex in seq_len(dim(dfWithoutColumnNames)[2])) {
+      crtClass <- as.character(colClasses[crtColumnIndex])
+      crtFun <- match.fun(paste("as", crtClass, sep = "."))
+      dfWithoutColumnNames[[(colnames(dfWithoutColumnNames))[crtColumnIndex]]] <-
+        crtFun(dfWithoutColumnNames[[(colnames(dfWithoutColumnNames))[crtColumnIndex]]])
     }
-    dim(sub_dat_str)
-    
-    #the model is loaded, prepare the data to pass to the model for prediction
-    
-    
-    sub_dat_str = sub_dat_str[complete.cases(sub_dat_str),] 
-    sub_dat_str = sub_dat_str[!apply(sub_dat_str == "", 1, all),]  #remove empty rows
-    
-    dim(sub_dat_str)
-    #make these columns categorical
-    cat_cols = c('DSHOSPID','FEMALE','RACE','ATYPE','AMONTH','PointOfOriginUB04','TRAN_IN','MEDINCSTQ','PSTATE','PAY1','DXCCS1','DXMCCS1','ZIP3')
-    
-    makecatg = sapply(sub_dat_str[,cat_cols],FUN=function(x){as.factor(x)})
-    makecatg = as.data.frame(makecatg)
-    sub_dat_str[,cat_cols] = makecatg
-    
-    #make these columns numeric
-    cat_num = c('AGE', 'LOS', 'NDX', 'NCHRONIC', 'num_DXPOA', 'num_E_POA', 'num_uCHRONB', 'num_PAY', 'num_CM')
-    makenum = sapply(sub_dat_str[,cat_num],FUN=function(x){as.numeric(x)})
-    makenum = as.data.frame(makenum)
-    sub_dat_str[,cat_num] = makenum
-    
-    torm = c("KEY" ,"VisitLink", "DSHOSPID","LOS")
-    
-    sub_dat_str2pred = sub_dat_str[,names(sub_dat_str)[!names(sub_dat_str) %in% torm]]
-    
-    #the model is loaded, prepare the data to pass to the model for prediction
-    #sub_dat_str2pred = sub_dat_str2pred[complete.cases(sub_dat_str2pred),] 
-    sub_dat_str2pred = na.omit(sub_dat_str2pred)
-    
-    # use the model loaded above to get the predictions for on streaming data, store the raw data and predictions
-    y_pred <- predict(model_lm, sub_dat_str2pred)
-    length(y_pred)
-    
-    sub_dat_str$LOS_pred = y_pred
-    #dim(sub_dat_str)
-    dat_str_wpred = rbind(dat_str_wpred,sub_dat_str)
-    
+    dfWithoutColumnNames
   }
-  
-  #dat_str_wpred
-  #only keep 2 columns - KEY and LOS_pred
-  predictions = data.frame(KEY=dat_str_wpred$KEY, LOS_pred=dat_str_wpred$LOS_pred)
-  #roundLOS_pred
-  predictions$LOS_pred[predictions$LOS_pred >= 1.5] = round(predictions$LOS_pred)
-  predictions$LOS_pred[predictions$LOS_pred < 1.5]  = 1
-  
-  return(predictions)
-  
-}
 
-#####################################################################
-#           End of function
-#####################################################################
+############################################################
+#      End of function
+############################################################
 
 # inputFromUSQL and outputToUSQL are dedicated named data frames respectively to pass data between USQL and R. 
 # Input and output DataFrame identifier names are fixed 
 # (i.e. users cannot change these predefined names of input and output DataFrame identifiers).
 
-my_inputFromUSQL  <- inputFromUSQL[,-1]   # dropping the first column with usql partition info
-#my_inputFromUSQL = read.csv('C:/Users/shaheen/Downloads/hcadfstreamscore1cFE_out.csv',stringsAsFactors = F,header=F)
+# dropping the first column with usql partition info
+inputFromUSQL <- inputFromUSQL[, -1]
 
-names(my_inputFromUSQL) = c("KEY" , "VisitLink" ,"DSHOSPID" ,"AGE" ,"FEMALE" , "RACE" ,"ATYPE" , "AMONTH" ,"PointOfOriginUB04", "TRAN_IN"  ,"MEDINCSTQ" ,"PSTATE" ,"PAY1","LOS" , "NDX" ,"NCHRONIC" ,"DXCCS1" , "DXMCCS1"  ,"num_DXPOA" , "num_E_POA"    ,"num_uCHRONB" ,"num_PAY" ,"num_CM" ,"ZIP3")
-unique(my_inputFromUSQL$ATYPE)
+crtSchemaFile <- "R_schema_with_data_type_phm_data.csv"
+hcupDataProcessingFunctionsFile <- "phmLOSPrediction_HCUPDataProcessing.R"
 
+# function setColumnNamesAndTypes()  will assign the colnames and data type to each of the columns
+inputFromUSQL <- setColumnNamesAndTypes(inputFromUSQL, crtSchemaFile)
 
-#===========================================================
-#modelsLocation = 'C:/dsvm/notebooks/HealthcareSolution/LOSmodels_lm/'
-modelsLocation <- "" 
-scoredData <- doLOSPrediction(my_inputFromUSQL, modelsLocation)  # will return 2 columns - KEY and LOS_pred
+#streaming data has identical schema with historical data (different order though), plus one extra column for time
+inputFromUSQL <- inputFromUSQL[, -1]
 
-scoredData <- merge(my_inputFromUSQL,scoredData,by='KEY',all.x=T) # recover the original number of rows
+# HCUP data specifics, most columns can be upper case, except the ones below
+colnames(inputFromUSQL) <- toupper(colnames(inputFromUSQL))
+names(inputFromUSQL)[names(inputFromUSQL) == 'ID'] = 'KEY'
+names(inputFromUSQL)[names(inputFromUSQL) == 'VISITLINK'] = 'VisitLink'
+names(inputFromUSQL)[names(inputFromUSQL) == 'POINTOFORIGINUB04'] = 'PointOfOriginUB04'
 
-names(scoredData)[names(scoredData)=='KEY'] <- 'id'  # recover original col name
+#  functions are defined in file phmLOSPrediction_HCUPDataProcessing.R and follow basic ML pipeline steps
+#  feature engineering, scoring.
+source(hcupDataProcessingFunctionsFile, echo = TRUE)
+# feature engineering - transform the data to be passed to the model for preditions
+processedData <- doFeatureEngineering(inputFromUSQL)
 
-# drop everything except id and LOS_pred. It is more efficient to do processing/merging in usql
-scoredData <- scoredData[,c("id", "LOS_pred")]
+# Get the predictions
+modelsLocation <- ""
+processedData <- doLOSPrediction(processedData, modelsLocation)
+
+# Merge with original raw data. Not all rows will have a prediction due to misssing values, but all rows will have LOS_pred column
+processedData = addPredCol2Raw(processedData, inputFromUSQL)
+
+# recover original col name
+names(processedData)[names(processedData) == 'KEY'] = 'id'
+
+# Drop everything except id and LOS_pred. It is more efficient to do processing/merging in usql
+processedData <- processedData[, c("id", "LOS_pred")]
+
+# Will make everyting string to avoid schema processing in ADLA
+for (crtColumnIndex in seq_len(dim(processedData)[2])) {
+  processedData[[crtColumnIndex]] <- as.character(processedData[[crtColumnIndex]])
+}
 
 # also make all cols lowercase
-colnames(scoredData) <- tolower(colnames(scoredData))  # c("id","los_pred")
+colnames(processedData) <- tolower(colnames(processedData))
 
-#-------------------------------------
-#for all cols to be of type string for output
-scoredData <- data.frame(lapply(scoredData,as.character))
-#could rename the colnames for usql..make then V1 V2...
-#names(scoredData) = paste('V',1:ncol(scoredData),sep='')
-#
-# #------------------------------------
-outputToUSQL <- scoredData
+outputToUSQL <- processedData
+
+
 

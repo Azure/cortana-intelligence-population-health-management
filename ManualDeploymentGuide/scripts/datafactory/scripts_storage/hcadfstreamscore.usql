@@ -1,12 +1,19 @@
 // hcadfstreamscore.usql
 // Script summary:
 // This usql script is used to submit ADLA job that constitutes the second activity in ADF
-// In this usql script, we will extract the joined data and do Feature Engineering using usql.
-// Then we will pass the Feature Engineered data to an R script, which will return the Predcitions
+// In this usql script, we will extract the joined data.
+// We will pass this data to an R script, which will return the Predcitions
 // Finally we will join the predictions to the original data in usql.
-// We will deploy the R script that does the scoring - phm_adf_score_streamed.R and 
-// the pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc. in the usql scrpit
-
+// We will deploy the following reosurces
+// - R scripts that do the scoring - 1) phm_score_streamed.R and 2) phmLOSPrediction_HCUPDataProcessing.R
+//   these should be in your data lake store in folder /adfRscripts
+// - The pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc.
+//   these should be in your data lake store in folder /models 
+// - A schema file R_schema_with_data_type_phm_data.csv
+//   these should be in your data lake store in folder /historic_meta
+// This usql script will return the raw data plus predictions
+// inputFile and outputFile variables are used in the script but not explicitly declared!
+// This is because these are defined by activities parameters of the adf pipeline json definition (source).
 
 
 REFERENCE ASSEMBLY [ExtR];
@@ -15,34 +22,39 @@ REFERENCE ASSEMBLY [ExtR];
 DECLARE @DoBalancedComputing_Flag bool = false;
 DECLARE @PartitionCount int = 10;
 
+///////////////////////////////////////////////////////////////////////////////////
+//   Deploy the following Resouce: R scripts, schema csv file, pretrained models. 
+///////////////////////////////////////////////////////////////////////////////////
 
-//deploy R scripts - "phm_adf_score_streamed.R" 
-DECLARE @path_Rscipt string = @"/adfRscripts" ;   
-DECLARE @RScriptName string = @"phm_score_streamed.R";  
-DECLARE @RScriptFullName string = @path_Rscipt + @"/" + @RScriptName;
+DECLARE @path_Rscipt string            = @"/adfrscripts" ;   
+DECLARE @RScriptName string            = @"phm_score_streamed.R";  
+DECLARE @RScriptFullName string        = @path_Rscipt + @"/" + @RScriptName;
 DEPLOY RESOURCE @RScriptFullName;
 
-//deploy schema file with column names and R class/type info - "R_schema_with_data_type_phm_data.csv"
-//DECLARE @path_meta string  = @"/historic_meta/" ;
-//DECLARE @SchemaFile string = @path_meta + @"R_schema_with_data_type_phm_data.csv";
-//DEPLOY RESOURCE @SchemaFile;
+//PHM processing code for Length Of Stay (LOS) modelling in HCUP data
+DECLARE @AuxiliaryFunctionsFile string = @path_Rscipt + @"/" + @"phmLOSPrediction_HCUPDataProcessing.R";
+DEPLOY RESOURCE @AuxiliaryFunctionsFile;
 
+//schema file with column names and R class/type info
+DECLARE @path_meta string              = @"/historic_meta" ; 
+DECLARE @SchemaFile string             = @path_meta + @"/" + @"R_schema_with_data_type_phm_data.csv";
+DEPLOY RESOURCE @SchemaFile;
 
-//deploy scoring models, hospital specific and one generic
-DECLARE @path_models string = "/models/";
+DECLARE @inputFile string  =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00.csv";
+DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamscore_test_out.csv";
 
-DECLARE @model00 string = @path_models  + @"allotherhosp_LOSmodel.rds";
-DECLARE @model01 string = @path_models  + @"hosp_1_LOSmodel.rds";
-DECLARE @model02 string = @path_models  + @"hosp_2_LOSmodel.rds";
-DECLARE @model03 string = @path_models  + @"hosp_3_LOSmodel.rds";
-DECLARE @model04 string = @path_models  + @"hosp_4_LOSmodel.rds";
-DECLARE @model05 string = @path_models  + @"hosp_5_LOSmodel.rds";
-DECLARE @model06 string = @path_models  + @"hosp_6_LOSmodel.rds";
-DECLARE @model07 string = @path_models  + @"hosp_7_LOSmodel.rds";
-DECLARE @model08 string = @path_models  + @"hosp_8_LOSmodel.rds";
-DECLARE @model09 string = @path_models  + @"hosp_9_LOSmodel.rds";
-DECLARE @model10 string = @path_models  + @"hosp_10_LOSmodel.rds";
-
+DECLARE @ModelFilesDir string = @"/models";
+DECLARE @model00 string = @ModelFilesDir + @"/" + @"allotherhosp_LOSmodel.rds";
+DECLARE @model01 string = @ModelFilesDir + @"/" + @"hosp_1_LOSmodel.rds";
+DECLARE @model02 string = @ModelFilesDir + @"/" + @"hosp_2_LOSmodel.rds";
+DECLARE @model03 string = @ModelFilesDir + @"/" + @"hosp_3_LOSmodel.rds";
+DECLARE @model04 string = @ModelFilesDir + @"/" + @"hosp_4_LOSmodel.rds";
+DECLARE @model05 string = @ModelFilesDir + @"/" + @"hosp_5_LOSmodel.rds";
+DECLARE @model06 string = @ModelFilesDir + @"/" + @"hosp_6_LOSmodel.rds";
+DECLARE @model07 string = @ModelFilesDir + @"/" + @"hosp_7_LOSmodel.rds";
+DECLARE @model08 string = @ModelFilesDir + @"/" + @"hosp_8_LOSmodel.rds";
+DECLARE @model09 string = @ModelFilesDir + @"/" + @"hosp_9_LOSmodel.rds";
+DECLARE @model10 string = @ModelFilesDir + @"/" + @"hosp_10_LOSmodel.rds";
 DEPLOY RESOURCE @model00;
 DEPLOY RESOURCE @model01;
 DEPLOY RESOURCE @model02;
@@ -55,33 +67,9 @@ DEPLOY RESOURCE @model08;
 DEPLOY RESOURCE @model09;
 DEPLOY RESOURCE @model10;
 
-/////////////////////////////////////////
-/* debug
-//Use inputFile and outputFile for debug purposes, otherwise inputFile and outputFile are variables defined by  
-//activities parameters of the adf pipeline json definition (source).
-
-DECLARE @inputFile string =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00.csv";
-DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamscore_out.csv";
-
-//declare input data
-DECLARE @StreamDataDir string = "/PHM/data/stream";
-DECLARE @inputStreamFile string = "hccostadls__stream_results_2017_03_22_12_00";
-DECLARE @inputFile string =  @StreamDataDir + @"/" + @inputStreamFile + @".csv";
-
-//declare output data
-DECLARE @OutputDir string =  @"/PHM/data/output/stream";
-DECLARE @outputFile string =  @OutputDir + @"/" + @inputStreamFile + @CurrentOperation + @".csv";
-
-//for debug purposes
-DECLARE @RScriptForDebug = @"
-outputToUSQL<-dir()
-";
-
-//declare output data
-DECLARE @OutputDebugFileFullName string =  @OutputDir + @"/" + @inputStreamFile + @CurrentOperation + @"_DEBUG.csv";
-
-*/
-/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+//   Extract Data in variable @InputData from @inputFile (defined through adf)
+///////////////////////////////////////////////////////////////////////////////////
 
 @InputData = 
     EXTRACT 
@@ -698,222 +686,42 @@ DECLARE @OutputDebugFileFullName string =  @OutputDir + @"/" + @inputStreamFile 
 	u_ultrasound string	
     FROM @inputFile
     USING Extractors.Csv();  
+
+/////////////////////////////////////////////////////////////////
+
     
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
+IF @DoBalancedComputing_Flag == true 
+THEN
+	@ExtendedData =
+            SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount) AS Par,
+		   *
+	    FROM @InputData;
+ELSE 
+	@ExtendedData =
+	    SELECT  0 AS Par,
+		   *
+	    FROM @InputData;  
+END;
 
-//Add Feature Engineering(FE) usql script here.
-
-
-// create a column num_DXPOA
-
-@cols_dxpoa = SELECT
-id ,
-Convert.ToDecimal((dxpoa1 ==  "Y") ? "1" : ((dxpoa1 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa2 ==  "Y") ? "1" : ((dxpoa2 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa3 ==  "Y") ? "1" : ((dxpoa3 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa4 ==  "Y") ? "1" : ((dxpoa4 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa5 ==  "Y") ? "1" : ((dxpoa5 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa6 ==  "Y") ? "1" : ((dxpoa6 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa7 ==  "Y") ? "1" : ((dxpoa7 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa8 ==  "Y") ? "1" : ((dxpoa8 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa9 ==  "Y") ? "1" : ((dxpoa9 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa10 ==  "Y") ? "1" : ((dxpoa10 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa11 ==  "Y") ? "1" : ((dxpoa11 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa12 ==  "Y") ? "1" : ((dxpoa12 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa13 ==  "Y") ? "1" : ((dxpoa13 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa14 ==  "Y") ? "1" : ((dxpoa14 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa15 ==  "Y") ? "1" : ((dxpoa15 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa16 ==  "Y") ? "1" : ((dxpoa16 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa17 ==  "Y") ? "1" : ((dxpoa17 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa18 ==  "Y") ? "1" : ((dxpoa18 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa19 ==  "Y") ? "1" : ((dxpoa19 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa20 ==  "Y") ? "1" : ((dxpoa20 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa21 ==  "Y") ? "1" : ((dxpoa21 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa22 ==  "Y") ? "1" : ((dxpoa22 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa23 ==  "Y") ? "1" : ((dxpoa23 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa24 ==  "Y") ? "1" : ((dxpoa24 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((dxpoa25 ==  "Y") ? "1" : ((dxpoa25 == "1") ? "1" : "0")) AS 
-num_DXPOA
-FROM @InputData;
-
-@cols_dxpoa2 = SELECT
-id ,
-num_DXPOA.ToString() AS num_DXPOA
-FROM @cols_dxpoa;
-
-///////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-
-// create a column num_e_poa
-
-@cols_e_poa = SELECT
-id ,
-Convert.ToDecimal((e_poa1 ==  "Y") ? "1" : ((e_poa1 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa2 ==  "Y") ? "1" : ((e_poa2 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa3 ==  "Y") ? "1" : ((e_poa3 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa4 ==  "Y") ? "1" : ((e_poa4 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa5 ==  "Y") ? "1" : ((e_poa5 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa6 ==  "Y") ? "1" : ((e_poa6 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa7 ==  "Y") ? "1" : ((e_poa7 == "1") ? "1" : "0")) + 
-Convert.ToDecimal((e_poa8 ==  "Y") ? "1" : ((e_poa8 == "1") ? "1" : "0")) 
-AS num_e_poa
-FROM @InputData;
-
-@cols_e_poa2 = SELECT
-id ,
-num_e_poa.ToString() AS num_e_poa
-FROM @cols_e_poa;
-
-///////////////////////////////////////////////////
-////////////////////////////////////////////////////
-
-// create a column num_uCHRONB
-
-@cols_chronb  = SELECT
-id ,
-Convert.ToDecimal((chronb1 ==  "-9") ? "0" : ((chronb1 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb2 ==  "-9") ? "0" : ((chronb2 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb3 ==  "-9") ? "0" : ((chronb3 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb4 ==  "-9") ? "0" : ((chronb4 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb5 ==  "-9") ? "0" : ((chronb5 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb6 ==  "-9") ? "0" : ((chronb6 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb7 ==  "-9") ? "0" : ((chronb7 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb8 ==  "-9") ? "0" : ((chronb8 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb9 ==  "-9") ? "0" : ((chronb9 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb10 ==  "-9") ? "0" : ((chronb10 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb11 ==  "-9") ? "0" : ((chronb11 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb12 ==  "-9") ? "0" : ((chronb12 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb13 ==  "-9") ? "0" : ((chronb13 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb14 ==  "-9") ? "0" : ((chronb14 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb15 ==  "-9") ? "0" : ((chronb15 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb16 ==  "-9") ? "0" : ((chronb16 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb17 ==  "-9") ? "0" : ((chronb17 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb18 ==  "-9") ? "0" : ((chronb18 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb19 ==  "-9") ? "0" : ((chronb19 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb20 ==  "-9") ? "0" : ((chronb20 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb21 ==  "-9") ? "0" : ((chronb21 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb22 ==  "-9") ? "0" : ((chronb22 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb23 ==  "-9") ? "0" : ((chronb23 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb24 ==  "-9") ? "0" : ((chronb24 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((chronb25 ==  "-9") ? "0" : ((chronb25 == "0") ? "0" : "1")) 
-AS num_uCHRONB
-FROM @InputData;
-
-@cols_chronb2 = SELECT
-id ,
-num_uCHRONB.ToString() AS num_uCHRONB
-FROM @cols_chronb;
-
-///////////////////////////////////////////////
-///////////////////////////////////////////////
-
-// create a column num_pay
-
-@cols_pay  = SELECT
-id ,
-Convert.ToDecimal((pay1 ==  "NA") ? "0" : ((pay1 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((pay2 ==  "NA") ? "0" : ((pay2 == "0") ? "0" : "1")) + 
-Convert.ToDecimal((pay3 ==  "NA") ? "0" : ((pay3 == "0") ? "0" : "1"))
-AS num_pay
-FROM @InputData;
-
-@cols_pay2  = SELECT
-id ,
-num_pay.ToString() AS num_pay
-FROM @cols_pay;
-
-////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-
-// create a column num_CM
-
-@cols_CM = SELECT
-id ,
-Convert.ToDecimal(cm_aids) + Convert.ToDecimal(cm_alcohol) + Convert.ToDecimal(cm_anemdef) + Convert.ToDecimal(cm_arth) + Convert.ToDecimal(cm_bldloss) + Convert.ToDecimal(cm_chf) + Convert.ToDecimal(cm_chrnlung) + Convert.ToDecimal(cm_coag) + Convert.ToDecimal(cm_depress) + Convert.ToDecimal(cm_dm) + Convert.ToDecimal(cm_dmcx) + Convert.ToDecimal(cm_drug) + Convert.ToDecimal(cm_htn_c) + Convert.ToDecimal(cm_hypothy) + Convert.ToDecimal(cm_liver) + Convert.ToDecimal(cm_lymph) + Convert.ToDecimal(cm_lytes) + Convert.ToDecimal(cm_mets) + Convert.ToDecimal(cm_neuro) + Convert.ToDecimal(cm_obese) + Convert.ToDecimal(cm_para) + Convert.ToDecimal(cm_perivasc) + Convert.ToDecimal(cm_psych) + Convert.ToDecimal(cm_pulmcirc) + Convert.ToDecimal(cm_renlfail) + Convert.ToDecimal(cm_tumor) + Convert.ToDecimal(cm_ulcer) + Convert.ToDecimal(cm_valve) + Convert.ToDecimal(cm_wghtloss) AS num_CM
-FROM @InputData;
-
-@cols_CM2 = SELECT
-id ,
-num_CM.ToString() AS num_CM
-FROM @cols_CM;
-
-////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////
-
-// create a column zip3
-
-@cols_zip = SELECT
-id ,
-//zip AS zip,
-zip.Remove(zip.Length - 2, 2) AS zip3
-FROM @InputData;
-
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-
-// select the subset of columns that are needed
-
-@cols_20 = SELECT
-id , visitlink , dshospid , age , female , race , atype , amonth , pointoforiginub04 , tran_in , medincstq , pstate , zip , hospst , pay1 , los , ndx , nchronic , dxccs1 , dxmccs1
-FROM @InputData;
-
-// [1] "KEY"               "VisitLink"         "DSHOSPID"          "AGE"               "FEMALE"            "RACE"              "ATYPE"            
-// [8] "AMONTH"            "PointOfOriginUB04" "TRAN_IN"           "MEDINCSTQ"         "PSTATE"            "PAY1"              "LOS"              
-//[15] "NDX"               "NCHRONIC"          "DXCCS1"            "DXMCCS1"           "num_DXPOA"         "num_E_POA"         "num_uCHRONB"      
-//[22] "num_PAY"           "num_CM"            "ZIP3"   
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-
-@InputDataFE = SELECT 
-
-A.id, A.visitlink, A.dshospid, A.age, A.female, A.race, A.atype, A.amonth, A.pointoforiginub04, A.tran_in, A.medincstq, A.pstate, A.pay1, A.los, A.ndx, A.nchronic, A.dxccs1, A.dxmccs1,
-B.num_DXPOA,
-C.num_e_poa,
-D.num_uCHRONB,
-E.num_pay,
-F.num_CM,
-G.zip3
-
-FROM @cols_20 AS A
-JOIN @cols_dxpoa2 AS B
-  ON A.id == B.id
-JOIN @cols_e_poa2 AS C
-  ON A.id == C.id
-JOIN @cols_chronb2 AS D
-  ON A.id == D.id
-JOIN @cols_pay2 AS E
-  ON A.id == E.id
-JOIN @cols_CM2 AS F
-  ON A.id == F.id
-JOIN @cols_zip AS G
-  ON A.id == G.id;
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-
-	  
-@ExtendedData =
-    SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount)  AS Par,
-           *
-    FROM @InputDataFE;
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//    Reduce the data and pass it to R script deployed above
+// 
+/////////////////////////////////////////////////////////////////
 
 @RScriptOutput = REDUCE @ExtendedData ON Par
 PRODUCE Par, 
 id string, 
 los_pred string
-USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", stringsAsFactors:false);
-  
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-//               Merge @RScriptOutput with @InputData
-//
-///////////////////////////////////////////////////////////////////
-	  
+READONLY Par
+USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
+//OPTION (PARTITION(Par) = (PARTITIONCOUNT = 30));
+
+
+/////////////////////////////////////////////////////////////////
+//               Merge the predictions with the raw data
+//               join @RScriptOutput and @InputData
+/////////////////////////////////////////////////////////////////  
+
 @StreamedDataMergedWithPrediction = 
     SELECT 
 	streamData.mydate,
@@ -1532,5 +1340,9 @@ USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", 
 	      JOIN 
 		      @RScriptOutput AS scoredStreamData
 	  ON streamData.id == scoredStreamData.id;
+
+/////////////////////////////////////////////////////////////////
+//      Write the output to outputFile (defined through adf)
+/////////////////////////////////////////////////////////////////  
 	  
 OUTPUT @StreamedDataMergedWithPrediction TO @outputFile USING Outputters.Csv(quoting : false);

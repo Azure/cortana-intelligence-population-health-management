@@ -1,52 +1,56 @@
-// hcadfstreamforpbi.usql
+// hcadfstreampbi.usql
 // Script summary:
-// This usql script is used to submit ADLA job that constitutes the second activity in ADF
-// In this usql script, we will extract the joined data and do Feature Engineering using usql.
-// Then we will pass the Feature Engineered data to an R script, which will return the Predcitions
-// Finally we will join the predictions to the original data in usql.
-// We will deploy the R script that does the scoring - phm_adf_score_streamed.R and 
-// the pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc. in the usql scrpit
-// @Shaheen_Gauher   gshaheen@microsoft.com
-// George Iordanescu ghiordan@microsoft.com
+// This usql script is used to submit ADLA job that constitutes the third activity in ADF pipeline
+// In this usql script, we will extract the scored data.
+// We will pass this data to an R script, which will return curated data for visualisation
+// Finally we will drop the first column- the partition column before writing the output
+// We will deploy the following reosurces
+// - R script that creates data for visualisation - "phm_forpbi_streamed.R"
+//   these should be in your data lake store in folder /adfRscripts
+// - A schema file "R_schema_with_data_type_phm_data.csv"
+//   these should be in your data lake store in folder /historic_meta
+// This usql script will return the raw data plus predictions
+// inputFile and outputFile variables are used in the script but not explicitly declared!!
+// This is because these are defined by activities parameters of the adf pipeline json definition (source).
 
 
 REFERENCE ASSEMBLY [ExtR];
 
+DECLARE @PartitionCount int = 10;
 
-//deploy R scripts - "phm_forpbi_streamed.R" 
-DECLARE @path_Rscipt string = @"/adfRscripts" ;   
-DECLARE @RScriptName string = @"phm_forpbi_streamed.R";  
+///////////////////////////////////////////////////////////////////////////////////
+//   Deploy the following Resouce: R scripts, schema csv file, mapping csv files
+///////////////////////////////////////////////////////////////////////////////////
+
+
+DECLARE @path_Rscipt string     = @"/adfrscripts" ;   
+DECLARE @RScriptName string     = @"phm_forpbi_streamed.R";  
 DECLARE @RScriptFullName string = @path_Rscipt + @"/" + @RScriptName;
 DEPLOY RESOURCE @RScriptFullName;
 
-//deploy schema file with column names and R class/type info - "R_schema_with_data_type_phm_data.csv"
-DECLARE @path_meta string  = @"/historic_meta" ;
-DECLARE @SchemaFile string = @path_meta + @"/" + @"R_schema_with_data_type_phm_data.csv";
-DEPLOY RESOURCE @SchemaFile;
 
-// encoding maps for diagnoses and procedures
-DECLARE @MapFile1 string = @path_meta + @"/" + @"Single-LevelCCS-Diagnoses_csv.csv";
+DECLARE @path_meta string   = @"/historic_meta" ;  
+DECLARE @SchemaFile string  = @path_meta + @"/" + @"R_schema_with_data_type_phm_data.csv";
+DEPLOY RESOURCE @SchemaFile; 
+DECLARE @MapFile1 string    = @path_meta + @"/" + @"Single_LevelCCS_Diagnoses_csv.csv";
 DEPLOY RESOURCE @MapFile1; 
-DECLARE @MapFile2 string = @path_meta + @"/" + @"Single-LevelCCS-Procedures_csv.csv";
+DECLARE @MapFile2 string    = @path_meta + @"/" + @"Single_LevelCCS_Procedures_csv.csv";
 DEPLOY RESOURCE @MapFile2; 
 
-DECLARE @inputFile string =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00_forpbitest.csv"; 
-DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamforpbi_out.csv";
 
-DECLARE @PartitionCount int = 10;
+DECLARE @inputFile string  =  @"/testadf/hccostadls__stream_results_2017_03_22_12_00phm_adf_score_streamed.csv";
+DECLARE @outputFile string =  @"/testadf/testpbi.csv";
 
-/* debug
-//Use inputFile and outputFile for debug purposes, otherwise inputFile and outputFile are variables defined by  
-//activities parameters of the adf pipeline json definition (source).
-DECLARE @inputFile string =   @"/PHM/data/output/stream/hccostadls__stream_results_2017_03_22_12_00phm_adf_score_streamed.csv";
-DECLARE @outputFile string =  @"/PHM/data/output/stream/hccostadls__stream_results_2017_03_22_12_00_scored_processed_for_pbi.csv";
-*/
 
 //we can choose to receive the DF returned from R as a string (ReturnDF_Flag==true) or as a proper DF (ReturnDF_Flag==true)
 DECLARE @ReturnDF_Flag bool = true;
 
 //we process everything in R UDO using the deployed schema (col names and types) so 
 //data type and col names in USQL is irrelevant hence we use 'string' for everything. 
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Extract Data in variable @InputData from @inputFile (defined through adf)
+///////////////////////////////////////////////////////////////////////////////////
 
 @InputData = 
     EXTRACT  	
@@ -665,16 +669,26 @@ V612  string
     FROM @inputFile
     USING Extractors.Csv();  
 
+	
+/////////////////////////////////////////////////////////////////
+
     
 @ExtendedData =
     SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount)  AS Par,
            *
     FROM @InputData;
     
+/////////////////////////////////////////////////////////////////
+//    Reduce the data and pass it to R script deployed above
+// 
+/////////////////////////////////////////////////////////////////
+
 //Same as with inputdata, we process everything in R UDO using the deployed schema (col names and types) so 
 //data type and col names for output data in USQL is irrelevant hence we use 'string' for everything. 
 
-@RScriptOutput = REDUCE @ExtendedData ON Par
+IF @ReturnDF_Flag == true 
+THEN
+	@RScriptOutput = REDUCE @ExtendedData ON Par
 	PRODUCE Par, 
 	V1  string,
 	V2  string,
@@ -731,14 +745,21 @@ V612  string
 	V53  string,
 	V54  string,
 	V55  string
+	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", stringsAsFactors:false);
+ELSE
+	@RScriptOutput = REDUCE @ExtendedData ON Par
+	PRODUCE Par, RowId int, ROutput string
+	READONLY Par
+	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"charactermatrix");
+END;
 
-USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", stringsAsFactors:false);
+/////////////////////////////////////////////////////////////////
+//               Drop the PAR column from @RScriptOutput
+///////////////////////////////////////////////////////////////// 
 
-
-//drop PAR column
 @SavedData =
     SELECT 	
-    	V1,
+    V1,
 	V2,
 	V3,
 	V4,
@@ -794,6 +815,10 @@ USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", 
 	V54,
 	V55
     FROM @RScriptOutput;
+
+/////////////////////////////////////////////////////////////////
+//      Write the output to outputFile (defined through adf)
+/////////////////////////////////////////////////////////////////  
 
 OUTPUT @SavedData TO @outputFile USING Outputters.Csv();    
 
