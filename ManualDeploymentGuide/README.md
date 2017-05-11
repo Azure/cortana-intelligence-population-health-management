@@ -218,7 +218,7 @@ This section will walk you through the steps to manually create the population h
 ## Create Azure Stream Analytics Job - Cold and Hot Paths
   [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path and the hot path. 
 
-## Cold Path
+## Cold Path Stream
   For the cold path, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. We will name the Steam Analytics Job that we create for this, **HealthCareColdPath**. 
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
@@ -284,7 +284,7 @@ select now, then click on **Start**.
 
 Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severity/, stream/raw/core/ etc.) after approximately 5 minutes.
 
-## Hot Path
+## Hot Path Stream
   For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **HealthCareHotPath**. 
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
