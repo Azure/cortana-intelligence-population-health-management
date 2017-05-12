@@ -187,14 +187,16 @@ This section will walk you through the steps to manually create the population h
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
   value which from the Data Lake Store blade which will be in the form **adl://---.azuredatalakestore.net**  e.g. adl://gsciqs1w6yadls.azuredatalakestore.net/
   - You will need this to connect PBI to the data in your Data Lake Store. 
-  - Next we will create four folders (adfrscripts, historic_meta, models and pbifile ) in our Data Lake Store and upload files to them.
+  - Next we will create three folders (**adfrscripts**, **historic_meta**, **models** ) in our Data Lake Store and upload files to them.
      - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
      - In the next blade, click in Data Explorer at the top.
-     - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter adfrscripts. This folder will contain the R scripts deployed when submitting an ADLA job through usql scripts
-     - Create three more folders the same way and name them historic_meta, models and pbifile. Folder historic_meta will contain the historic data and some other files required for schema specification and mapping (.csv files). The model folder will contain the pretrained models (.rds files). The pbifile folder will contain data for visualisation.
-     - Select the folder adfrscripts and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls]() here.
-     - Select the folder historic data and upload the contents of [rawevents/files_historic]() here
-     - Select the folder models and upload the contents of [scripts/datafactory/models]() here.  
+     - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **adfrscripts**. This folder will contain the R scripts deployed when submitting an ADLA job through usql scripts
+     - Create two more folders the same way and name them **historic_meta** and **models**. Folder historic_meta will contain the historic data and some other files required for schema specification and mapping (.csv files). The model folder will contain the pretrained models (.rds files).
+     - Select the folder **adfrscripts** and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls]() here.
+     - Select the folder **historic_meta** and upload the contents of [rawevents/files_historic]() here
+     - Select the folder **models** and upload the contents of [scripts/datafactory/models]() here.  
+     - For the Azure Data Factory to run we need these files to be place.
+     
 
 
 ##   Start the Generator now 
@@ -209,7 +211,7 @@ This section will walk you through the steps to manually create the population h
     - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was collected after creating the Azure Storage account.
     - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was collected after creating the Azure Storage account.  
 	- Save and close **HealthCareGenerator.exe.config** 
- - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **manufactureeh**.  
+ - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
     ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when this generator is running.  
     ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
 
@@ -282,7 +284,7 @@ This section will walk you through the steps to manually create the population h
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select now, then click on **Start**.   
 
-Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severity/, stream/raw/core/ etc.) after approximately 5 minutes.
+Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severity/, stream/raw/core/, stream/raw/charges/ and stream/raw/dxpr/ with the directory structure defined by *Path prefix pattern* above) after approximately 5 minutes.
 
 ## Hot Path Stream
   For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **HealthCareHotPath**. 
