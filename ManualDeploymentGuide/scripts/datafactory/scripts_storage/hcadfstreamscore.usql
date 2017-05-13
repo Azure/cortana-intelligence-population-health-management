@@ -6,7 +6,7 @@
 // Finally we will join the predictions to the original data in usql.
 // We will deploy the following reosurces
 // - R scripts that do the scoring - 1) phm_score_streamed.R and 2) phmLOSPrediction_HCUPDataProcessing.R
-//   these should be in your data lake store in folder /adfRscripts
+//   these should be in your data lake store in folder /adfrscripts
 // - The pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc.
 //   these should be in your data lake store in folder /models 
 // - A schema file R_schema_with_data_type_phm_data.csv
@@ -43,18 +43,18 @@ DEPLOY RESOURCE @SchemaFile;
 DECLARE @inputFile string  =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00.csv";
 DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamscore_test_out.csv";
 
-DECLARE @ModelFilesDir string = @"/models";
-DECLARE @model00 string = @ModelFilesDir + @"/" + @"allotherhosp_LOSmodel.rds";
-DECLARE @model01 string = @ModelFilesDir + @"/" + @"hosp_1_LOSmodel.rds";
-DECLARE @model02 string = @ModelFilesDir + @"/" + @"hosp_2_LOSmodel.rds";
-DECLARE @model03 string = @ModelFilesDir + @"/" + @"hosp_3_LOSmodel.rds";
-DECLARE @model04 string = @ModelFilesDir + @"/" + @"hosp_4_LOSmodel.rds";
-DECLARE @model05 string = @ModelFilesDir + @"/" + @"hosp_5_LOSmodel.rds";
-DECLARE @model06 string = @ModelFilesDir + @"/" + @"hosp_6_LOSmodel.rds";
-DECLARE @model07 string = @ModelFilesDir + @"/" + @"hosp_7_LOSmodel.rds";
-DECLARE @model08 string = @ModelFilesDir + @"/" + @"hosp_8_LOSmodel.rds";
-DECLARE @model09 string = @ModelFilesDir + @"/" + @"hosp_9_LOSmodel.rds";
-DECLARE @model10 string = @ModelFilesDir + @"/" + @"hosp_10_LOSmodel.rds";
+DECLARE @path_models string = @"/models";
+DECLARE @model00 string = @path_models + @"/" + @"allotherhosp_LOSmodel.rds";
+DECLARE @model01 string = @path_models + @"/" + @"hosp_1_LOSmodel.rds";
+DECLARE @model02 string = @path_models + @"/" + @"hosp_2_LOSmodel.rds";
+DECLARE @model03 string = @path_models + @"/" + @"hosp_3_LOSmodel.rds";
+DECLARE @model04 string = @path_models + @"/" + @"hosp_4_LOSmodel.rds";
+DECLARE @model05 string = @path_models + @"/" + @"hosp_5_LOSmodel.rds";
+DECLARE @model06 string = @path_models + @"/" + @"hosp_6_LOSmodel.rds";
+DECLARE @model07 string = @path_models + @"/" + @"hosp_7_LOSmodel.rds";
+DECLARE @model08 string = @path_models + @"/" + @"hosp_8_LOSmodel.rds";
+DECLARE @model09 string = @path_models + @"/" + @"hosp_9_LOSmodel.rds";
+DECLARE @model10 string = @path_models + @"/" + @"hosp_10_LOSmodel.rds";
 DEPLOY RESOURCE @model00;
 DEPLOY RESOURCE @model01;
 DEPLOY RESOURCE @model02;
