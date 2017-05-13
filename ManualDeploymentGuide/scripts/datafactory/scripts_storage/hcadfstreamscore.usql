@@ -40,8 +40,8 @@ DECLARE @path_meta string              = @"/historic_meta" ;
 DECLARE @SchemaFile string             = @path_meta + @"/" + @"R_schema_with_data_type_phm_data.csv";
 DEPLOY RESOURCE @SchemaFile;
 
-DECLARE @inputFile string  =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00.csv";
-DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamscore_test_out.csv";
+//DECLARE @inputFile string  =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00.csv";   //defined through adf
+//DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamscore_test_out.csv";                     //defined through adf
 
 DECLARE @path_models string = @"/models";
 DECLARE @model00 string = @path_models + @"/" + @"allotherhosp_LOSmodel.rds";
@@ -705,7 +705,7 @@ END;
 
 /////////////////////////////////////////////////////////////////
 //    Reduce the data and pass it to R script deployed above
-// 
+//    The output from R script is being stored in @RScriptOutput
 /////////////////////////////////////////////////////////////////
 
 @RScriptOutput = REDUCE @ExtendedData ON Par
