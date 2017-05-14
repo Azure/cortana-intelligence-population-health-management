@@ -9,102 +9,95 @@
 #         function doFeatureEngineering ()
 #####################################################
 
-doFeatureEngineering <- function(dat) {
-  # e.g. dat -> hccostadls__stream_results_2017_03_22_12_00.csv with header
-  #-------------------------------------------
-  
-  
-  #select columns below
-  #Logic used: only use information available when the patient is 'just' admitted
-  cols1 = c('KEY','VisitLink','DSHOSPID','AGE','FEMALE','RACE','ATYPE','AMONTH','PointOfOriginUB04','TRAN_IN',
+doFeatureEngineering = function(dat) {
+
+  # select columns below
+  # Logic used: only use information available when the patient is 'just' admitted
+  cols1   = c('KEY','VisitLink','DSHOSPID','AGE','FEMALE','RACE','ATYPE','AMONTH','PointOfOriginUB04','TRAN_IN',
             'MEDINCSTQ','PSTATE','ZIP','HOSPST','PAY1','PAY2','PAY3','LOS') 
-  cols2 = grep('DXPOA',names(dat),value=T)
-  cols3 = grep('E_POA',names(dat),value=T)
+  cols2   = grep('DXPOA',names(dat),value=T)
+  cols3   = grep('E_POA',names(dat),value=T)
   
-  cols4 = grep('^CHRON[0-9]',names(dat),value=T)
-  cols5 = grep('^CHRONB',names(dat),value=T)
-  cols6 = grep('^CM_',names(dat),value=T)
-  cols7 = c('NDX','NCHRONIC','DX1','DXCCS1','DXMCCS1')
+  cols4   = grep('^CHRON[0-9]',names(dat),value=T)
+  cols5   = grep('^CHRONB',names(dat),value=T)
+  cols6   = grep('^CM_',names(dat),value=T)
+  cols7   = c('NDX','NCHRONIC','DX1','DXCCS1','DXMCCS1')
   
   allcols = c(cols1,cols2,cols3,cols4,cols5,cols6,cols7)
-  
-  othercols = names(dat)[!names(dat) %in% allcols]
-  cat(length(allcols),'+',length(othercols),'=',ncol(dat),'\n')
-  
-  
+
   #------------------------
   
   dat4los = dat[,allcols]
   
   #------------------------
-  #DXPOA1 - DXPOA25  cols2
+  # DXPOA1 - DXPOA25  cols2
   indDXPOA           = grep('DXPOA',names(dat4los))
-  #convert all  'Y' to 1 for DXPOA columns
+  # convert all  'Y' to 1 for DXPOA columns
   dat4los[,indDXPOA] = apply(dat4los[,indDXPOA],2,FUN=function(x){ifelse(x=='Y',1,x)}) 
-  #now convert rest to 0 for DXPOA columns
+  # now convert rest to 0 for DXPOA columns
   dat4los[,indDXPOA] = apply(dat4los[,indDXPOA],2,FUN=function(x){ifelse(x==1,x,0)})
   
-  #create a column num_DXPOA
-  #for these 25 columns , loop over all rows..for each row give me count of number of 1s ..(valid values will be 0 to 25)
+  # create a column num_DXPOA
+  # for these 25 columns , loop over all rows..for each row get count of number of 1s ..(valid values will be 0 to 25)
   dat4los$num_DXPOA = apply(dat4los[,indDXPOA],1,FUN=function(x){length(x[x=='1'])})
   
   dat4los           = dat4los[,-indDXPOA]  #delete all DXPOA cols
   
   #-------------------------------
-  #E_POA1 to E_POA8  cols3
-  #convert all non 'Y' to 0 for E_PAO
+  # E_POA1 to E_POA8  cols3
+  # convert all non 'Y' to 0 for E_PAO
   indE_POA           = grep('E_POA',names(dat4los))
   dat4los[,indE_POA] = apply(dat4los[,indE_POA],2,FUN=function(x){ifelse(x=='Y',1,x)}) #NO Y in simulated data
   dat4los[,indE_POA] = apply(dat4los[,indE_POA],2,FUN=function(x){ifelse(x==1,x,0)})
   
-  #create a column num_E_POA
+  # create a column num_E_POA
   dat4los$num_E_POA  = apply(dat4los[,indE_POA],1,FUN=function(x){length(x[x=='1'])})
   
   dat4los            = dat4los[,-indE_POA]  #delete all E_POA cols
   
   #-------------------------------------
-  #CHRON1 - CHRON25 cols4 
+  # CHRON1 - CHRON25  
   indCHRON = grep('^CHRON[0-9]',names(dat4los))
-  #create a column num_CHRON..if the data has NCHRONIC skip it - in the data actually
-  #dat4los$num_CHRON = apply(dat4los[,cols4],1,FUN=function(x){length(x[x==1])})
+  # create a column num_CHRON..if the data has NCHRONIC skip it - in the data 
+  # dat4los$num_CHRON = apply(dat4los[,cols4],1,FUN=function(x){length(x[x==1])})
   
   dat4los  = dat4los[,-indCHRON]  #delete all CHRON cols..only keeping their count
   
   #------------------------------------------
-  #CHRONB1 - CHRONB25  cols5
+  # CHRONB1 - CHRONB25  
   indchronB = grep('^CHRONB[0-9]',names(dat4los))
   
-  #create a column num_uCHRONB get number of unique CHRONB
+  # create a column num_uCHRONB get number of unique CHRONB
   dat4los$num_uCHRONB =  apply(dat4los[indchronB],1,FUN=function(x){length(unique(x[!is.na(x)]))})
   
   dat4los  = dat4los[,-indchronB]  # deleting all CHRONB cols..only keeping their count
   
   #--------------------------------------
-  #PAY2 and PAY3 have a lot of -9 so removing these cols and creating num_PAY
+  # PAY2 and PAY3 have a lot of missing values so removing these cols and creating num_PAY
   indPAY          = grep('PAY',names(dat4los),value=T)
   dat4los$num_PAY = apply(dat4los[,grep('PAY',names(dat4los),value=T)],1,FUN=function(x){length(x[!is.na(x)])})
   
-  #remove PAY2 and PAY3 now
+  # remove PAY2 and PAY3 now
   dat4los$PAY2    = NULL
   dat4los$PAY3    = NULL
   
   #---------------------------------------
-  #CM_AIDS,.. cols6
+  # CM_AIDS,.. cols6
   indCM          = grep('CM_',names(dat4los))
   dat4los$num_CM = apply(dat4los[,indCM],1,FUN=function(x){(length(x[x==1]))})
   
-  dat4los       = dat4los[,-indCM]  # deleting all CM cols
+  dat4los        = dat4los[,-indCM]  # deleting all CM cols
   
   #----------------------------
-  # #removing HOSPST as there is only one value in it 'FL' in simulated data, in real data will have more than one value
-  dat4los = dat4los[,!names(dat4los) %in% c('HOSPST')]
+  # removing HOSPST as there is only one value in it 'FL' in simulated data, in real data will have more than one value
+  dat4los        = dat4los[,!names(dat4los) %in% c('HOSPST')]
   
-  #removing DX1. Will use a higher level diagnosis info in DXCCS1 instead
-  dat4los = dat4los[,!names(dat4los) %in% c('DX1')]
+  # removing DX1. Will use a higher level diagnosis info in DXCCS1 instead
+  dat4los        = dat4los[,!names(dat4los) %in% c('DX1')]
   
   # creating ZIP3 containing the first three numbers in zip code
-  dat4los$ZIP3 = substr(dat4los$ZIP,1,3)
-  dat4los$ZIP  = NULL
+  dat4los$ZIP3  = substr(dat4los$ZIP,1,3)
+  dat4los$ZIP   = NULL
   
   
   return(dat4los)
@@ -180,7 +173,7 @@ doLOSPrediction <-function(dat_str, modelsLocation){
     
     
     sub_dat_str$LOS_pred = y_pred
-    #dim(sub_dat_str)
+    
     dat_str_wpred        = rbind(dat_str_wpred,sub_dat_str)
     
   }
