@@ -180,7 +180,7 @@ DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/
     FETCH @dataSizeForVisualization ROWS;   
 
 // if we did not stream @dataSizeForVisualization rows yet, fill the balance using historic data 
-// add row number info based on streamed recordds time to ease selection of most recent scored streamed data     
+// add row number info based on streamed records time to ease selection of most recent scored streamed data     
 @numberedHistoricalData =
     SELECT 
     ROW_NUMBER() OVER(ORDER BY id ASC) AS RowNumber,
@@ -197,7 +197,7 @@ DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/
     SELECT *
     FROM @numberedHistoricalData
     CROSS JOIN @scoredStreamedDataInfo AS crtscoredStreamedDataInfo
-    WHERE @numberedHistoricalData.RowNumber < (@dataSizeForVisualization-crtscoredStreamedDataInfo.myRowCount) ;
+    WHERE @numberedHistoricalData.RowNumber <= (@dataSizeForVisualization-crtscoredStreamedDataInfo.myRowCount) ;
 
 // put together scored streamed data we got so far, plus historic data, in a @dataSizeForVisualization rows long rowset
  @concatenatedData =    
@@ -205,10 +205,9 @@ DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/
      UNION ALL         
      SELECT * FROM @remainingData;  
      
- // final data has same schema as streamed scored data (i.e. historical data plus dateAndTime), so we remove all row info and virtual columns    
+// final data has same schema as historical data (i.e. streamed scored data minus dateAndTime), so we remove all time and row info and virtual columns    
 @finalData = 
     SELECT 
-	dateAndTime,
 	dshospid,
 	id,
 	age,
@@ -266,7 +265,7 @@ DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/
     FROM @concatenatedData;
 
 // save final data
-OUTPUT @finalData TO @outputFile ORDER BY dateAndTime DESC USING Outputters.Csv(quoting : false);
+OUTPUT @finalData TO @outputFile USING Outputters.Csv(quoting : false);
 
 
 
