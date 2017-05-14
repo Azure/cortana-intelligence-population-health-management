@@ -379,7 +379,7 @@ fun_addcols <- function(dat){
   #dim(dat)  #3000   54
   #===========================================================
   #reorder to make it consistent with the schema for data4PBI_simulated
-  myorder = c('DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
+  myorder = c('DATE', 'DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
   dat     = dat[,myorder]
   return(dat)
 }
