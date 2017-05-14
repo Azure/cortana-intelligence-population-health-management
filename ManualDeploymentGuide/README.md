@@ -29,14 +29,14 @@ Batch Layer:
 
 To build the pipeline above for this solution, we will need to carry out the following steps:
 
-- Create an Azure Resource Group for the solution
-- Create Azure Storage Account (Move resources to this storage account)
-- Create an Azure Event Hub (Add two Consumer Groups)
-- Create an Azure Data Lake Store
-- Create Azure Data Lake Analtytics 
-- Create Azure Stream Analytics Job (Cold and Hot Paths)
-- Create Azure Data Factory (Linked Services, Datasets, Pipeline)
-- Download and configure the data generator
+- [Create an Azure Resource Group for the solution](#azurerg)
+- [Create Azure Storage Account](#azuresa) (Move resources to this storage account)
+- [Create an Azure Event Hub](#azureeh) (Add two Consumer Groups)
+- [Create an Azure Data Lake Store](#azuredls)
+- [Create Azure Data Lake Analtytics](#azuredla)
+- [Create Azure Stream Analytics Job](#azurestra) (Cold and Hot Paths)
+- [Create Azure Data Factory](#azuredf) (Linked Services, Datasets, Pipeline)
+- [Download and configure the data generator](#gen)
 
 Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
 
@@ -49,20 +49,20 @@ This tutorial will require:
    trial](https://azure.microsoft.com/en-us/pricing/free-trial/) is
    available for new users)
  - A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.
- - Download a copy of this repository to gain access to the neccesary files that will be used in certain setup steps.     
+ - Download a copy of this repository to gain access to the necessary files that will be used in certain setup steps.     
  
 ### Naming Convention  
 
-This deployment guide walks the readers through the creation of each of the Cortana Intelligence Suite services in the solution architecture defined in Section 2. 
+This deployment guide walks the readers through the creation of each of the Cortana Intelligence Suite services in the solution architecture shown above. 
 As there are usually many interdependent components in a solution, [Azure Resource Manager](https://azure.microsoft.com/en-gb/features/resource-manager/) enables you to 
 group all Azure services in one solution into a resource group. Each component in the resource group is called a resource. We want to use a common name for the different 
 services we are creating. However, several services, such as Azure Storage, require a unique name for the storage account across a region and hence a naming convention 
-is needed that should provide the user with a unique identifier. To address this, we suggest employing a base service name based on solution scope (manufacturing) and 
+is needed that should provide the user with a unique identifier. The idea is to create a unique string (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (healthcare) and 
 user's specific details like name and/or a custom numeric ID:  
 
  **healthcare[UI][N]**  
   
-where [UI] is the user's initials, N is a random integer(01-99) that you choose. Note that all characters must be entered in in lowercase.  
+where [UI] is the user's initials (in lowercase), N is a random integer(01-99) that you choose.  
   
 To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. So for example, user **Mary Jane** might use a base service name of healthcare**mj01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
 Hub" below: 
@@ -78,6 +78,7 @@ Deployment Steps:
 
 This section will walk you through the steps to manually create the population health management solution in your Azure subscription.
 
+<a name="azurerg"></a>
 ## Create an Azure Resource Group for the solution
   The Azure Resource Group is used to logically group the resources needed for this architecture. To better understand the Azure Resource Manager click [read more here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview). 
 
@@ -91,6 +92,7 @@ This section will walk you through the steps to manually create the population h
 
 **NOTE** : It may be helpful for future steps to record the resource group name and location for later steps in this manual. 
 
+<a name="azuresa"></a>
 ## Create Azure Storage Account 
   The Azure Storage Account is required for several parts of this pattern
   - It is used as a the storage location for the raw event data used by the data generator that will feed the Azure Event Hub. 
@@ -136,6 +138,7 @@ This section will walk you through the steps to manually create the population h
   - Record the *STORAGE ACCOUNT NAME*, *PRIMARY ACCESS KEY*, and *PRIMARY CONNECTION STRING* values.
   - You will need these credentials when setting up a LinkedService to access the files in your blob through ADF  and also when starting the data generator.
 
+<a name="azureeh"></a>
 ## Create an Azure Event Hub
   The Azure Event Hub is the ingestion point of raw records that will be processed in this solution. The role of Event Hub in solution architecture is as the "front door" for an event pipeline. It is often called an event ingestor.
 
@@ -170,7 +173,7 @@ This section will walk you through the steps to manually create the population h
  - Click on Consumer Groups under Entities and it will open a pane contaning the list of Consumer Groups you just added. Copy the names coldpathcg and hotpathcg. You will need these when setting up the stream analytics job.
  
 
-
+<a name="azuredls"></a>
 ##   Create an Azure Data Lake Store
   The Azure Data Lake store is used as to hold raw and scored results from the raw data points generated by the data generator and streamed in through Stream Analytics job.
 
@@ -195,13 +198,14 @@ This section will walk you through the steps to manually create the population h
      - Select the folder **adfrscripts** and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls]() here.
      - Select the folder **historic_meta** and upload the contents of [rawevents/files_historic]() here
      - Select the folder **models** and upload the contents of [scripts/datafactory/models]() here.  
-     - For the Azure Data Factory to run we need these files to be place.
+     - For the Azure Data Factory to run we need these files to be in place.
      
 
 
 ##   Start the Generator now 
-  With the data in [rawevents/files_datagenerator folder]() uploaded to storage, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
+  With the [data for generator](rawevents/files_datagenerator folder) uploaded to storage, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
 
+<a name="gen"></a>
 ## Download and configure the data generator  
  - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/datagenerator) of this repository.  
  - Unzip this file to the local disk drive of a Windows Machine.  
@@ -216,7 +220,7 @@ This section will walk you through the steps to manually create the population h
     ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
 
 
-
+<a name="azurestra"></a>
 ## Create Azure Stream Analytics Job - Cold and Hot Paths
   [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path and the hot path. 
 
@@ -335,6 +339,7 @@ Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severi
 select Now, then click on **Start**.   
 - After some time in the Datasets section of your PowerBI, this new dataset hotpathcore will appear.
  
+<a name="azuredla"></a>
 ##   Create Azure Data Lake Analtytics 
   Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The usql script for various jobs (joining, scoring etc. ) can be found at scripts/datafactory/scripts_storage/ and will need to be uploaded to storage from where the ADF will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (e.g. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store adfrscripts/, historicdata/ and models/. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One important step is to Install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end to end data science scenarios covering: merging various data files, feature engineering (FE), partitioned data model building, and post deployment, massively parallel FE and scoring.
 
@@ -354,6 +359,7 @@ select Now, then click on **Start**.
   - In the Sample Scripts blade, click on Install U-SQL Extensions to install U-SQL Extensions to your account.
   - This is an important step to enable R (and python) extensions to work with ADLA.
 
+<a name="azuredf"></a>
 ## Create Azure Data Factory
   Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline. The compute service we will be using for data transformation in this ADF is Data Lake Analytics. In our pipeline we have essentially four activities.
   
