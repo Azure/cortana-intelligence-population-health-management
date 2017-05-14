@@ -22,6 +22,9 @@
  Data for PBI visualization consists of all streamed scored data (received after externally defined @dataAquisitionStart), padded 
 with historic data up to @dataSizeForVisualization rows. If all streamed scored data has more than @dataSizeForVisualization rows,
 we only keep the most recent @dataSizeForVisualization streamed scored rows and append 0 historical rows.
+
+@dataAquisitionStart is a variable defined by activities parameters of the adf pipeline json definition (source).
+
  Inputs:
   - all streamed scored data received after @dataAquisitionStart
   - historic data (1103173 rows)
