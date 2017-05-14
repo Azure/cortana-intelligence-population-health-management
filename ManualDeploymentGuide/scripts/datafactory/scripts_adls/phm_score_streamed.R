@@ -59,9 +59,9 @@ inputFromUSQL <- inputFromUSQL[, -1]
 colnames(inputFromUSQL) <- toupper(colnames(inputFromUSQL))
 
 #Rename columns to match the names in HCUP schema
-names(inputFromUSQL)[names(inputFromUSQL) == 'ID']                = 'KEY'
-names(inputFromUSQL)[names(inputFromUSQL) == 'VISITLINK']         = 'VisitLink'
-names(inputFromUSQL)[names(inputFromUSQL) == 'POINTOFORIGINUB04'] = 'PointOfOriginUB04'
+names(inputFromUSQL)[names(inputFromUSQL) == 'ID']                <- 'KEY'
+names(inputFromUSQL)[names(inputFromUSQL) == 'VISITLINK']         <- 'VisitLink'
+names(inputFromUSQL)[names(inputFromUSQL) == 'POINTOFORIGINUB04'] <- 'PointOfOriginUB04'
 
 #  functions are defined in script 'phmLOSPrediction_HCUPDataProcessing.R' and follow basic ML pipeline steps
 #  source() will load functions doFeatureEngineering(), doLOSPrediction(), addPredCol2Raw() used below
@@ -78,7 +78,7 @@ processedData  <- doLOSPrediction(processedData, modelsLocation)
 processedData  <- addPredCol2Raw(processedData, inputFromUSQL)
 
 # recover original col name
-names(processedData)[names(processedData) == 'KEY'] = 'id'
+names(processedData)[names(processedData) == 'KEY'] <- 'id'
 
 # Drop everything except id and LOS_pred. 
 # Will return only 2 columns back to usql. (It is more efficient to do processing/merging in usql)
