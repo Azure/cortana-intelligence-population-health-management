@@ -1,14 +1,24 @@
 ############################################################
-# Purpose: This script will accept the joined  data and return the predictions
-#          Requires:
-#          "R_schema_with_data_type_phm_data.csv" and 
-#          "phmLOSPrediction_HCUPDataProcessing.R"
-#          Will return the predictions back to usql
+# Summary: Performs ADLA specific jobs to obtain the prediction of patients' Length of Stay (LOS) in hospitals using simulated data that is similar to 
+#          publicly available data(https://www.hcup-us.ahrq.gov/databases.jsp) from the  Healthcare Cost and Utilization Project
+#          ([HCUP](https://www.hcup-us.ahrq.gov/)). 
+#	   
+#          ADLA specific operations performed here:
+#          - schema (name and data type) enforcing
+#          - USQL input and output management (using variables 'inputFromUSQL' and 'outputToUSQL', whose names are reserved through USQL R UDO extension definition)
+#          - R code for feature engineering and Scoring is applied at scale though ADLA.
+#         
+#          LOS prediction is done by applying HCUP specific Feature Engineering and scoring operations to 
+#          input 'streamed data' (about 3e3 records per 5 minutes) consisting of simulated patient data with schema identical to HCUP data.
+#          HCUP data specific operations are defined in sourced phmLOSPrediction_HCUPDataProcessing.R script functions.
+#          
+# Author:  George Iordanescu ghiordan@microsoft.com
 ############################################################
 
 ############################################################
 #    function setColumnNamesAndTypes()
-#    - will assign the names and data types to each of the columns, they were read as string in usql
+#    In big data scenarios, data proper is separated from schema. We use USQL as a mere vehicle for scoring at scale, and all processing is done in R.
+#    This is accomplished by distributing data in USQL using generic string type, and depoying schema info to each worker and enforcing it in R. 
 ############################################################
 
 setColumnNamesAndTypes <- function(dfWithoutColumnNames, colClassFilename) {
@@ -24,13 +34,12 @@ setColumnNamesAndTypes <- function(dfWithoutColumnNames, colClassFilename) {
   
   #set df col class/types
   colClasses <- unlist(colClasses)
-  
-  #
-  for (crtColumnIndex in seq_len(dim(dfWithoutColumnNames)[2])) {
-    crtClass <- as.character(colClasses[crtColumnIndex])
-    crtFun   <- match.fun(paste("as", crtClass, sep = "."))
-    dfWithoutColumnNames[[(colnames(dfWithoutColumnNames))[crtColumnIndex]]] <- crtFun(dfWithoutColumnNames[[(colnames(dfWithoutColumnNames))[crtColumnIndex]]])
-  }
+    for (crtColumnIndex in seq_len(dim(dfWithoutColumnNames)[2])) {
+      crtClass <- as.character(colClasses[crtColumnIndex])
+      crtFun <- match.fun(paste("as", crtClass, sep = "."))
+      dfWithoutColumnNames[[(colnames(dfWithoutColumnNames))[crtColumnIndex]]] <-
+        crtFun(dfWithoutColumnNames[[(colnames(dfWithoutColumnNames))[crtColumnIndex]]])
+    }
   
   dfWithoutColumnNames
 }
@@ -39,20 +48,21 @@ setColumnNamesAndTypes <- function(dfWithoutColumnNames, colClassFilename) {
 #      End of function
 ############################################################
 
-# inputFromUSQL and outputToUSQL are dedicated named data frames respectively to pass data between USQL and R. 
-# Input and output DataFrame identifier names are fixed 
-# (i.e. users cannot change these predefined names of input and output DataFrame identifiers).
-
-# dropping the first column with usql partition info
+# in ADLA, partitioned data comes through inputFromUSQL, everything else is deployed by USQL script, and loaded in R here on local worker.
+# Original data in associated USQL script is partioned and partition info is added as first column in inputFromUSQL. 
+# We do not use partition info, so we will drop it.
 inputFromUSQL <- inputFromUSQL[, -1]
 
+# ADLA data is (usually) distributed hence headerless. Schema needs to be defined separately and deployed to each worker in USQL, and then enforced here in R.
 crtSchemaFile                   <- "R_schema_with_data_type_phm_data.csv"
+
+# The auxiliary code (phmLOSPrediction_HCUPDataProcessing.R) has been deployed to each worker in USQL, and is available in this script's current directory.
 hcupDataProcessingFunctionsFile <- "phmLOSPrediction_HCUPDataProcessing.R"
 
 # function setColumnNamesAndTypes()  will assign the colnames and data type to each of the columns
 inputFromUSQL <- setColumnNamesAndTypes(inputFromUSQL, crtSchemaFile)
 
-#streaming data has identical schema with historical data (different order though), plus one extra column for time
+#streaming data has identical schema with historical data, plus one extra column for time
 inputFromUSQL <- inputFromUSQL[, -1]
 
 # HCUP data specifics, most columns can be upper case, except the ones below
@@ -70,7 +80,7 @@ source(hcupDataProcessingFunctionsFile, echo = TRUE)
 # feature engineering - transform the data to be passed to the model for preditions
 processedData  <- doFeatureEngineering(inputFromUSQL)
 
-# Get the predictions
+# Get the predictions. Everything is in the local parent directory, the path info (modelsLocation) is empty.
 modelsLocation <- ""
 processedData  <- doLOSPrediction(processedData, modelsLocation)
 
