@@ -1,60 +1,86 @@
-// hcadfstreamscore.usql
-// Script summary:
-// This usql script is used to submit ADLA job that constitutes the second activity in ADF
-// In this usql script, we will extract the joined data.
-// We will pass this data to an R script, which will return the Predcitions
-// Finally we will join the predictions to the original data in usql.
-// We will deploy the following reosurces
-// - R scripts that do the scoring - 1) phm_score_streamed.R and 2) phmLOSPrediction_HCUPDataProcessing.R
-//   these should be in your data lake store in folder /adfrscripts
-// - The pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc.
-//   these should be in your data lake store in folder /models 
-// - A schema file R_schema_with_data_type_phm_data.csv
-//   these should be in your data lake store in folder /historic_meta
-// This usql script will return the raw data plus predictions
-// inputFile and outputFile variables are used in the script but not explicitly declared!
-// This is because these are defined by activities parameters of the adf pipeline json definition (source).
+// 
+// Copyright  Microsoft Corporation ("Microsoft").
+// 
+// Microsoft grants you the right to use this software in accordance with your subscription agreement, if any, to use software 
+// provided for use with Microsoft Azure ("Subscription Agreement").  All software is licensed, not sold.  
+// 
+// If you do not have a Subscription Agreement, or at your option if you so choose, Microsoft grants you a nonexclusive, perpetual, 
+// royalty-free right to use and modify this software solely for your internal business purposes in connection with Microsoft Azure 
+// and other Microsoft products, including but not limited to, Microsoft R Open, Microsoft R Server, and Microsoft SQL Server.  
+// 
+// Unless otherwise stated in your Subscription Agreement, the following applies.  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT 
+// WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL MICROSOFT OR ITS LICENSORS BE LIABLE 
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SAMPLE CODE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+// 
 
+/* Summary:
+ Scores (i.e. uses models to issue predictions) streamed joined data. Models have been trained off-line. Main processing script does ADLA
+ specific operations (schema enforcing, management of input and output to USQL) plus call functions for typical machine learning operations 
+ (feature engineering, scoring, merging) from sourced phmLOSPrediction_HCUPDataProcessing.R. The latter is a a plain R (no ADLA R-UDO dependencies) script
+ that encapsulates HCUP data specific preprocessing and scoring operations.
+ 
+ @inputFile and @outputFile are variables defined by activities parameters of the adf pipeline json definition (source).
+ 
+ Inputs:
+  - @inputFile: latest unscored streamed data. Tracking of processed data and accumulation of new unprocessed data is done through the ADF pipeline activitiy 
+  (see pipeline source json file)  
+  
+ Output:
+  - @outputFile: latest scored streamed data (i.e. input data plus LOS predictions). 
+   
+ Dependencies (data may be partitioned, so beside the processing R script, more resources are deployed to each worker):
+   - phm_forpbi_streamed.R: processing R script that encapsulates ADLA specific operations. 
+   - R_schema_with_data_type_phm_data.csv: data schema info (columns names and data types).
+   - phmLOSPrediction_HCUPDataProcessing.R: HCUP data feature engineering and scoring.
+   - hosp_i_LOSmodel.rds (where i=1..10): R models, computed off-line for specific hospital IDs.
+   - allotherhosp_LOSmodel.rds: : R model, computed off-line all other hospitals pooled together. If retrained on all data, this could be also applied to the 10 hospitals 
+   modelled individually above.
+   
+  # Author:  George Iordanescu ghiordan@microsoft.com
+*/
 
 REFERENCE ASSEMBLY [ExtR];
 
-//for row based operations, we can choose to split the data (DoBalancedComputing_Flag=true) among PartitionCount workers
+// for row based operations, we can choose to split the data (i.e. set @DoBalancedComputing_Flag=true) among @PartitionCount workers
 DECLARE @DoBalancedComputing_Flag bool = false;
 DECLARE @PartitionCount int = 10;
 
-///////////////////////////////////////////////////////////////////////////////////
-//   Deploy the following Resouce: R scripts, schema csv file, pretrained models. 
-///////////////////////////////////////////////////////////////////////////////////
+// define base directories for deployed dependencies
+DECLARE @RScriptDir string = @"/PHM/code/adlaRUDO";
+DECLARE @SchemaInfoDir string = @"/PHM/code/adlaRUDO/metainfo"; 
+DECLARE @ModelFilesDir string = @"/PHM/code/adlaRUDO/models"; 
 
-DECLARE @path_Rscipt string            = @"/adfrscripts" ;   
-DECLARE @RScriptName string            = @"phm_score_streamed.R";  
-DECLARE @RScriptFullName string        = @path_Rscipt + @"/" + @RScriptName;
+// deploy processing R script ( unlike other dependencies, @RScriptName is referred later in this script for reducer, so it is defined 
+// separately from @RScriptFullName used for deployment )
+DECLARE @RScriptName string = "phm_score_streamed.R";
+DECLARE @RScriptFullName string = @RScriptDir + @"/" + @RScriptName;
 DEPLOY RESOURCE @RScriptFullName;
 
-//PHM processing code for Length Of Stay (LOS) modelling in HCUP data
-DECLARE @AuxiliaryFunctionsFile string = @path_Rscipt + @"/" + @"phmLOSPrediction_HCUPDataProcessing.R";
+// PHM processing code for Length Of Stay (LOS) modelling in HCUP data
+DECLARE @AuxiliaryFunctionsFile string = @RScriptDir + @"/" + @"phmLOSPrediction_HCUPDataProcessing.R";
 DEPLOY RESOURCE @AuxiliaryFunctionsFile;
 
-//schema file with column names and R class/type info
-DECLARE @path_meta string              = @"/historic_meta" ; 
-DECLARE @SchemaFile string             = @path_meta + @"/" + @"R_schema_with_data_type_phm_data.csv";
+// schema file with column names and R class/type info
+DECLARE @SchemaFile string = @SchemaInfoDir + @"/" + @"R_schema_with_data_type_phm_data.csv";
 DEPLOY RESOURCE @SchemaFile;
 
-//DECLARE @inputFile string  =  @"/phm/iodata/hccostadls__stream_results_2017_03_22_12_00.csv";   //defined through adf
-//DECLARE @outputFile string =  @"/phm/iodata/hcadfstreamscore_test_out.csv";                     //defined through adf
-
-DECLARE @path_models string = @"/models";
-DECLARE @model00 string = @path_models + @"/" + @"allotherhosp_LOSmodel.rds";
-DECLARE @model01 string = @path_models + @"/" + @"hosp_1_LOSmodel.rds";
-DECLARE @model02 string = @path_models + @"/" + @"hosp_2_LOSmodel.rds";
-DECLARE @model03 string = @path_models + @"/" + @"hosp_3_LOSmodel.rds";
-DECLARE @model04 string = @path_models + @"/" + @"hosp_4_LOSmodel.rds";
-DECLARE @model05 string = @path_models + @"/" + @"hosp_5_LOSmodel.rds";
-DECLARE @model06 string = @path_models + @"/" + @"hosp_6_LOSmodel.rds";
-DECLARE @model07 string = @path_models + @"/" + @"hosp_7_LOSmodel.rds";
-DECLARE @model08 string = @path_models + @"/" + @"hosp_8_LOSmodel.rds";
-DECLARE @model09 string = @path_models + @"/" + @"hosp_9_LOSmodel.rds";
-DECLARE @model10 string = @path_models + @"/" + @"hosp_10_LOSmodel.rds";
+// deploy scoring models, 10 hospital specific and one generic
+DECLARE @model00 string = @ModelFilesDir + @"/" + @"allotherhosp_LOSmodel.rds";
+DECLARE @model01 string = @ModelFilesDir + @"/" + @"hosp_1_LOSmodel.rds";
+DECLARE @model02 string = @ModelFilesDir + @"/" + @"hosp_2_LOSmodel.rds";
+DECLARE @model03 string = @ModelFilesDir + @"/" + @"hosp_3_LOSmodel.rds";
+DECLARE @model04 string = @ModelFilesDir + @"/" + @"hosp_4_LOSmodel.rds";
+DECLARE @model05 string = @ModelFilesDir + @"/" + @"hosp_5_LOSmodel.rds";
+DECLARE @model06 string = @ModelFilesDir + @"/" + @"hosp_6_LOSmodel.rds";
+DECLARE @model07 string = @ModelFilesDir + @"/" + @"hosp_7_LOSmodel.rds";
+DECLARE @model08 string = @ModelFilesDir + @"/" + @"hosp_8_LOSmodel.rds";
+DECLARE @model09 string = @ModelFilesDir + @"/" + @"hosp_9_LOSmodel.rds";
+DECLARE @model10 string = @ModelFilesDir + @"/" + @"hosp_10_LOSmodel.rds";
 DEPLOY RESOURCE @model00;
 DEPLOY RESOURCE @model01;
 DEPLOY RESOURCE @model02;
@@ -67,10 +93,10 @@ DEPLOY RESOURCE @model08;
 DEPLOY RESOURCE @model09;
 DEPLOY RESOURCE @model10;
 
-///////////////////////////////////////////////////////////////////////////////////
-//   Extract Data in variable @InputData from @inputFile (defined through adf)
-///////////////////////////////////////////////////////////////////////////////////
 
+// we process everything in R UDO using the deployed schema (col names and types) so 
+// data type in USQL are irrelevant hence we use 'string' for all columns. 
+// We used real column names here but for the same reason we could have used generic names just as well.
 @InputData = 
     EXTRACT 
 	mydate string,
@@ -687,9 +713,7 @@ DEPLOY RESOURCE @model10;
     FROM @inputFile
     USING Extractors.Csv();  
 
-/////////////////////////////////////////////////////////////////
-
-    
+// we can switch to distributed data by setting DoBalancedComputing_Flag to true, and thus do parallelized scoring.   
 IF @DoBalancedComputing_Flag == true 
 THEN
 	@ExtendedData =
@@ -703,25 +727,15 @@ ELSE
 	    FROM @InputData;  
 END;
 
-/////////////////////////////////////////////////////////////////
-//    Reduce the data and pass it to R script deployed above
-//    The output from R script is being stored in @RScriptOutput
-/////////////////////////////////////////////////////////////////
-
+//apply processing R script to whole data frame from each partition. 
+// unlike from USQL to R UDO, when we return a data fram from R to USQL, data schema (name and type) must match.
 @RScriptOutput = REDUCE @ExtendedData ON Par
-PRODUCE Par, 
-id string, 
-los_pred string
+PRODUCE Par, id string, los_pred string
 READONLY Par
 USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
-//OPTION (PARTITION(Par) = (PARTITIONCOUNT = 30));
+// OPTION (PARTITION(Par) = (PARTITIONCOUNT = 30));
 
-
-/////////////////////////////////////////////////////////////////
-//               Merge the predictions with the raw data
-//               join @RScriptOutput and @InputData
-/////////////////////////////////////////////////////////////////  
-
+//join input data and R script output, i.e. add LOS prediction column to @InputData
 @StreamedDataMergedWithPrediction = 
     SELECT 
 	streamData.mydate,
@@ -1341,8 +1355,5 @@ USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
 		      @RScriptOutput AS scoredStreamData
 	  ON streamData.id == scoredStreamData.id;
 
-/////////////////////////////////////////////////////////////////
-//      Write the output to outputFile (defined through adf)
-/////////////////////////////////////////////////////////////////  
-	  
+// save processed data	  
 OUTPUT @StreamedDataMergedWithPrediction TO @outputFile USING Outputters.Csv(quoting : false);
