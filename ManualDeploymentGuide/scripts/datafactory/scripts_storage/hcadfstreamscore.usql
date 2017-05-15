@@ -41,7 +41,6 @@
    - allotherhosp_LOSmodel.rds: : R model, computed off-line all other hospitals pooled together. If retrained on all data, this could be also applied to the 10 hospitals 
    modelled individually above.
    
-  # Author:  George Iordanescu ghiordan@microsoft.com
 */
 
 REFERENCE ASSEMBLY [ExtR];

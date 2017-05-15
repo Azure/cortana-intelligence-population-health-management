@@ -32,7 +32,6 @@ we only keep the most recent @dataSizeForVisualization streamed scored rows and 
  Output:
    - most recent up to @dataSizeForVisualization rows from scored streamed data, concatenated with historic data if needed.
   
-  # Author:  George Iordanescu ghiordan@microsoft.com
 */
 
 REFERENCE ASSEMBLY [ExtR];

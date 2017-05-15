@@ -12,7 +12,6 @@
 #          input 'streamed data' (about 3e3 records per 5 minutes) consisting of simulated patient data with schema identical to HCUP data.
 #          HCUP data specific operations are defined in sourced phmLOSPrediction_HCUPDataProcessing.R script functions.
 #          
-# Author:  George Iordanescu ghiordan@microsoft.com
 ############################################################
 
 ############################################################

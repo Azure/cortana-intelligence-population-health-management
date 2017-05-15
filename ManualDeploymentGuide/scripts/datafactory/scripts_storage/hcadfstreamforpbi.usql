@@ -37,7 +37,6 @@
    - Single_LevelCCS_Diagnoses_csv.csv: diagnoses encoding map
    - Single_LevelCCS_Procedures_csv.csv: procedures encoding map
    
-  # Author:  George Iordanescu ghiordan@microsoft.com
 */
 
 REFERENCE ASSEMBLY [ExtR];
