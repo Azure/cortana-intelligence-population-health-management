@@ -19,29 +19,39 @@
 // 
 
 /* Summary:
- Data for PBI visualization consists of all streamed scored data (received after externally defined @dataAquisitionStart), padded 
+ Data for PBI visualization consists of all streamed scored data (received after timestamp defined by @dataAquisitionStart), padded 
 with historic data up to @dataSizeForVisualization rows. If all streamed scored data has more than @dataSizeForVisualization rows,
 we only keep the most recent @dataSizeForVisualization streamed scored rows and append 0 historical rows.
 
-@dataAquisitionStart is a variable defined by activities parameters of the adf pipeline json definition (source).
-
  Inputs:
-  - all streamed scored data received after @dataAquisitionStart
-  - historic data (1103173 rows)
+  - @inputFile: all streamed scored data received after @dataAquisitionStart
+  - @HistoricalDataFile: historic data (1103173 rows)
   
  Output:
-   - most recent up to @dataSizeForVisualization rows from scored streamed data, concatenated with historic data if needed.
-  
+   - @outputFile: most recent up to @dataSizeForVisualization rows from scored streamed data, concatenated with historic data if needed.
+
 */
 
 REFERENCE ASSEMBLY [ExtR];
 
+// define base directories for deployed dependencies
+DECLARE @HistoricalDataDir string = "/PHM/data/historical";
+DECLARE @InputStreamedDataDir string = "/stream/forPBI";
+DECLARE @OutputDir string =  @"/stream/forPBI";
+
 // number of rows used for PBI visualization
 DECLARE @dataSizeForVisualization int = 1000000;
 
-// define input data, all streamed scored (received after externally defined @dataAquisitionStart) plus historic data
-DECLARE @HistoricalDataFile string =  @"/PHM/data/historical/data_for_visualization_useful_columns_historical.csv";
-DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/{scoredStreamedSubsettingDate:MM}/{scoredStreamedSubsettingDate:dd}/{scoredStreamedSubsettingDate:HH}/{scoredStreamedSubsettingDate:mm}_forPBI.csv";
+// @dataAquisitionStart controls the begining time for all streamed scored data processed in this script
+// Can be defined either using the stremed data recorded time stamps ( "2015-03-20T21:25:00.0000000"), or as below. 
+DECLARE @dataAquisitionStart string = "01/29/2010 21:25:00";
+
+// define both input datasets, all streamed scored (received after @dataAquisitionStart) plus historic data
+DECLARE @inputFile string = @InputStreamedDataDir + @"/" + @"{scoredStreamedSubsettingDate:yyyy}/{scoredStreamedSubsettingDate:MM}/{scoredStreamedSubsettingDate:dd}/{scoredStreamedSubsettingDate:HH}/{scoredStreamedSubsettingDate:mm}_forPBI.csv";
+DECLARE @HistoricalDataFile string =  @HistoricalDataDir + @"/" + @"data4visualization_hist.csv";
+
+// declare output data
+DECLARE @outputFile string =  @OutputDir + @"/" + @"data4visualization_latest.csv";
 
 // define all streamed scored data
 @InputDataAll = 
@@ -105,13 +115,13 @@ DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/
     FROM @inputFile
     USING Extractors.Csv();  
 
-// load all streamed scored data received since @dataAquisitionStart    
+// load all streamed scored data received since @dataAquisitionStart        
  @InputData = 
     SELECT   *
     FROM @InputDataAll
     WHERE scoredStreamedSubsettingDate >= DateTime.Parse(@dataAquisitionStart);    
 
-// load historical data to pad streamed scored up to @dataSizeForVisualization        
+// load historical data to pad streamed scored up to @dataSizeForVisualization            
 @HistoricalData =
      EXTRACT 
 	dshospid string,
@@ -208,68 +218,68 @@ DECLARE @inputFile string = "/stream/forPBI/{scoredStreamedSubsettingDate:yyyy}/
      UNION ALL         
      SELECT * FROM @remainingData;  
      
-// final data has same schema as historical data (i.e. streamed scored data minus dateAndTime), so we remove all time and row info and virtual columns    
+// final data has same schema as historical data (i.e. streamed scored data minus dateAndTime), so we remove all time and row info and virtual columns
+// also add and save column names formatted according to PBI visualization schema.
 @finalData = 
     SELECT 
-	dshospid,
-	id,
-	age,
-	amonth,
-	atype,
-	dispub04,
-	drg,
-	dx1,
-	dxccs1,
-	hospst,
-	homeless,
-	los,
-	mdc,
-	medincstq,
-	pr1,
-	prccs1,
-	pstate,
-	pointoforiginub04,
-	race,
-	totchg,
-	visitlink,
-	zip,
-	ayear,
-	dxmccs1,
-	prmccs1,
-	readmitted,
-	dxccs_name,
-	prccs_name,
-	prmccs_name,
-	dxmccs_name,
-	transfer_in,
-	mdc_name,
-	totchg_bin,
-	los_bin,
-	chgperday,
-	age_bin,
-	age_bin2,
-	payer1,
-	gender,
-	hospzip,
-	readmitted_num,
-	myrownum,
-	ecol1,
-	ecol2,
-	ecol3,
-	ecol4,
-	ecol5,
-	ecol6,
-	ecol7,
-	chronic_conditions,
-	ecol8,
-	ecol9,
-	ecol10,
-	readmittance_conditions 
-    FROM @concatenatedData;
+	dshospid AS ["DSHOSPID"],
+	id AS ["KEY"],
+	age AS ["AGE"],
+	amonth AS ["AMONTH"],
+	atype AS ["ATYPE"],
+	dispub04 AS ["DISPUB04"],
+	drg AS ["DRG"],
+	dx1 AS ["DX1"],
+	dxccs1 AS ["DXCCS1"],
+	hospst AS ["HOSPST"],
+	homeless AS ["Homeless"],
+	los AS ["LOS"],
+	mdc AS ["MDC"],
+	medincstq AS ["MEDINCSTQ"],
+	pr1 AS ["PR1"],
+	prccs1 AS ["PRCCS1"],
+	pstate AS ["PSTATE"],
+	pointoforiginub04 AS ["PointOfOriginUB04"],
+	race AS ["RACE"],
+	totchg AS ["TOTCHG"],
+	visitlink AS ["VisitLink"],
+	zip AS ["ZIP"],
+	ayear AS ["AYEAR"],
+	dxmccs1 AS ["DXMCCS1"],
+	prmccs1 AS ["PRMCCS1"],
+	readmitted AS ["Readmitted"],
+	dxccs_name AS ["DXCCS_name"],
+	prccs_name AS ["PRCCS_name"],
+	prmccs_name AS ["PRMCCS_name"],
+	dxmccs_name AS ["DXMCCS_name"],
+	transfer_in AS ["TRANSFER_IN"],
+	mdc_name AS ["MDC_name"],
+	totchg_bin AS ["TOTCHG_bin"],
+	los_bin AS ["LOS_bin"],
+	chgperday AS ["CHGperday"],
+	age_bin AS ["AGE_bin"],
+	age_bin2 AS ["AGE_bin2"],
+	payer1 AS ["PAYER1"],
+	gender AS ["GENDER"],
+	hospzip AS ["HOSPZIP"],
+	readmitted_num AS ["Readmitted_num"],
+	myrownum AS ["myrownum"],
+	ecol1 AS ["ecol1"],
+	ecol2 AS ["ecol2"],
+	ecol3 AS ["ecol3"],
+	ecol4 AS ["ecol4"],
+	ecol5 AS ["ecol5"],
+	ecol6 AS ["ecol6"],
+	ecol7 AS ["ecol7"],
+	chronic_conditions AS ["CHRONIC_conditions"],
+	ecol8 AS ["ecol8"],
+	ecol9 AS ["ecol9"],
+	ecol10 AS ["ecol10"],
+	readmittance_conditions AS ["Readmittance_conditions"]
+    FROM @concatenatedData AS DummyTable;
 
 // save final data
-OUTPUT @finalData TO @outputFile USING Outputters.Csv(quoting : false);
-
+OUTPUT @finalData TO @outputFile USING Outputters.Csv(quoting : false, outputHeader : true);
 
 
 
