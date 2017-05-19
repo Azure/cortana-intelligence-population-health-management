@@ -102,27 +102,27 @@ This section will walk you through the steps to manually create the population h
   - Navigate back to the Resource group and select the storage account just created.
   - Click on *Blobs* in the storage account blade.
   - Click __+ Container__  
-  - Enter the name *data* and changes the *Access type* to blob.
+  - Enter the name *data* and change the *Access type* to blob.
   - Click ***Create***
   - Click __+ Container__  
-  - Enter the name *scripts* and changes the *Access type* to blob.
+  - Enter the name *scripts* and change the *Access type* to blob.
   - Click ***Create***
 
-  Now you will move the neccesary files into the newly created containers. These files are the raw events used by the data generator as well as scripts that 
+  Now you will move the neccesary files into the newly created containers. These files are the raw events used by the data generator as well as usql scripts that 
   will be called by the Azure Data Factory pipeline.
   - Download the files in the [rawevents folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/rawevents) locally on your machine.
   - Select the *data* container that was just created above.
   - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of rawevent on your machine. 
   - Select the files and click **Upload**.
   - Download the files in the [scripts/datafactory/scripts_adls folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactory) locally on your machine.
-  - Select the *scripts* container.
+  - Select the *scripts* container that was just created above.
   - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of scripts_adls on your machine. 
   - Select the files and click **Upload**.
 
   Navigate back to the storage account blade to collect important information that will be required in future steps. 
   - On the storage account blade, select **Access keys** from the menu on the left.
-  - Record the *STORAGE ACCOUNT NAME*, *PRIMARY ACCESS KEY*, and *PRIMARY CONNECTION STRING* values.
-  - You will need these credentials when setting up a LinkedService to access the files in your blob through Azure Data Factory and also when starting the data generator.
+  - Record the *STORAGE ACCOUNT NAME*, *KEY*, and *CONNECTION STRING* values for *key1*.
+  - You will need these credentials when setting up a Linked Service to access the files in your blob through Azure Data Factory and also when starting the data generator.
 
 <a name="azureeh"></a>
 ## Create an Azure Event Hub
