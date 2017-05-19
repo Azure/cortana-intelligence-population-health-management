@@ -8,22 +8,8 @@ Solution architecture
 =================================
 ![Solution Diagram Picture](https://cloud.githubusercontent.com/assets/16708375/25901999/3190e1f8-3590-11e7-93b5-408afd5d2e3e.png)
 
-The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. 
-
-Speed Layer:  
- - Event from 4 different connected datasets are ingested using an [Azure Event Hub](https://azure.microsoft.com/en-us/documentation/articles/event-hubs-overview/) 
- which receives the event records sent using an [Azure WebJob](https://azure.microsoft.com/en-us/documentation/articles/web-sites-create-web-jobs/).  
- - Event processing is performed using an [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) job which separate events based on the dataset
- the event orginated from and stores the records in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/).
- - A second [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) job performs some aggregations on the data which are then sent to 
- [PowerBI](https://powerbi.microsoft.com/) data sets for near real time visualizations.
-
-  
-Batch Layer:  
- -  [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) job
- by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart)
- - Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) files and visualized using [PowerBI](https://powerbi.microsoft.com/).  
- 
+The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. The solution is composed of several Azure components that perform various tasks including data ingest, data storage, data movement, advanced analytics and visualization.  [Azure Event Hub](https://azure.microsoft.com/en-us/documentation/articles/event-hubs-overview/) is the ingestion point of raw records that will be processed in this solution. These are then pushed to Data Lake Store for storage and further processing by Stream Analytics. A second [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) job sends selected data to [PowerBI](https://powerbi.microsoft.com/) for near real time visualizations. [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) job
+ by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart). Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) files and visualized using [PowerBI](https://powerbi.microsoft.com/).
 
 ----------
 
@@ -57,18 +43,18 @@ This deployment guide walks the readers through the creation of each of the Cort
 As there are usually many interdependent components in a solution, [Azure Resource Manager](https://azure.microsoft.com/en-gb/features/resource-manager/) enables you to 
 group all Azure services in one solution into a resource group. Each component in the resource group is called a resource. We want to use a common name for the different 
 services we are creating. However, several services, such as Azure Storage, require a unique name for the storage account across a region and hence a naming convention 
-is needed that should provide the user with a unique identifier. The idea is to create a unique string (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (healthcare) and 
+is needed that should provide the user with a unique identifier. The idea is to create a unique string (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (**healthcare**) and 
 user's specific details like name and/or a custom numeric ID:  
 
  **healthcare[UI][N]**  
   
 where [UI] is the user's initials (in lowercase), N is a random integer(01-99) that you choose.  
   
-To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. So for example, user **Mary Jane** might use a base service name of healthcare**mj01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
+To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. A user, say, *Mary Jane* might use a base service name of healthcare**mj01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
 Hub" below: 
 
- - healthcare***ehns*** should actually be spelled healthcare***mj01ehns*** 
- - healthcare***eh*** should actually be spelled healthcare***mj01eh***  
+ - healthcareehns should actually be spelled healthcare**mj01**ehns 
+ - healthcareeh should actually be spelled healthcare**mj01**eh  
   
 ----------
 
@@ -125,9 +111,9 @@ This section will walk you through the steps to manually create the population h
   Now you will move the neccesary files into the newly created containers. These files are the raw events used by the data generator as well as scripts that 
   will be called by the Azure Data Factory pipeline.  
   - Select the *data* container
-  - Click ***Upload*** at the top of the container blade and copy the contents 
-  - Download the files in the [rawevents folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/rawevents) locally, then choose 
-  the local files and select **Upload**.
+  - Download the files in the [rawevents folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/rawevents) locally on your machine.
+  - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of rawevent on your machine. 
+  - Select the files and click **Upload**.
   - Select the *scripts* container
   - Click ***Upload*** at the top of the container blade and copy the contents 
   - Dowload the files in the [scripts/datafactory/scripts_adls folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactory) locally then choose
@@ -136,7 +122,7 @@ This section will walk you through the steps to manually create the population h
   Navigate back to the storage account blade to collect important information that will be required in future steps. 
   - On the storage account blade, select **Access keys** from the menu on the left.
   - Record the *STORAGE ACCOUNT NAME*, *PRIMARY ACCESS KEY*, and *PRIMARY CONNECTION STRING* values.
-  - You will need these credentials when setting up a LinkedService to access the files in your blob through ADF  and also when starting the data generator.
+  - You will need these credentials when setting up a LinkedService to access the files in your blob through Azure Data Factory and also when starting the data generator.
 
 <a name="azureeh"></a>
 ## Create an Azure Event Hub
