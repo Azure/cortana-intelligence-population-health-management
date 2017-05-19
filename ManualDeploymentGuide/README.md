@@ -347,7 +347,7 @@ select *Now*, then click on **Start**.
 
 <a name="azuredf"></a>
 ## Create Azure Data Factory
-  Azure Data Factory (ADF) is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline with four different activities. The compute service we will be using for data transformation in this Data Factory is Data Lake Analytics.
+  Azure Data Factory is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline with four different activities. The compute service we will be using for data transformation in this Data Factory is Data Lake Analytics.
   
   
 ### Azure Data Factory - get started
@@ -364,7 +364,7 @@ select *Now*, then click on **Start**.
   - The creation step may take several minutes.  
 
 ### Azure Data Factory Linked Services
-  In order for data factory to link to the data locations, we will need to create a 'LinkedService' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create LinkedService for Azure Storage account which contains the USQL scripts, the Azure Data Lake store where the data resides, and finally the Azure Data Lake analytics instance. We will set these Linked Services first before we define the Datasets.
+  In order for data factory to link to the data locations, we will need to create a 'Linked Service' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create Linked Service for Azure Storage account which contains the USQL scripts, the Azure Data Lake Store where the data resides, and finally the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
 
   Azure Storage Linked Service
 
@@ -400,9 +400,7 @@ select *Now*, then click on **Start**.
   - At the top of the blade, click *Deploy*
 
 ### Azure Data Factory Datasets
-  Now that we have the Linked Services out of the way, we need to set up Datasets which will act as inputs and outputs for each of the activity in the Data Factory pipeline. In Azure Data Factory these are defined in JSON format. For this, we use a single input to start off the processing.
-
-  Setting up the starting file. This file does not exist, but will be tagged as an *external* file so that Data Factory does not check for it's existence.
+  Now that we have the Linked Services out of the way, we need to set up [Datasets](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-create-datasets) which will act as inputs and outputs for each of the activity in the Data Factory pipeline. In Azure Data Factory these are defined in JSON format. The input dataset for the first activity in the pipeline will have external flag set to true as it is not explicitly produced by a data factory pipeline (this is the streaming data that is being collected in Data Lake Store through Stream Analytics job). This flag is set to false otherwise. The processing window is defined by availability and is set to 15 minutes which means a data slice will be produced every 15 minutes.
  
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
@@ -411,22 +409,25 @@ select *Now*, then click on **Start**.
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - At the top of the blade, click *Deploy*
-  - You should see '01StreamedData' appear under Datasets.
+  - You should see 01StreamedData appear under Datasets.
 
-  Setting up the working files is next. These files also don't exist, but with data factory being a dependency flow, they are also required to help orchestrate the steps of processing in the pipeline. 
+  The input datasets for the other three activities is produced by the current pipeline and will have external flag set to false. Let us set these up. 
  
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
+  - You will be presented a template.
   - The template contains quite a few settings, which we will not cover. Instead download the file *outputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file.
   - Change the *name* field to *02JoinedData*
   - At the top of the blade, click *Deploy*
-  - You should see '02JoinedData' appear under Datasets
-  - Click on the newly created set *02JoinedData*
-    - Click the *Clone* button at the top of the blade. 
-    - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
+  - You should see *02JoinedData* appear under Datasets
+  - Create three more datasets by cloning 02JoinedData and replacing the name with the names below.
+  - Click on the newly created set *02JoinedData* 
+  - Click the *Clone* button at the top of the blade
+  - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
+  - Repeat.
       
       - 03ScoredData
       
@@ -488,7 +489,7 @@ select *Now*, then click on **Start**.
   
 
 
- Azure Data Factory is deployed now. Scored results will start to appear in the Azure Data Lake store after 15 minutes. 
+ Azure Data Factory is deployed now. Joined results will start to appear in the Azure Data Lake store in stream/joined followed by scored results in stream/scoring etc. For more on how to monitor the pipeline read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
 
 ## Visualization
 
