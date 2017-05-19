@@ -5,11 +5,13 @@
         "type": "AzureDataLakeStore",
         "linkedServiceName": "AzureDataLakeStoreLinkedService",
         "typeProperties": {
-            "folderPath": "stream/results/"
+            "folderPath": "dummyfolder/"
         },
         "availability": {
             "frequency": "Minute",
             "interval": 15
-        }
+        },
+        "external": false,
+        "policy": {}
     }
 }
