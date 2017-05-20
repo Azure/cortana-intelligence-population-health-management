@@ -80,9 +80,9 @@ This section will walk you through the steps to manually create the population h
 
 <a name="azuresa"></a>
 ## Create Azure Storage Account 
-  The Azure Storage Account is required for several parts of this pattern
+  The Azure Storage Account is required for several parts of this solution
   - It is used as a the storage location for the raw event data used by the data generator that will feed the Azure Event Hub. 
-  - It is used as a Linked Service in the Azure Data Factory and holds the USQL scripts required to submit Data Lake Analytics jobs to process data.
+  - It is used as a Linked Service in the Azure Data Factory and holds the USQL scripts required to submit Data Lake Analytics jobs to process data by Azure Data Factory.
 
   ### Creation Steps
   - Log into the [Azure Management Portal](https://portal.azure.com) 
@@ -415,7 +415,7 @@ select *Now*, then click on **Start**.
  
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
-  - At the top of the blade choose *... More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
+  - At the top of the blade click on *...More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
   - You will be presented a template.
   - The template contains quite a few settings, which we will not cover. Instead download the file *outputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
   folder.
@@ -427,19 +427,15 @@ select *Now*, then click on **Start**.
   - Click on the newly created set *02JoinedData* 
   - Click the *Clone* button at the top of the blade
   - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
-  - Repeat.
-      
-      - 03ScoredData
-      
-      - 04ProcessedForPBIData
-      
-      - 05AppendedToHistoricData
-      
+  - Repeat for      
+      - 03ScoredData      
+      - 04ProcessedForPBIData      
+      - 05AppendedToHistoricData      
    - When finished you will have a total of 5 datasets.
   
 ### Azure Data Factory Pipeline
   With the services and datasets in place it is time to set up a pipeline that will process the data. 
-  Note: The shortest execution time of data factory is 15 minutes.
+  ***Note***: The shortest execution time of data factory is 15 minutes.
 
  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
