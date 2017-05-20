@@ -431,10 +431,11 @@ select *Now*, then click on **Start**.
       - 03ScoredData      
       - 04ProcessedForPBIData      
       - 05AppendedToHistoricData      
-   - When finished you will have a total of 5 datasets.
+   - When finished you will have a total of five datasets.
   
 ### Azure Data Factory Pipeline
   With the services and datasets in place it is time to set up a pipeline that will process the data. 
+
   ***Note***: The shortest execution time of data factory is 15 minutes.
 
  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
@@ -476,16 +477,10 @@ select *Now*, then click on **Start**.
   #### Activity Period
 
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
-  properties *start* and *end* located at the bottom of the pipeline editor. 
+  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your data factory will not be 
+  producing data over too long a period of time and we do that only because the [data generator]() (which you set up earlier and should be running) will not run infinitely. Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
 
-  These times are UTC. Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your data factory will not be 
-  producing data over too long a period of time and we do that only because the [data generator]() (which you set up earlier and should be running) will not run infinitely. 
-
-  Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
-  
-
-
- Azure Data Factory is deployed now. Joined results will start to appear in the Azure Data Lake store in stream/joined followed by scored results in stream/scoring etc. For more on how to monitor the pipeline read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
+ **Azure Data Factory is deployed now**. Joined results will start to appear in the Azure Data Lake store in stream/joined followed by scored results in stream/scoring etc. For more on how to monitor the pipeline read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
 
 ## Visualization
 
