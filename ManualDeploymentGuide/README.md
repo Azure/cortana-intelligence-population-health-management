@@ -19,10 +19,10 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create Azure Storage Account](#azuresa) (Move resources to this storage account)
 - [Create an Azure Event Hub](#azureeh) (Add two Consumer Groups)
 - [Create an Azure Data Lake Store](#azuredls)
+- [Download and configure the data generator](#gen)
 - [Create Azure Data Lake Analtytics](#azuredla)
 - [Create Azure Stream Analytics Job](#azurestra) (Cold and Hot Paths)
 - [Create Azure Data Factory](#azuredf) (Linked Services, Datasets, Pipeline)
-- [Download and configure the data generator](#gen)
 
 Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
 
