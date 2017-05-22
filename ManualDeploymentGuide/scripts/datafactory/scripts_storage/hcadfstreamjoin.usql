@@ -28,7 +28,7 @@
 // @inputFile and @outputFile variables are used in the script but not explicitly declared!!
 // This is because these are defined by activities parameters of the adf pipeline json definition (source).
 // 
-// @queryTime : String representation of a DateTime object representing ADF slice end
+// @queryTime     : String representation of a DateTime object representing ADF slice end
 // @queryLength   : Minutes of data to collect for this execution
 // @outputFile    : File in ADLS to output the results. This is really for testing 
 //                  and should be constant across each of the files to have a consistent resting

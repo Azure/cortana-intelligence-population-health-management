@@ -21,15 +21,15 @@
 // hcadfstreampbi.usql
 // Script summary:
 // This usql script is used to submit ADLA job that constitutes the third activity in ADF pipeline
-// In this usql script, we will extract the scored data.
+// In this usql script, the input is scored ouput.
 // We will pass this data to an R script, which will return curated data for visualisation
 // Finally we will drop the first column- the partition column before writing the output
 // We will deploy the following reosurces
-// - R script that creates data for visualisation - "phm_forpbi_streamed.R"
+// - R script that creates data for visualisation - "hcadfstreamforpbi.R"
 //   these should be in your data lake store in folder /adfrscripts
-// - A schema file "R_schema_with_data_type_phm_data.csv"
+// - Two files for mapping "Single_LevelCCS_Diagnoses_csv.csv.csv" and "Single_LevelCCS_Procedures_csv.csv"
 //   these should be in your data lake store in folder /historic_meta
-// This usql script will return the raw data plus predictions
+// This usql script will return data to build Population Health Report
 // inputFile and outputFile variables are used in the script but not explicitly declared!!
 // This is because these are defined by activities parameters of the adf pipeline json definition (source).
 

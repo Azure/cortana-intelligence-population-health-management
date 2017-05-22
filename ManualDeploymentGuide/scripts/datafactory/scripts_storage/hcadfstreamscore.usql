@@ -25,13 +25,11 @@
 // We will pass this data to an R script, which will return the Predcitions
 // Finally we will join the predictions to the original data in usql.
 // We will deploy the following reosurces
-// - R scripts that do the scoring - 1) phm_score_streamed.R and 2) phmLOSPrediction_HCUPDataProcessing.R
+// - R script that does the scoring - hcadfstreamscore.R
 //   these should be in your data lake store in folder /adfRscripts
 // - The pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc.
 //   these should be in your data lake store in folder /models 
-// - A schema file R_schema_with_data_type_phm_data.csv
-//   these should be in your data lake store in folder /historic_meta
-// This usql script will return the raw data plus predictions
+// This usql script will return the predictions with some more columns necessary for creating data for visualization in the next step
 // inputFile and outputFile variables are used in the script but not explicitly declared!
 // This is because these are defined by activities parameters of the adf pipeline json definition (source).
 
@@ -51,32 +49,19 @@ DECLARE @RScriptName string            = @"hcadfstreamscore.R";
 DECLARE @RScriptFullName string        = @path_Rscipt + @"/" + @RScriptName;
 DEPLOY RESOURCE @RScriptFullName;
 
-DECLARE @inputFile string  =  @"/stream/joined/2017/05/12/10/30_join.csv";
-DECLARE @outputFile string =  @"/mytempfolder/hcadfstreamscore_lean_wheader.csv";
 
-DECLARE @path_models string = @"/models";
-DECLARE @model00 string     = @path_models + @"/" + @"allotherhosp_LOSmodel.rds";
-DECLARE @model01 string     = @path_models + @"/" + @"hosp_1_LOSmodel.rds";
-DECLARE @model02 string     = @path_models + @"/" + @"hosp_2_LOSmodel.rds";
-DECLARE @model03 string     = @path_models + @"/" + @"hosp_3_LOSmodel.rds";
-DECLARE @model04 string     = @path_models + @"/" + @"hosp_4_LOSmodel.rds";
-DECLARE @model05 string     = @path_models + @"/" + @"hosp_5_LOSmodel.rds";
-DECLARE @model06 string     = @path_models + @"/" + @"hosp_6_LOSmodel.rds";
-DECLARE @model07 string     = @path_models + @"/" + @"hosp_7_LOSmodel.rds";
-DECLARE @model08 string     = @path_models + @"/" + @"hosp_8_LOSmodel.rds";
-DECLARE @model09 string     = @path_models + @"/" + @"hosp_9_LOSmodel.rds";
-DECLARE @model10 string     = @path_models + @"/" + @"hosp_10_LOSmodel.rds";
-DEPLOY RESOURCE @model00;
-DEPLOY RESOURCE @model01;
-DEPLOY RESOURCE @model02;
-DEPLOY RESOURCE @model03;
-DEPLOY RESOURCE @model04;
-DEPLOY RESOURCE @model05;
-DEPLOY RESOURCE @model06;
-DEPLOY RESOURCE @model07;
-DEPLOY RESOURCE @model08;
-DEPLOY RESOURCE @model09;
-DEPLOY RESOURCE @model10;
+DEPLOY RESOURCE @"/models/allotherhosp_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_1_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_2_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_3_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_4_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_5_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_6_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_7_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_8_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_9_LOSmodel.rds";
+DEPLOY RESOURCE @"/models/hosp_10_LOSmodel.rds";
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 //   Extract Data in variable @InputData from @inputFile (defined through adf)
