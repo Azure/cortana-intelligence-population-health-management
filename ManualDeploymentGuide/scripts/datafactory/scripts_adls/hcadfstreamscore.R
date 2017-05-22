@@ -2,7 +2,7 @@
 # Purpose: In this R script we push the streaming data through a function for scoring
 #          The function doLOSPrediction() accepts the transformed data that can be fed to the models for prediction.
 #          It also accepts as input the model location. It returns 2 cols - KEY and LOS_pred
-#          Before passing this output to usql we change the data types to string.
+#          Before passing this output to usql we will change the data types to string.
 #############################################################################################
 
 #############################################################################################
@@ -110,7 +110,7 @@ doLOSPrediction = function(dat_str, modelsLocation){
 
 my_inputFromUSQL  = inputFromUSQL[,-1]   # dropping the first column with usql partition info
 
-# From usql receive the input in following order
+# From usql received the input in the following order
 # c('id','visitlink','dshospid','age','female','race','atype','amonth','pointoforiginub04','tran_in','medincstq','pstate','pay1','los','ndx','nchronic','dxccs1','dxmccs1','num_DXPOA','num_e_poa','num_uCHRONB','num_pay','num_CM','zip3')
 
 FEcolnames = c("KEY" , "VisitLink" ,"DSHOSPID" ,"AGE" ,"FEMALE" , "RACE" ,"ATYPE" , "AMONTH" ,"PointOfOriginUB04", "TRAN_IN"  ,"MEDINCSTQ" ,"PSTATE" ,"PAY1","LOS" , "NDX" ,"NCHRONIC" ,"DXCCS1" , "DXMCCS1"  ,"num_DXPOA" , "num_E_POA"    ,"num_uCHRONB" ,"num_PAY" ,"num_CM" ,"ZIP3")

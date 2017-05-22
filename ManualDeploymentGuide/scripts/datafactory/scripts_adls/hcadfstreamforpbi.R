@@ -1,7 +1,6 @@
 # Purpose: Read scored data and create curated data for visualisation. 
-#          Scored data contains the raw data plus one additional column 'LOS_pred'
+#          Input is scored data plus some additional columns for visualization
 #          Requires:
-#          - 'R_schema_with_data_type_phm_data.csv' to get the schema
 #          - 'Single_LevelCCS_Diagnoses_csv.csv' , 'Single_LevelCCS_Procedures_csv.csv' for mapping
 #          We will do the following tasks:
 #          - Select subset of columns that are needed for visualization
@@ -388,12 +387,6 @@ fun_addcols = function(dat){
   dat$LOS = round(dat$LOS)
   dat$LOS[dat$LOS < 1] = 1
   
-  # #===========================================================
-  # # reorder to make it consistent with the schema for data4visualization_hist.csv 
-  # myorder = c('DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
-  # dat     = dat[,myorder]
-  # #===========================================================
-  # 
   return(dat)
   
 }
