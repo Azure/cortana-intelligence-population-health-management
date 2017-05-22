@@ -873,7 +873,7 @@ JOIN @cols_zip AS G
   ON A.id == G.id;
   
   
-////////////////////
+//////////////////////////////////////////////////
 
 @InputDataFEcomplete = SELECT 
 *
@@ -881,8 +881,7 @@ FROM @InputDataFE
 WHERE !String.IsNullOrEmpty( visitlink ) AND !String.IsNullOrEmpty( dshospid ) AND !String.IsNullOrEmpty( age ) AND !String.IsNullOrEmpty( female ) AND !String.IsNullOrEmpty( race ) AND !String.IsNullOrEmpty( atype ) AND !String.IsNullOrEmpty( amonth ) AND !String.IsNullOrEmpty( pointoforiginub04 ) AND !String.IsNullOrEmpty( tran_in ) AND !String.IsNullOrEmpty( medincstq ) AND !String.IsNullOrEmpty( pstate ) AND !String.IsNullOrEmpty( pay1 ) AND !String.IsNullOrEmpty( los ) AND !String.IsNullOrEmpty( ndx ) AND !String.IsNullOrEmpty( nchronic ) AND !String.IsNullOrEmpty( dxccs1 ) AND !String.IsNullOrEmpty( dxmccs1 ) AND !String.IsNullOrEmpty( num_DXPOA ) AND !String.IsNullOrEmpty( num_e_poa ) AND !String.IsNullOrEmpty( num_uCHRONB ) AND !String.IsNullOrEmpty( num_pay ) AND !String.IsNullOrEmpty( num_CM ) AND !String.IsNullOrEmpty( zip3 );
 
 
-
-////////////////////
+//////////////////////////////////////////////////////////
 
 IF @DoBalancedComputing_Flag == true 
 THEN
@@ -890,13 +889,11 @@ THEN
             SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount) AS Par,
 		   *
 	    FROM @InputDataFEcomplete;
-		//OPTION (ROWCOUNT=500000000);
 ELSE 
 	@ExtendedData =
 	    SELECT  0 AS Par,
 		   *
 	    FROM @InputDataFEcomplete;
-		//OPTION (ROWCOUNT=500000000);  
 END;
 
 /////////////////////////////////////////////////////////////////
@@ -910,16 +907,14 @@ id string,
 los_pred string
 READONLY Par
 USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
-//OPTION (ROWCOUNT=500000000);
-//OPTION (PARTITION(Par) = (PARTITIONCOUNT = 30));
 
 
 /////////////////////////////////////////////////////////////////
-//               Merge the predictions with the raw data
-//               join @RScriptOutput and @InputData
+//     Merge the predictions with the raw data
+//     join @RScriptOutput and @InputData
 /////////////////////////////////////////////////////////////////  
 
-@StreamedDataMergedWithPrediction = 
+@ScoredOutput = 
     SELECT 
 	streamData.id, 
 streamData.age, 
@@ -960,7 +955,7 @@ FROM @InputData AS streamData
 //      Write the output to outputFile (defined through adf)
 /////////////////////////////////////////////////////////////////  
 	  
-OUTPUT @StreamedDataMergedWithPrediction 
+OUTPUT @ScoredOutput 
        TO @outputFile 
 	   USING Outputters.Csv(outputHeader : true, quoting : false);
 
