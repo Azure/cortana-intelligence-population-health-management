@@ -8,7 +8,7 @@ Solution architecture
 =================================
 ![Solution Diagram Picture](https://cloud.githubusercontent.com/assets/16708375/25901999/3190e1f8-3590-11e7-93b5-408afd5d2e3e.png)
 
-The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. The solution is composed of several Azure components that perform various tasks, viz. data ingest, data storage, data movement, advanced analytics and visualization.  [Azure Event Hub](https://azure.microsoft.com/en-us/documentation/articles/event-hubs-overview/) is the ingestion point of raw records that will be processed in this solution. These are then pushed to Data Lake Store for storage and further processing by [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/). A second Stream Analytics job sends selected data to [PowerBI](https://powerbi.microsoft.com/) for near real time visualizations. [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the Azure Stream Analytics job
+The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. The solution is composed of several Azure components that perform various tasks, viz. data ingest, data storage, data movement, advanced analytics and visualization.  [Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is the ingestion point of raw records that will be processed in this solution. These are then pushed to Data Lake Store for storage and further processing by [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/). A second Stream Analytics job sends selected data to [PowerBI](https://powerbi.microsoft.com/) for near real time visualizations. [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the Azure Stream Analytics job
  by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart). Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) and visualized using Power BI.
 
 ----------
@@ -16,13 +16,13 @@ The architecture diagram above shows the solution design for Population Health M
 To build the pipeline above for this solution, we will need to carry out the following steps:
 
 - [Create an Azure Resource Group for the solution](#azurerg)
-- [Create Azure Storage Account](#azuresa) (Move resources to this storage account)
-- [Create an Azure Event Hub](#azureeh) (Add two Consumer Groups)
+- [Create Azure Storage Account](#azuresa) 
+- [Create an Azure Event Hub](#azureeh) 
 - [Create an Azure Data Lake Store](#azuredls)
 - [Download and configure the data generator](#gen)
 - [Create Azure Data Lake Analtytics](#azuredla)
-- [Create Azure Stream Analytics Job](#azurestra) (Cold and Hot Paths)
-- [Create Azure Data Factory](#azuredf) (Linked Services, Datasets, Pipeline)
+- [Create Azure Stream Analytics Job](#azurestra) 
+- [Create Azure Data Factory](#azuredf) 
 
 Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
 
@@ -55,7 +55,13 @@ Hub" below:
 
  - healthcareehns should actually be spelled healthcare**mj01**ehns 
  - healthcareeh should actually be spelled healthcare**mj01**eh  
-  
+
+### Accessing Files in the Git Repository
+
+This tutorial will refer to files available in the Manual Deployment Guide section of the [Population Health Management  git repository](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide). You can download all of these files at once by clicking the "Clone or download" button on the repository.
+
+You can download or view individual files by navigating through the repository folders. If you choose this option, be sure to download the "raw" version of each file by clicking the filename to view it, then cliking Download.
+
 ----------
 
 Deployment Steps:
@@ -110,17 +116,17 @@ This section will walk you through the steps to manually create the population h
 
   Now you will move the neccesary files into the newly created containers. These files are the raw events used by the data generator as well as usql scripts that 
   will be called by the Azure Data Factory pipeline.
-  - Download the files in the [rawevents folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/rawevents) locally on your machine.
+  - Download the files in [this](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator)folder (rawevents/files_datagenerator/) locally on your machine.
   - Select the *data* container that was just created above.
   - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of rawevent on your machine. 
   - Select the files and click **Upload**.
-  - Download the files in the [scripts/datafactory/scripts_adls folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactory) locally on your machine.
+  - Download the files in the [this](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder (scripts/datafactory/scripts_storage/) locally on your machine.
   - Select the *scripts* container that was just created above.
   - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of scripts_adls on your machine. 
   - Select the files and click **Upload**.
 
   Navigate back to the storage account blade to collect important information that will be required in future steps. 
-  - On the storage account blade, select **Access keys** from the menu on the left.
+  - On the storage account blade, select **Access keys** from the [menu](screenshot) on the left.
   - Record the *STORAGE ACCOUNT NAME*, *KEY*, and *CONNECTION STRING* values for *key1*.
   - You will need these credentials when setting up a Linked Service to access the files in your blob through Azure Data Factory and also when starting the data generator.
 
@@ -174,31 +180,31 @@ This section will walk you through the steps to manually create the population h
   - Click ***Create***  
   - The creation step may take several minutes. 
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
-  value which from the Data Lake Store blade which will be in the form **adl://---.azuredatalakestore.net**  e.g. adl://gsciqs1w6yadls.azuredatalakestore.net/
+  value which from the Data Lake Store blade which will be in the [form](screenshot) **adl://---.azuredatalakestore.net**  e.g. adl://gsciqs1w6yadls.azuredatalakestore.net/
   - You will need this to connect PBI to the data in your Data Lake Store. 
   - Next we will create three folders (**adfrscripts**, **historic_meta**, **models** ) in our Data Lake Store and upload files to them.
      - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
      - In the next blade, click in Data Explorer at the top.
      - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **adfrscripts**. This folder will contain the R scripts deployed when submitting an ADLA job through usql scripts
      - Create two more folders the same way and name them **historic_meta** and **models**. Folder historic_meta will contain the historic data and some other files required for schema specification and mapping (.csv files). The model folder will contain the pretrained models (.rds files).
-     - Select the folder **adfrscripts** and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls]() here.
-     - Select the folder **historic_meta** and upload the contents of [rawevents/files_historic]() here
-     - Select the folder **models** and upload the contents of [scripts/datafactory/models]() here.  
+     - Select the folder **adfrscripts** and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_adls) here.
+     - Select the folder **historic_meta** and upload the contents of [rawevents/files_historic](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_historic) here
+     - Select the folder **models** and upload the contents of [scripts/datafactory/models](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/models) here.  
      - For the Azure Data Factory to run we need these files to be in place.
      
 
 
 ##   Start the Generator now 
-  With the [data for generator](rawevents/files_datagenerator folder) uploaded to storage, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
+  With the [data for generator](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
 
 <a name="gen"></a>
 ## Download and configure the data generator  
- - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/datagenerator) of this repository.  
+ - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository.  
  - Unzip this file to the local disk drive of a Windows Machine.  
  - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
     - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
-    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* that was collected after creating the Azure Event Hub.
-    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was collected after creating the Azure Storage account.
+    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* that was [collected](screenshot) after creating the Azure Event Hub.
+    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](screenshot) after creating the Azure Storage account.
     - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was collected after creating the Azure Storage account.  
 	- Save and close **HealthCareGenerator.exe.config** 
  - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
@@ -319,7 +325,7 @@ Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severi
         - Click the **Create** button to complete  
    
  - Navigate back to the Stream Analytics job blade and click ***Query***  
-    - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window. 
+    - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window. 
     - Click *SAVE*  
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select *Now*, then click on **Start**.   
@@ -327,7 +333,7 @@ select *Now*, then click on **Start**.
  
 <a name="azuredla"></a>
 ##   Create Azure Data Lake Analtytics 
-  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The usql script for various jobs (joining, scoring etc. ) can be found at scripts/datafactory/scripts_storage/ and will need to be uploaded to storage from where Azure Data Factory will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (viz. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store in the folders adfrscripts, historicdata and models. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One additional important step is to Install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end to end data science scenarios covering: merging various data files, feature engineering (FE), partitioned data model building, and post deployment, massively parallel FE and scoring.
+  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The usql script for various jobs (joining, scoring etc. ) can be found at [scripts/datafactory/scripts_storage/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder of this repository and will need to be uploaded to storage from where Azure Data Factory will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (viz. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store in the folders adfrscripts, historicdata and models. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One additional important step is to Install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end to end data science scenarios covering: merging various data files, feature engineering (FE), partitioned data model building, and post deployment, massively parallel FE and scoring.
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
@@ -342,7 +348,7 @@ select *Now*, then click on **Start**.
   - The creation step may take several minutes.
   - When completed, navigate back to the resource group blade and select the ***healthcareadla*** Data Lake Account.
   - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
-  - In the Sample Scripts blade, click on Install U-SQL Extensions to install U-SQL Extensions to your account.
+  - In the Sample Scripts [blade](screenshot), click on Install U-SQL Extensions to install U-SQL Extensions to your account.
   - This step will enable R (and python) extensions to work with ADLA.
 
 <a name="azuredf"></a>
@@ -364,7 +370,7 @@ select *Now*, then click on **Start**.
   - The creation step may take several minutes.  
 
 ### Azure Data Factory Linked Services
-  In order for data factory to link to the data locations, we will need to create a 'Linked Service' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create Linked Service for Azure Storage account which contains the USQL scripts, the Azure Data Lake Store where the data resides, and finally the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
+  In order for data factory to link to the data locations, we will need to create a '[Linked Service](https://docs.microsoft.com/en-us/rest/api/datafactory/data-factory-linked-service)' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create Linked Service for Azure Storage account which contains the USQL scripts, the Azure Data Lake Store where the data resides, and finally the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
 
   Azure Storage Linked Service
 
@@ -405,7 +411,7 @@ select *Now*, then click on **Start**.
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade instead of *New data store* click on *... More* and from the drop down choose **New dataset** and then *Azure Data Lake Store* from the list.
-  - The template contains quite a few settings, which we will not cover. Instead download the file *inputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains quite a few settings, which we will not cover. Instead download the file *inputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - At the top of the blade, click *Deploy*
@@ -441,7 +447,7 @@ select *Now*, then click on **Start**.
  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - Right click on *Pipelines* and choose *New pipeline*
-  - The template contains an empty pipeline. Download the file *pipeline.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains an empty pipeline. Download the file *pipeline.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - **DO NOT** click  *Deploy* yet
@@ -450,7 +456,7 @@ select *Now*, then click on **Start**.
 
   #### Joining
 
-  This activity executes a [USQL script](hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result 
   is a single output file with the results for the 15 minute window this activity should cover. 
 
@@ -458,7 +464,7 @@ select *Now*, then click on **Start**.
   
   #### Scoring
 
-  This activity executes a [USQL script](hcadfstreamjoin.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
   a single output file with the scoring results for the 15 minute window this activity should cover.
 
@@ -466,19 +472,19 @@ select *Now*, then click on **Start**.
 
   #### Processing for PBI
 
-  This activity executes a [USQL script](hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to create data for visualization, and output the results of that work to
   a single output file for the 15 minute window this activity should cover.
 
   #### Appending
 
-  This activity executes a [USQL script](hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
 
   #### Activity Period
 
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
   properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your data factory will not be 
-  producing data over too long a period of time and we do that only because the [data generator]() (which you set up earlier and should be running) will not run infinitely. Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
+  producing data over too long a period of time and we do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
 
  **Azure Data Factory is deployed now**. Joined results will start to appear in the Azure Data Lake store in stream/joined followed by scored results in stream/scoring etc. For more on how to monitor the pipeline read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
 
