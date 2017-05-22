@@ -1,0 +1,259 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+// Copyright  Microsoft Corporation ("Microsoft").
+// 
+// Microsoft grants you the right to use this software in accordance with your subscription agreement, if any, to use software 
+// provided for use with Microsoft Azure ("Subscription Agreement").  All software is licensed, not sold.  
+// 
+// If you do not have a Subscription Agreement, or at your option if you so choose, Microsoft grants you a nonexclusive, perpetual, 
+// royalty-free right to use and modify this software solely for your internal business purposes in connection with Microsoft Azure 
+// and other Microsoft products, including but not limited to, Microsoft R Open, Microsoft R Server, and Microsoft SQL Server.  
+// 
+// Unless otherwise stated in your Subscription Agreement, the following applies.  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT 
+// WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL MICROSOFT OR ITS LICENSORS BE LIABLE 
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SAMPLE CODE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//
+// hcadfstreampbi.usql
+// Script summary:
+// This usql script is used to submit ADLA job that constitutes the third activity in ADF pipeline
+// In this usql script, we will extract the scored data.
+// We will pass this data to an R script, which will return curated data for visualisation
+// Finally we will drop the first column- the partition column before writing the output
+// We will deploy the following reosurces
+// - R script that creates data for visualisation - "phm_forpbi_streamed.R"
+//   these should be in your data lake store in folder /adfrscripts
+// - A schema file "R_schema_with_data_type_phm_data.csv"
+//   these should be in your data lake store in folder /historic_meta
+// This usql script will return the raw data plus predictions
+// inputFile and outputFile variables are used in the script but not explicitly declared!!
+// This is because these are defined by activities parameters of the adf pipeline json definition (source).
+
+
+REFERENCE ASSEMBLY [ExtR];
+
+//for row based operations, we can choose to split the data (DoBalancedComputing_Flag=true) among PartitionCount workers
+DECLARE @DoBalancedComputing_Flag bool = false;
+DECLARE @PartitionCount int = 10;
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Deploy the following Resouce: R scripts, schema csv file, mapping csv files
+///////////////////////////////////////////////////////////////////////////////////
+
+
+DECLARE @path_Rscipt string     = @"/adfrscripts" ;   
+DECLARE @RScriptName string     = @"hcadfstreamforpbi.R";  
+DECLARE @RScriptFullName string = @path_Rscipt + @"/" + @RScriptName;
+DEPLOY RESOURCE @RScriptFullName;
+
+
+DECLARE @path_meta string       = @"/historic_meta" ;  
+
+DECLARE @MapFile1 string        = @path_meta + @"/" + @"Single_LevelCCS_Diagnoses_csv.csv";
+DEPLOY RESOURCE @MapFile1; 
+DECLARE @MapFile2 string        = @path_meta + @"/" + @"Single_LevelCCS_Procedures_csv.csv";
+DEPLOY RESOURCE @MapFile2; 
+
+
+
+//we can choose to receive the DF returned from R as a string (ReturnDF_Flag==true) or as a proper DF (ReturnDF_Flag==true)
+DECLARE @ReturnDF_Flag bool = true;
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Extract Data in variable @InputData from @inputFile (defined through adf)
+///////////////////////////////////////////////////////////////////////////////////
+
+@InputData = 
+    EXTRACT  	
+V1  string,
+V2  string,
+V3  string,
+V4  string,
+V5  string,
+V6  string,
+V7  string,
+V8  string,
+V9  string,
+V10  string,
+V11  string,
+V12  string,
+V13  string,
+V14  string,
+V15  string,
+V16  string,
+V17  string,
+V18  string,
+V19  string,
+V20  string,
+V21  string,
+V22  string,
+V23  string,
+V24  string,
+V25  string,
+V26  string,
+V27  string,
+V28  string,
+V29  string
+    FROM @inputFile
+    USING Extractors.Csv();  
+
+	
+/////////////////////////////////////////////////////////////////
+
+IF @DoBalancedComputing_Flag == true 
+THEN
+	@ExtendedData =
+            SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount) AS Par,
+		   *
+	    FROM @InputData;
+		//OPTION (ROWCOUNT=500000000);
+ELSE 
+	@ExtendedData =
+	    SELECT  0 AS Par,
+		   *
+	    FROM @InputData;
+		//OPTION (ROWCOUNT=500000000);  
+END;
+
+/////////////////////////////////////////////////////////////////
+//    Reduce the data and pass it to R script deployed above
+// 
+/////////////////////////////////////////////////////////////////
+
+@RScriptOutput = REDUCE @ExtendedData ON Par
+	PRODUCE 
+	Par, 
+	V1  string,
+	V2  string,
+	V3  string,
+	V4  string,
+	V5  string,
+	V6  string,
+	V7  string,
+	V8  string,
+	V9  string,
+	V10  string,
+	V11  string,
+	V12  string,
+	V13  string,
+	V14  string,
+	V15  string,
+	V16  string,
+	V17  string,
+	V18  string,
+	V19  string,
+	V20  string,
+	V21  string,
+	V22  string,
+	V23  string,
+	V24  string,
+	V25  string,
+	V26  string,
+	V27  string,
+	V28  string,
+	V29  string,
+	V30  string,
+	V31  string,
+	V32  string,
+	V33  string,
+	V34  string,
+	V35  string,
+	V36  string,
+	V37  string,
+	V38  string,
+	V39  string,
+	V40  string,
+	V41  string,
+	V42  string,
+	V43  string,
+	V44  string,
+	V45  string,
+	V46  string,
+	V47  string,
+	V48  string,
+	V49  string,
+	V50  string,
+	V51  string,
+	V52  string,
+	V53  string,
+	V54  string
+	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", stringsAsFactors:false);
+
+
+/////////////////////////////////////////////////////////////////
+//               Drop the PAR column from @RScriptOutput
+///////////////////////////////////////////////////////////////// 
+
+@SavedData =
+    SELECT 	
+    V1,
+	V2,
+	V3,
+	V4,
+	V5,
+	V6,
+	V7,
+	V8,
+	V9,
+	V10,
+	V11,
+	V12,
+	V13,
+	V14,
+	V15,
+	V16,
+	V17,
+	V18,
+	V19,
+	V20,
+	V21,
+	V22,
+	V23,
+	V24,
+	V25,
+	V26,
+	V27,
+	V28,
+	V29,
+	V30,
+	V31,
+	V32,
+	V33,
+	V34,
+	V35,
+	V36,
+	V37,
+	V38,
+	V39,
+	V40,
+	V41,
+	V42,
+	V43,
+	V44,
+	V45,
+	V46,
+	V47,
+	V48,
+	V49,
+	V50,
+	V51,
+	V52,
+	V53,
+	V54
+    FROM @RScriptOutput;
+
+/////////////////////////////////////////////////////////////////
+//      Write the output to outputFile (defined through adf)
+/////////////////////////////////////////////////////////////////  
+
+OUTPUT @SavedData 
+    TO @outputFile 
+	USING Outputters.Csv(outputHeader : true, quoting:false);    
+
+   
+	
+  
