@@ -51,6 +51,8 @@ DECLARE @RScriptName string            = @"hcadfstreamscore.R";
 DECLARE @RScriptFullName string        = @path_Rscipt + @"/" + @RScriptName;
 DEPLOY RESOURCE @RScriptFullName;
 
+DECLARE @inputFile string  =  @"/stream/joined/2017/05/12/10/30_join.csv";
+DECLARE @outputFile string =  @"/mytempfolder/hcadfstreamscore_lean_wheader.csv";
 
 DECLARE @path_models string = @"/models";
 DECLARE @model00 string     = @path_models + @"/" + @"allotherhosp_LOSmodel.rds";
@@ -975,5 +977,5 @@ FROM @InputData AS streamData
 	  
 OUTPUT @StreamedDataMergedWithPrediction 
        TO @outputFile 
-	   USING Outputters.Csv(quoting : false);
+	   USING Outputters.Csv(outputHeader : true, quoting : false);
 

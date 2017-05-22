@@ -52,16 +52,17 @@ DEPLOY RESOURCE @RScriptFullName;
 
 
 DECLARE @path_meta string       = @"/historic_meta" ;  
-
 DECLARE @MapFile1 string        = @path_meta + @"/" + @"Single_LevelCCS_Diagnoses_csv.csv";
 DEPLOY RESOURCE @MapFile1; 
 DECLARE @MapFile2 string        = @path_meta + @"/" + @"Single_LevelCCS_Procedures_csv.csv";
 DEPLOY RESOURCE @MapFile2; 
 
 
-
 //we can choose to receive the DF returned from R as a string (ReturnDF_Flag==true) or as a proper DF (ReturnDF_Flag==true)
 DECLARE @ReturnDF_Flag bool = true;
+
+//we process everything in R UDO using the deployed schema (col names and types) so 
+//data type and col names in USQL is irrelevant hence we use 'string' for everything. 
 
 ///////////////////////////////////////////////////////////////////////////////////
 //   Extract Data in variable @InputData from @inputFile (defined through adf)
@@ -99,7 +100,7 @@ V27  string,
 V28  string,
 V29  string
     FROM @inputFile
-    USING Extractors.Csv();  
+    USING Extractors.Csv(skipFirstNRows: 1);  
 
 	
 /////////////////////////////////////////////////////////////////
@@ -110,13 +111,11 @@ THEN
             SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount) AS Par,
 		   *
 	    FROM @InputData;
-		//OPTION (ROWCOUNT=500000000);
 ELSE 
 	@ExtendedData =
 	    SELECT  0 AS Par,
 		   *
 	    FROM @InputData;
-		//OPTION (ROWCOUNT=500000000);  
 END;
 
 /////////////////////////////////////////////////////////////////
@@ -125,8 +124,8 @@ END;
 /////////////////////////////////////////////////////////////////
 
 @RScriptOutput = REDUCE @ExtendedData ON Par
-	PRODUCE 
-	Par, 
+PRODUCE 
+Par, 
 	V1  string,
 	V2  string,
 	V3  string,
@@ -181,70 +180,70 @@ END;
 	V52  string,
 	V53  string,
 	V54  string
-	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe", stringsAsFactors:false);
+	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
 
 
 /////////////////////////////////////////////////////////////////
 //               Drop the PAR column from @RScriptOutput
 ///////////////////////////////////////////////////////////////// 
-
 @SavedData =
     SELECT 	
-    V1,
-	V2,
-	V3,
-	V4,
-	V5,
-	V6,
-	V7,
-	V8,
-	V9,
-	V10,
-	V11,
-	V12,
-	V13,
-	V14,
-	V15,
-	V16,
-	V17,
-	V18,
-	V19,
-	V20,
-	V21,
-	V22,
-	V23,
-	V24,
-	V25,
-	V26,
-	V27,
-	V28,
-	V29,
-	V30,
-	V31,
-	V32,
-	V33,
-	V34,
-	V35,
-	V36,
-	V37,
-	V38,
-	V39,
-	V40,
-	V41,
-	V42,
-	V43,
-	V44,
-	V45,
-	V46,
-	V47,
-	V48,
-	V49,
-	V50,
-	V51,
-	V52,
-	V53,
-	V54
+V1 AS [DSHOSPID] , 
+V2 AS [KEY] , 
+V3 AS [AGE] , 
+V4 AS [AMONTH] , 
+V5 AS [ATYPE] , 
+V6 AS [DISPUB04] , 
+V7 AS [DRG] , 
+V8 AS [DX1] , 
+V9 AS [DXCCS1] , 
+V10 AS [HOSPST] , 
+V11 AS [Homeless] , 
+V12 AS [LOS] , 
+V13 AS [MDC] , 
+V14 AS [MEDINCSTQ] , 
+V15 AS [PR1] , 
+V16 AS [PRCCS1] , 
+V17 AS [PSTATE] , 
+V18 AS [PointOfOriginUB04] , 
+V19 AS [RACE] , 
+V20 AS [TOTCHG] , 
+V21 AS [VisitLink] , 
+V22 AS [ZIP] , 
+V23 AS [AYEAR] , 
+V24 AS [DXMCCS1] , 
+V25 AS [PRMCCS1] , 
+V26 AS [Readmitted] , 
+V27 AS [DXCCS_name] , 
+V28 AS [PRCCS_name] , 
+V29 AS [PRMCCS_name] , 
+V30 AS [DXMCCS_name] , 
+V31 AS [TRANSFER_IN] , 
+V32 AS [MDC_name] , 
+V33 AS [TOTCHG_bin] , 
+V34 AS [LOS_bin] , 
+V35 AS [CHGperday] , 
+V36 AS [AGE_bin] , 
+V37 AS [AGE_bin2] , 
+V38 AS [PAYER1] , 
+V39 AS [GENDER] , 
+V40 AS [HOSPZIP] , 
+V41 AS [Readmitted_num] , 
+V42 AS [myrownum] , 
+V43 AS [ecol1] , 
+V44 AS [ecol2] , 
+V45 AS [ecol3] , 
+V46 AS [ecol4] , 
+V47 AS [ecol5] , 
+V48 AS [ecol6] , 
+V49 AS [ecol7] , 
+V50 AS [CHRONIC_conditions] , 
+V51 AS [ecol8] , 
+V52 AS [ecol9] , 
+V53 AS [ecol10] , 
+V54 AS [Readmittance_conditions]
     FROM @RScriptOutput;
+
 
 /////////////////////////////////////////////////////////////////
 //      Write the output to outputFile (defined through adf)

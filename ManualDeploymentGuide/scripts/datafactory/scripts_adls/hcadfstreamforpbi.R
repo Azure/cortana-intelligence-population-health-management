@@ -384,15 +384,16 @@ fun_addcols = function(dat){
   
   dat$myrownum = NA
   
+  dat$LOS = as.numeric(dat$LOS)
   dat$LOS = round(dat$LOS)
   dat$LOS[dat$LOS < 1] = 1
   
-  #===========================================================
-  # reorder to make it consistent with the schema for data4PBI_simulated
-  myorder = c('DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
-  dat     = dat[,myorder]
-  #===========================================================
-  
+  # #===========================================================
+  # # reorder to make it consistent with the schema for data4visualization_hist.csv 
+  # myorder = c('DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
+  # dat     = dat[,myorder]
+  # #===========================================================
+  # 
   return(dat)
   
 }
@@ -405,14 +406,13 @@ fun_addcols = function(dat){
 # Input and output DataFrame identifier names are fixed 
 # (i.e. users cannot change these predefined names of input and output DataFrame identifiers).
 
-my_inputFromUSQL = inputFromUSQL
+my_inputFromUSQL = inputFromUSQL[,-1] #drop the Par column
 
-colsforvis       = c('KEY','AGE','FEMALE','RACE','Homeless','PSTATE','MEDINCSTQ','ZIP','DSHOSPID','VisitLink','HOSPST','PAY1','TRAN_IN','AYEAR','AMONTH','ATYPE','PointOfOriginUB04','DISPUB04','LOS','MDC','DRG','DX1','DXCCS1','DXMCCS1','PR1','PRCCS1','PRMCCS1','TOTCHG','LOS_pred')
-
+colsforvis  = c('KEY','AGE','FEMALE','RACE','Homeless','PSTATE','MEDINCSTQ','ZIP','DSHOSPID','VisitLink','HOSPST','PAY1','TRAN_IN','AYEAR','AMONTH','ATYPE','PointOfOriginUB04','DISPUB04','LOS','MDC','DRG','DX1','DXCCS1','DXMCCS1','PR1','PRCCS1','PRMCCS1','TOTCHG','LOS_pred')
 
 names(my_inputFromUSQL) = colsforvis
 
-# renaming a few columns as they appear in HCUP data
+# renaming a few columns to as they appear in HCUP data
 names(my_inputFromUSQL)[names(my_inputFromUSQL)=='VISITLINK']         = 'VisitLink'
 names(my_inputFromUSQL)[names(my_inputFromUSQL)=='POINTOFORIGINUB04'] = 'PointOfOriginUB04'
 names(my_inputFromUSQL)[names(my_inputFromUSQL)=='HOMELESS']          = 'Homeless'
@@ -426,15 +426,22 @@ my_inputFromUSQL$ATYPE = gsub('ATYPE_','',my_inputFromUSQL$ATYPE)  # setting the
 dat = fun_addcols(my_inputFromUSQL)
 
 #######################################################################
+# reorder to make it consistent with the schema for data4visualization_hist.csv 
+schema_pbi = c('DSHOSPID','KEY','AGE','AMONTH','ATYPE','DISPUB04','DRG','DX1','DXCCS1','HOSPST','Homeless','LOS','MDC','MEDINCSTQ','PR1','PRCCS1','PSTATE','PointOfOriginUB04','RACE','TOTCHG','VisitLink','ZIP','AYEAR','DXMCCS1','PRMCCS1','Readmitted','DXCCS_name','PRCCS_name','PRMCCS_name','DXMCCS_name','TRANSFER_IN','MDC_name','TOTCHG_bin','LOS_bin','CHGperday','AGE_bin','AGE_bin2','PAYER1','GENDER','HOSPZIP','Readmitted_num','myrownum','ecol1','ecol2','ecol3','ecol4','ecol5','ecol6','ecol7','CHRONIC_conditions','ecol8','ecol9','ecol10','Readmittance_conditions')
+dat_out    = dat[,schema_pbi]
+
+
+#===========================================================
+
 # for all to be string for output
-dat = data.frame(lapply(dat,as.character))
+dat_out = data.frame(lapply(dat_out,as.character))
 
 #######################################################################
 # rename the colnames for usql..make then V1 V2...
-names(dat)   = paste('V',1:ncol(dat),sep='')
+names(dat_out)   = paste('V',1:ncol(dat_out),sep='')
 
 #######################################################################
-outputToUSQL =  dat
+outputToUSQL =  dat_out
 
 
 
