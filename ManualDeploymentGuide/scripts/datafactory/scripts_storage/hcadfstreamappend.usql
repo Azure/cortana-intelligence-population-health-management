@@ -95,7 +95,7 @@ DECLARE @outputFile                 = @"/pbidataforPHM/data4visualization_latest
 	readmittance_conditions string,
 	folderDate DateTime 
     FROM @inputFile
-    USING Extractors.Csv(skipFirstNRows: 1);  
+    USING Extractors.Csv(skipFirstNRows: 1, silent: true);  
 
 ///////////////////////////////////////////////////////////////////////
 //    Select all streamed data forPBI since @dataAquisitionStart
