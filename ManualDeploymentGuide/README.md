@@ -123,23 +123,30 @@ Navigate back to the storage account blade to collect important information that
   - Enter the name *data* and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *data* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this]() command
+  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt?token=AKE1neHB2wqJmtWR7xCWza99BaGdqMPhks5ZLdTIwA%3D%3D) command
   - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing. 
   - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) files appear in your container *data*
   - Click __+ Container__  to create the second container.
   - Enter the name *scripts* and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *scripts* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this]() command 
+  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/azCopy_command_scripts.txt?token=AKE1ndBKnGTm9Rq7A0cWbXKYgYwcU13Zks5ZLcsQwA%3D%3D) command 
   - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing.
-  - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) files appear in your container *scripts*
+  - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) four usql files appear in your container *scripts*
+  - Click __+ Container__  to create the third container.
+  - Enter the name *forphmdeploymentbyadf* and change the *Access type* to **blob**.
+  - Click ***Create***
+  - You should see *forphmdeploymentbyadf* appear in the list of containers
+  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/azCopy_command_scripts.txt?token=AKE1ndBKnGTm9Rq7A0cWbXKYgYwcU13Zks5ZLcsQwA%3D%3D) command 
+  - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing.
+  - Click refresh and you should see all the files in the folders [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container *forphmdeploymentbyadf*. 
 
   Alternative to using AzCopy is to manually download the contents from the git repository to your local machine and upload them to the appropriate containers by following the instructions below (*Skip* if you are using AzCopy).
-  - Download the files in [rawevents/files_datagenerator/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) folder locally on your machine.
+  - Download the csv files in [rawevents/files_datagenerator/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) folder locally on your machine.
   - Select the *data* container that was just created above.
   - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of rawevent on your machine. 
   - Select the files and click **Upload**.
-  - Download the files in the [scripts/datafactory/scripts_storage/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder locally on your machine.
+  - Download the usql files in the [scripts/datafactory/scripts_storage/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder locally on your machine.
   - Select the *scripts* container that was just created above.
   - Click ***Upload*** at the top of the container blade and navigate to where you downloaded the contents of scripts_adls on your machine. 
   - Select the files and click **Upload**.
@@ -176,8 +183,8 @@ Navigate back to the storage account blade to collect important information that
  - On the ***healthcareeehns*** blade choose [*Shared access policies*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub1.PNG?token=AKE1nbxn0yvjW04vjuNLprBto3cyzmieks5ZLbz7wA%3D%3D) from the menu under Settings.
  - Select [**RootManageSharedAccessKey**](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nXUjKUgJL3wh1vgoyn9wKU8jTntHks5ZLb0kwA%3D%3D) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
  - Return to the ***healthcareehns*** blade and choose *Overview* from the menu, click on Event Hub under Entities and record the event hub name you just created.
- - Click on ***healthcareeh** and choose *Overview* from the menu. 
- - Click on Consumer Groups under Entities and it will open a pane contaning the list of Consumer Groups you just added. Copy the names coldpathcg and hotpathcg. You will need these when setting up the stream analytics job.
+ - Click on **healthcareeh** and choose *Overview* from the menu. 
+ - Click on Consumer Groups under Entities and it will open a pane containing the list of Consumer Groups you just added. Copy the names coldpathcg and hotpathcg. You will need these when setting up the stream analytics job.
  
 
 <a name="azuredls"></a>
@@ -197,6 +204,18 @@ Navigate back to the storage account blade to collect important information that
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
   value which from the Data Lake Store blade which will be in the [form](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nZJeOG7q3pFgLOTS-Cp-7CHCOKZIks5ZLcgEwA%3D%3D) **adl://__****__.azuredatalakestore.net**  
   - You will need this to connect PBI to the data in your Data Lake Store. 
+
+  ### Move resources to Data Lake Store
+  - Navigate back to the Resource group and select the Data lake Store you just created. 
+  - In the next blade, click in Data Explorer at the top.
+  - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
+  - We will use AzCopy to get the contents for *forphmdeploymentbyadf* locally on our machine.
+  - In the AzCopy terminal, type the following [command]().
+  - Navigate to the folder C:\forphmdeploymentbyadf on your machine. Next we will upload these files to our Data Lake Store
+  - Select the folder **forphmdeploymentbyadf** in your Data Lake Store that you just created and click on Upload at the top. Upload the contents of C:\forphmdeploymentbyadf here.
+  - This will take time depending on your bandwidth.
+  - We can also use one time copy wizard in Data Factory to move files from the storage container *forphmdeploymentbyadf* we created above to the folder *forphmdeploymentbyadf* in our Data lake store. 
+  - 
   - Next we will create three folders (**adfrscripts**, **historic_meta**, **models** ) in our Data Lake Store and upload files to them.
      - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
      - In the next blade, click in Data Explorer at the top.
