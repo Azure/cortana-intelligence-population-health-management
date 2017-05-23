@@ -1,1 +1,1 @@
-This folder contains the pre-trained models.
+The pre-trained models are stored in a blob. Using the AzCopy command provided (azCopy_command_models.txt) they can be downloaded locally to your machine.  
