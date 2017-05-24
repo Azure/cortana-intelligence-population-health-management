@@ -1,4 +1,4 @@
-The R scripts and csv files here need to be uploaded to Data Lake store. Besides these files we will also need the eleven pretrained models (not uploaded to git here) in Data Lake Store. All these will be used by Data Factory pipeline. 
+The R scripts, csv files in folder forphmdeploymentbyadf here need to be uploaded to Data Lake store. Besides these files we will also need the eleven pretrained models (not uploaded to git here) in Data Lake Store. All these will be used by Data Factory pipeline. 
 All these seventeen files reside in a public Azure storage container.
 Using the AzCopy command provided (azCopy_command_forphmdeploymentbyadf_toblob.txt) they can be transferred directly to your storage account.
 Once they are in your storage account, we will use one time ADF copy activity to transfer to Data Lake Store.
