@@ -29,7 +29,7 @@ In the Cost Report, we look at the Total Charge , Total cost of chronic disease 
 In this report we look at Most Readmitted Conditions, Readmittance by Payer and Age. To reduce readmision you get an insight into who to target and intervene to prevent, reduce readmittance.
 ![](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbi_InterventionProfile.PNG?token=AKE1nVkume5N4-ymiEcrIP8yAOuTi1F0ks5ZLkX7wA%3D%3D)
 
-# **Readmittance Tracking**
+# **Readmission Tracking**
 
 In this report we track Readmittance rate for certain conditions for different hospitals. There is also a metric file that we use for this visualisation thaat contains the goal to be met by a hospital regarding their readmit rate. By monitoring how they are doing every month, they can by proactive about measures to meet their target.
 ![](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbi_ReadmissionTracking.PNG?token=AKE1nS883OG5_x_3yFGUnyWxicS6Q4nSks5ZLkZuwA%3D%3D)
