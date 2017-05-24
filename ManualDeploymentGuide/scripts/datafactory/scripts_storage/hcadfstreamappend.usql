@@ -28,10 +28,9 @@
 
 DECLARE @numrowsforpbi int          = 1000000;                  // number of rows used for PBI visualization
 DECLARE @dataAquisitionStart string = @"05/01/2017 21:25:00";   // set it some date in the past before the streaming started
-DECLARE @HistoricalDataFile string  = @"/historic_meta/data4visualization_hist.csv";   // location of historic data
+DECLARE @HistoricalDataFile string  = @"/forphmdeploymentbyadf/data4visualization_hist.csv";   // location of historic data
 DECLARE @inputFile string           = "/stream/forPBI/{folderDate:yyyy}/{folderDate:MM}/{folderDate:dd}/{folderDate:HH}/{folderDate:mm}_forPBI.csv";
 DECLARE @outputFile                 = @"/pbidataforPHM/data4visualization_latest.csv"; // location of output data
-
 
 //////////////////////////////////////////////////////////
 //           Extract all streamed data forPBI

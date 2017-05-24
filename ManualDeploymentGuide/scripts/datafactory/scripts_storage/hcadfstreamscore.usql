@@ -26,9 +26,9 @@
 // Finally we will join the predictions to the original data in usql.
 // We will deploy the following reosurces
 // - R script that does the scoring - hcadfstreamscore.R
-//   these should be in your data lake store in folder /adfRscripts
+//   these should be in your data lake store in folder /forphmdeploymentbyadf
 // - The pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc.
-//   these should be in your data lake store in folder /models 
+//   these should be in your data lake store in folder /forphmdeploymentbyadf 
 // This usql script will return the predictions with some more columns necessary for creating data for visualization in the next step
 // inputFile and outputFile variables are used in the script but not explicitly declared!
 // This is because these are defined by activities parameters of the adf pipeline json definition (source).
@@ -44,23 +44,23 @@ DECLARE @PartitionCount int = 10;
 //   Deploy the following Resouce: R scripts, schema csv file, pretrained models. 
 ///////////////////////////////////////////////////////////////////////////////////
 
-DECLARE @path_Rscipt string            = @"/adfrscripts" ;   
+DECLARE @path_Rscipt string            = @"/forphmdeploymentbyadf" ;   
 DECLARE @RScriptName string            = @"hcadfstreamscore.R";  
 DECLARE @RScriptFullName string        = @path_Rscipt + @"/" + @RScriptName;
 DEPLOY RESOURCE @RScriptFullName;
 
 
-DEPLOY RESOURCE @"/models/allotherhosp_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_1_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_2_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_3_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_4_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_5_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_6_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_7_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_8_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_9_LOSmodel.rds";
-DEPLOY RESOURCE @"/models/hosp_10_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/allotherhosp_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_1_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_2_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_3_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_4_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_5_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_6_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_7_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_8_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_9_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_10_LOSmodel.rds";
 
 
 ///////////////////////////////////////////////////////////////////////////////////
