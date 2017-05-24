@@ -1,1 +1,0 @@
-These 4 files are used by the generator to simulate steaming data.
