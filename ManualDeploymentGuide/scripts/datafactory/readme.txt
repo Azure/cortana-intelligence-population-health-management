@@ -1,7 +1,7 @@
 The scripts and files here need to be uploaded to Data Lake store and will be used by Data Factory. 
-Using the AzCopy command provided (azCopy_command_forphmdeploymentbyadf.txt) they can be downloaded locally on your machine. 
+Using the AzCopy command provided (azCopy_command_forphmdeploymentbyadf_tolocal.txt) they can be downloaded locally on your machine. 
 
-You will see the following files -
+You will see the following seventeen files in C:\forphmdeploymentbyadf 
 allotherhosp_LOSmodel.rds          881M
 data4visualization_hist.csv        546M
 hcadfstreamforpbi.R                23K
