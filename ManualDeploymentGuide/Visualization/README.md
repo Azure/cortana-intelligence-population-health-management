@@ -17,19 +17,19 @@ A population health report lets the health care providers get an insight into th
 
 > Note:  1) In this step, the prerequisite is to download and install the free software [Power BI desktop](https://powerbi.microsoft.com/desktop). 2) We recommend you start this process 2-3 hours after you deploy the solution so that you have more data points to visualize.
 
-Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near real time as new patients get admitted to the hospital. The provided PBI file needs to connect to two data files in Data Lake store: data4PBI_simulated.csv and ReadmittanceTarget.csv. In the exercise below we will change the source of the Power BI file from local to the csv files in ADLS.
+Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near real time as new patients get admitted to the hospital. The provided PBI file needs to connect to two data files in Data Lake store: data4visualization_latest.csv and ReadmittanceTarget.csv. In the exercise below we will change the source of the Power BI file from local to the csv files in ADLS.
 
 #### 1) Get the credentials.
 
-  Go to your adls file location through Azure portal and copy the url. The ADLS location URL looks like
-adl://shaheenphmadlsdefault.azuredatalakestore.net/. 
+  Go to your adls file location through Azure portal and copy the url. The ADLS location URL looks [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nZJeOG7q3pFgLOTS-Cp-7CHCOKZIks5ZLcgEwA%3D%3D)
+adl://__****__adlsdefault.azuredatalakestore.net/. 
 Screenshot.
 
 #### 2)	Get the query connection string
 
-  -  We will get the connection string by connecting a new Power BI desktop file to our two csv files in ADLS. Open  a new Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter ADLS URL. Enter the URL you got in step 1. You will be prompted to sign in. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
+  -  We will get the connection string by connecting a new Power BI desktop file to our two csv files in ADLS. Open  a new Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
 
-  -	Locate the file you want to connect to (data4PBI_simulated.csv) and click Load. After the data has been successfully loaded into Power BI, you will see the following fields in the Fields tab. 
+  -	You will a list of all the folders in your Data Lake store. Locate the file you want to connect to (data4visualization_latest.csv) and click Load. After the data has been successfully loaded into Power BI, you will see the following fields in the Fields tab. [Read](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
   
   -	From the Home ribbon, click Edit Queries. In the Query Editor, under the Content column, click Binary. Your data is now available in a format that you can use to create visualizations.
   
@@ -37,7 +37,7 @@ Screenshot.
  
   -	Now that the Power BI is connected to the file in ADLS, click on Edit Querries and then click on Advanced Editor in the Home Ribbon. An editor will pop out with the connection string. Copy the contents of the editor in a notepad. We will use it to replace the contents of the Advanced Editor in the provided .pbix file in order to change the data source form a local csv to the csv file in ADLS.
   
-  -	 We will do the same steps as above for the second file 'ReadmittanceTarget.csv'. Save the connection string for this file in a notepad as well.	
+  -	 We will do the same steps as above for the second file 'ReadmittanceTarget.csv'. Save the connection query for this file in a notepad as well.	
   
 #### 3)	Update the data source of the Power BI file
 
