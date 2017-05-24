@@ -62,7 +62,7 @@ This tutorial will refer to files available in the Manual Deployment Guide secti
 
 You can download or view individual files by navigating through the repository folders. If you choose this option, be sure to download the "raw" version of each file by clicking the filename to view it, then cliking Download.
 
-### [Installing AzCopy Command-Line Utility](#azcopy)
+### Installing AzCopy Command-Line Utility
 
 AzCopy is a Windows command-line utility designed for copying data to and from Microsoft Azure storage. Download AzCopy from [here](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy). Open this desktop App you just installed by [searching](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy1.jpg?token=AKE1nQrJ204qRnprULTFa5APQBGY43g4ks5ZLbawwA%3D%3D) for ‘Microsoft Azure Storage command line’ or simple ‘azure storage command’. Open this app and you will get a [command prompt](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nVnp0yWCsgwyopVrNOIS4-NmbLSSks5ZLbbJwA%3D%3D). We will use this utility to transfer files to and from blob.
 
@@ -201,7 +201,7 @@ Navigate back to the storage account blade to collect important information that
   - In the next blade, click on Data Explorer at the top.
   - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
   - We will use AzCopy to get the contents for *forphmdeploymentbyadf* locally on our machine.
-  - In the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D), type the [command](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_tolocal.txt?token=AKE1nXSNmQ-X2gJn_HdToyrFEEgjzcEHks5ZLgoMwA%3D%3D).
+  - In the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D), type this [command](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_tolocal.txt?token=AKE1nXSNmQ-X2gJn_HdToyrFEEgjzcEHks5ZLgoMwA%3D%3D).
   - Navigate to the folder C:\forphmdeploymentbyadf on your machine. You should see seventeen [files](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) there. Next you will upload these files to our Data Lake Store.
   - Select the folder **forphmdeploymentbyadf** in your Data Lake Store that you just created and click on Upload at the top. Upload the contents of C:\forphmdeploymentbyadf here.
   - This will take time depending on your bandwidth.
