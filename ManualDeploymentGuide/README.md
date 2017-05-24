@@ -201,22 +201,13 @@ Navigate back to the storage account blade to collect important information that
   - In the next blade, click on Data Explorer at the top.
   - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
   - We will use AzCopy to get the contents for *forphmdeploymentbyadf* locally on our machine.
-  - In the AzCopy terminal, type the [command](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_tolocal.txt?token=AKE1nXSNmQ-X2gJn_HdToyrFEEgjzcEHks5ZLgoMwA%3D%3D).
+  - In the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D), type the [command](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_tolocal.txt?token=AKE1nXSNmQ-X2gJn_HdToyrFEEgjzcEHks5ZLgoMwA%3D%3D).
   - Navigate to the folder C:\forphmdeploymentbyadf on your machine. You should see seventeen [files](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) there. Next you will upload these files to our Data Lake Store.
   - Select the folder **forphmdeploymentbyadf** in your Data Lake Store that you just created and click on Upload at the top. Upload the contents of C:\forphmdeploymentbyadf here.
   - This will take time depending on your bandwidth.
   - We can also use one time copy wizard in Data Factory to move files from the storage container *forphmdeploymentbyadf* we created above to the folder *forphmdeploymentbyadf* in our Data lake store. 
-  - 
-  - Next we will create three folders (**adfrscripts**, **historic_meta**, **models** ) in our Data Lake Store and upload files to them.
-     - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
-     - In the next blade, click in Data Explorer at the top.
-     - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **adfrscripts**. This folder will contain the R scripts deployed when submitting an ADLA job through usql scripts
-     - Create two more folders the same way and name them **historic_meta** and **models**. Folder historic_meta will contain the historic data and some other files required for mapping etc. (.csv files). The model folder will contain the pretrained models (.rds files).
-     - Select the folder **adfrscripts** and click on Upload at the top. Upload the contents of [scripts/datafactory/scripts_adls](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_adls) here.
-     - Select the folder **historic_meta** and upload the contents of [rawevents/files_historic](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_historic) here
-     - Select the folder **models** and upload the contents of [scripts/datafactory/models](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/models) here.  
-     - For the Azure Data Factory to run we need these files to be in place.
-     
+  - For the Azure Data Factory to run we need these files to be in place.
+  
 
 
 ##   Start the Generator now 
