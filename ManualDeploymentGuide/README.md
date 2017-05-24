@@ -200,15 +200,10 @@ Navigate back to the storage account blade to collect important information that
   - Navigate back to the Resource group and select the Data lake Store you just created. 
   - In the next blade, click on Data Explorer at the top.
   - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
-  - We will use AzCopy to get the contents for *forphmdeploymentbyadf* locally on our machine.
-  - In the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D), type this [command](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_tolocal.txt?token=AKE1nXSNmQ-X2gJn_HdToyrFEEgjzcEHks5ZLgoMwA%3D%3D).
-  - Navigate to the folder C:\forphmdeploymentbyadf on your machine. You should see seventeen [files](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) there. Next you will upload these files to our Data Lake Store.
-  - Select the folder **forphmdeploymentbyadf** in your Data Lake Store that you just created and click on Upload at the top. Upload the contents of C:\forphmdeploymentbyadf here.
-  - This will take time depending on your bandwidth.
-  - We can also use one time copy wizard in Data Factory to move files from the storage container *forphmdeploymentbyadf* we created above to the folder *forphmdeploymentbyadf* in our Data lake store. 
-  - For the Azure Data Factory to run we need these files to be in place.
+  - We will move resources to this folder in Data Lake Store using Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md).
+  - Since we have not created a Data Factory yet, we will do these steps after creating a Data Factory.
+  - For the Azure Data Factory to run we need these files to be in this folder.
   
-
 
 ##   Start the Generator now 
   With the [data for generator](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
@@ -384,6 +379,10 @@ select *Now*, then click on **Start**.
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
   - Click ***Create***  
   - The creation step may take several minutes.  
+
+### One time copy using Azure Data Factory
+  - We will move resources to the folder **forphmdeploymentadf** in Data Lake Store from the container **forphmdeploymentadf** in our storage account using copy activity in Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md).
+
 
 ### Azure Data Factory Linked Services
   In order for data factory to link to the data locations, we will need to create a '[Linked Service](https://docs.microsoft.com/en-us/rest/api/datafactory/data-factory-linked-service)' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create Linked Service for Azure Storage account which contains the USQL scripts, the Azure Data Lake Store where the data resides, and finally the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
