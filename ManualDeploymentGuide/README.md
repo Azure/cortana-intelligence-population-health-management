@@ -116,25 +116,25 @@ Navigate back to the storage account blade to collect important information that
 
 
   ### Move resources to the storage account
-  - We will create two containers - 'data' and 'scripts'
+  - We will create three containers - 'data','scripts' and 'forphmdeploymentbyadf'
   - Navigate back to the Resource group and select the storage account just created.
   - Click on *Blobs* in the storage account blade.
   - Click __+ Container__  
-  - Enter the name *data* and change the *Access type* to **blob**.
+  - Enter the name ***data*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *data* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt?token=AKE1neHB2wqJmtWR7xCWza99BaGdqMPhks5ZLdTIwA%3D%3D) command
   - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing. 
   - Click refresh and you should see [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files appear in your container *data*
   - Click __+ Container__  to create the second container.
-  - Enter the name *scripts* and change the *Access type* to **blob**.
+  - Enter the name ***scripts*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *scripts* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/azCopy_command_scripts.txt?token=AKE1ndBKnGTm9Rq7A0cWbXKYgYwcU13Zks5ZLcsQwA%3D%3D) command 
   - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing.
   - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) four usql files appear in your container *scripts*
   - Click __+ Container__  to create the third container.
-  - Enter the name *forphmdeploymentbyadf* and change the *Access type* to **blob**.
+  - Enter the name ***forphmdeploymentbyadf*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *forphmdeploymentbyadf* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt?token=AKE1nam_-XkLYJk31QCH8fwltqZrTTeQks5ZLg23wA%3D%3D) command 
@@ -286,7 +286,7 @@ Navigate back to the storage account blade to collect important information that
   
   
 - Navigate back to the Stream Analytics job blade and click *Query*  
-    - Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
+    - Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
     - Click *SAVE*  
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select now, then click on **Start**.   
