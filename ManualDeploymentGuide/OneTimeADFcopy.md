@@ -29,6 +29,6 @@
    ![Step 11](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy11.PNG?token=AKE1nYvpFGOGha_GT_odPkret7CdP_Njks5ZLjH9wA%3D%3D)
   - The deployment will take a minute or so to complete.
    ![Step 12](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy12.PNG?token=AKE1nSvl51ZbDHzarbse-h2LWutjPibaks5ZLjITwA%3D%3D)
-  - Navigate back to your Data lake Store and select folder *forphmdeploymentadf*. You should see it populated with files from azure container.
+  - Navigate back to your Data lake Store and select folder *forphmdeploymentadf*. You should see it populated with files from azure storage container.
    ![Step 13](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy13.PNG?token=AKE1neNJGRsQcglIG5yQG_NjIdLaESqvks5ZLjcRwA%3D%3D)
   
