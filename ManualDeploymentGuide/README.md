@@ -124,21 +124,21 @@ Navigate back to the storage account blade to collect important information that
   - Click ***Create***
   - You should see *data* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt?token=AKE1neHB2wqJmtWR7xCWza99BaGdqMPhks5ZLdTIwA%3D%3D) command
-  - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing. 
+  - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and <storageaccountname> with your storage account name in the command before executing. 
   - Click refresh and you should see [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files appear in your container *data*
   - Click __+ Container__  to create the second container.
   - Enter the name ***scripts*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *scripts* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/azCopy_command_scripts.txt?token=AKE1ndBKnGTm9Rq7A0cWbXKYgYwcU13Zks5ZLcsQwA%3D%3D) command 
-  - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing.
+  - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and <storageaccountname> with your storage account name in the command before executing.
   - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) four usql files appear in your container *scripts*
   - Click __+ Container__  to create the third container.
   - Enter the name ***forphmdeploymentbyadf*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *forphmdeploymentbyadf* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt?token=AKE1nam_-XkLYJk31QCH8fwltqZrTTeQks5ZLg23wA%3D%3D) command 
-  - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing.
+  - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and <storageaccountname> with your storage account name in the command before executing.
   - Click refresh and you should see all the files in the different folders [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container *forphmdeploymentbyadf*. 
 
   
