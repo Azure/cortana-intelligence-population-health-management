@@ -131,7 +131,7 @@ Navigate back to the storage account blade to collect important information that
   - Click ***Create***
   - You should see *scripts* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/azCopy_command_scripts.txt?token=AKE1ndBKnGTm9Rq7A0cWbXKYgYwcU13Zks5ZLcsQwA%3D%3D) command 
-  - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and <storageaccountname> with your storage account name in the command before executing.
+  - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \`<storageaccountname> with your storage account name in the command before executing.
   - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) four usql files appear in your container *scripts*
   - Click __+ Container__  to create the third container.
   - Enter the name ***forphmdeploymentbyadf*** and change the *Access type* to **blob**.
@@ -219,6 +219,7 @@ Navigate back to the storage account blade to collect important information that
     - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nb5k9XP4_eSxJ9Qlluwc4ucw5imKks5ZLgMLwA%3D%3D) after creating the Azure Storage account.  
 	- Save and close **HealthCareGenerator.exe.config** 
  - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
+ - Once the data generator is running you should [see](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?token=AKE1nW-W3OLSRFim3KeWQPxwYG3akBKBks5ZLxExwA%3D%3D) incoming data in your Event Hub within a few minutes.
     ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when this generator is running.  
     ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
 
