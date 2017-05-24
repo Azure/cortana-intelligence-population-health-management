@@ -137,7 +137,7 @@ Navigate back to the storage account blade to collect important information that
   - Enter the name *forphmdeploymentbyadf* and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *forphmdeploymentbyadf* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf.txt?token=AKE1nd9YtLEahs1sqIlYf7fGwXqea3JHks5ZLgQmwA%3D%3D) command 
+  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt?token=AKE1nam_-XkLYJk31QCH8fwltqZrTTeQks5ZLg23wA%3D%3D) command 
   - Replace 'EnterYourStorageAccountkeyhere' in the command with your storage account key before executing.
   - Click refresh and you should see all the files in the different folders [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container *forphmdeploymentbyadf*. 
 
