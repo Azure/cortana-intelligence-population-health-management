@@ -211,7 +211,8 @@ Navigate back to the storage account blade to collect important information that
 <a name="gen"></a>
 ## Download and configure the data generator  
  - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository.  
- - Unzip this file to the local disk drive of a Windows Machine.  
+ - Unzip this file to the local disk drive of a Windows Machine. 
+ - Unzip in C:/ to ensure a short path name to avoid the 255 character limit on folder names. 
  - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
     - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
     - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nTMdNyLOAmJjatV1hPHM4wQegojgks5ZLgLuwA%3D%3D) after creating the Azure Event Hub.
