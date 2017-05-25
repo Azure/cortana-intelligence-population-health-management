@@ -24,11 +24,11 @@ Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerb
 
 #### 1) Get the credentials.
 
-  Through Azure portal, navigate to your Data Lake Store and copy the **ADL URI**. The uri looks [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nUk2pot2YgxNXQ_GjDSeOIdQx_xDks5ZLy1awA%3D%3D) adl://************.adlsdefault.azuredatalakestore.net/. 
+  - Through Azure portal, navigate to your Data Lake Store and copy the **ADL URI**. The uri looks [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nUk2pot2YgxNXQ_GjDSeOIdQx_xDks5ZLy1awA%3D%3D) adl://************.adlsdefault.azuredatalakestore.net/. 
 
-#### 2)	Get the query connection string
+#### 2)	Get the query connection strings
 
-  -  We will get the connection query by connecting a new Power BI desktop file to our two csv files in ADLS. Open  a **new** Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
+  -  We will get the connection query by connecting a new Power BI desktop file to our two csv files in Data Lake store. Open  a **new** Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
   -	You will see a list of all the folders in your Data Lake store. Click **Load**. 
   -	After the data has been successfully loaded into Power BI, you will see under Fields tab on the right, a table (data source) Query1 appear with fields [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbiconnect1.PNG?token=AKE1nfCbzixVTKDoP29lxwewzo3O1tPBks5ZL8fewA%3D%3D) Content, Date accessed, Date Created etc.
   -	From the Home ribbon, click Edit Queries. In the Query Editor, you will see the first column as Content and second column as Name.
