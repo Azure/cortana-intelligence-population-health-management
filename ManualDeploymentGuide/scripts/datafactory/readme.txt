@@ -1,7 +1,7 @@
 In folder 'scripts_storage', there are four usql scripts. These need to be uploaded to your storage account in container 'scripts'
 The AzCopy copy command provided in azCopy_command_scripts_toblob.txt will transfer these files to your storage container.
 
-Folder forphmdeploymentbyadf contains the files that will eventually need to be in Data Lake Store. These will be two R scripts,  four csv files and eleven pretrained models. All these will be used by Data Factory pipeline. 
+Folder 'forphmdeploymentbyadf' contains the files that will eventually need to be in Data Lake Store. These will be two R scripts,  four csv files and eleven pretrained models. All these will be used by Data Factory pipeline. 
 All these seventeen files reside in a public Azure storage container. The two R scripts have also been uploaded to git here in folder forphmdeploymentbyadf. Using the AzCopy command provided (azCopy_command_forphmdeploymentbyadf_toblob.txt) they can be transferred directly to your storage account. Once they are in your storage account, we will use one time ADF copy activity to transfer to Data Lake Store.
 
 After executing the command in azCopy_command_forphmdeploymentbyadf_toblob.txt you should see the following seventeen files in "forphmdeploymentbyadf" container in your storage account. After the ADF copy activity you should see these files in "forphmdeploymentbyadf" folder in your Data Lake Store.
