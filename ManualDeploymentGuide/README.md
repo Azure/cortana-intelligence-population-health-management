@@ -152,18 +152,18 @@ Navigate back to the storage account blade to collect important information that
  - Locate the resource group  you created for this project and click on it displaying the resources associated with the group in the resource group blade.
  - At the top of the Resource Group blade click __+Add__.
  - In the *Search Everything* search box enter **Event Hubs**
- - Choose ***Event Hubs*** from the results, then click *Create*, this will create the namespace for the Azure Event Hub.
- - For the name, use ***healthcareehns***
+ - Choose ***Event Hubs*** from the results, then click *Create*, this will create the **namespace** for the Azure Event Hub.
+ - For the name, use ***healthcareehns*** (e.g. Mary Jane would enter healthcaremj01ehns).
  - Subscription, resource group, and location should be correctly set.
  - Click ***Create*** 
  - The creation step may take several minutes.  
  - Navigate back to *Resource groups* and choose the resource group for this solution.
  - Click on ***healthcareehns***, then on the subsequent blade click __+Event Hub__
- - Enter ***healthcareeh*** as the Even Hub name, move partition count to 16 and click *Create*
+ - Enter ***healthcareehub*** as the Even Hub name (e.g. Mary Jane would enter healthcaremj01ehub), move partition count to 16 and click *Create*
  
  Once the Event Hub is created we will create Consumer Groups. In a stream processing architecture, each downstream application equates to a consumer group. We will create two Consumer Groups here corresponding to writing event data to two separate locations: Data Lake Store (cold path) and Power BI (hotpath). (There is always a default consumer group in an event hub)
 
- - Click on the Event Hub ***healthcareeh*** you just created, then on the subsequent blade click __+ Consumer Group__
+ - Click on the Event Hub ***healthcareehub*** you just created, then on the subsequent blade click __+ Consumer Group__
  - Enter coldpathcg as Name
  - Add the second consumer group by clicking on __+ Consumer Group__ again.
  - Enter hotpathcg as Name 
@@ -174,7 +174,7 @@ Navigate back to the storage account blade to collect important information that
  - On the ***healthcareeehns*** blade choose [*Shared access policies*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub1.PNG?token=AKE1nbxn0yvjW04vjuNLprBto3cyzmieks5ZLbz7wA%3D%3D) from the menu under Settings.
  - Select [**RootManageSharedAccessKey**](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nXUjKUgJL3wh1vgoyn9wKU8jTntHks5ZLb0kwA%3D%3D) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
  - Return to the ***healthcareehns*** blade and choose *Overview* from the menu, click on Event Hub under Entities and record the event hub name you just created.
- - Click on **healthcareeh** and choose *Overview* from the menu. 
+ - Click on **healthcareehub** and choose *Overview* from the menu. 
  - Click on Consumer Groups under Entities and it will open a pane containing the list of Consumer Groups you just added. Copy the names coldpathcg and hotpathcg. You will need these when setting up the stream analytics job.
  
 
@@ -188,12 +188,12 @@ Navigate back to the storage account blade to collect important information that
   - At the top of the Resource Group blade click __+Add__.
   - In the *Search Everything* search box enter ***Data Lake Store***
   - Choose ***Data Lake Store*** from the results then click *Create*
-  - Enter ***healthcareadls*** as the name.
+  - Enter ***healthcareadls*** as the name (e.g. Mary Jane would enter healthcaremj01adls).
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
   - Click ***Create***  
   - The creation step may take several minutes. 
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
-  value which from the Data Lake Store blade which will be in the [form](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nZJeOG7q3pFgLOTS-Cp-7CHCOKZIks5ZLcgEwA%3D%3D) **adl://__****__.azuredatalakestore.net**  
+  value which from the Data Lake Store blade which will be in the [form](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nZJeOG7q3pFgLOTS-Cp-7CHCOKZIks5ZLcgEwA%3D%3D) **adl://__********__.azuredatalakestore.net**  
   - You will need this to connect PBI to the data in your Data Lake Store. 
 
   ### Move resources to Data Lake Store
@@ -232,7 +232,7 @@ Navigate back to the storage account blade to collect important information that
   [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path stream and the hot path stream. 
 
 ## Cold Path Stream
-  For the cold path stream, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. We will name the Steam Analytics Job that we create for this, **HealthCareColdPath**. 
+  For the cold path stream, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. We will name the Steam Analytics Job that we create for this, **healthcareColdPath**. 
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
@@ -240,20 +240,20 @@ Navigate back to the storage account blade to collect important information that
   - At the top of the Resource Group blade click __+Add__.
   - In the *Search Everything* search box enter ***Stream Analytics job***
   - Choose ***Stream Analytics job*** from the results then click *Create*
-  - Enter ***HealthCareColdPath*** as the Job name.
+  - Enter ***healthcareColdPath*** as the Job name (e.g. Mary Jane would enter healthcaremj01ColdPath).
   - Subscription, resource group, and location should be correctly set.
   - Click *Create*  
   - The creation step may take several minutes.  
   - Return to the resource group blade.
-  - Select the ***HealthCareColdPath*** resource to open the Stream Analytics job to modify the job settings.  
+  - Select the ***healthcareColdPath*** resource to open the Stream Analytics job to modify the job settings.  
   - In the Stream Analytics job blade click *Inputs* 
     - At the top of the *Inputs* page click ***+ Add***
       - Input alias : InputHub
         - Source Type : Data Stream
         - Source : Event hub
         - Import Option: Use event hub from current subscription
-        - Service bus namespace: ***healthcareeehns*** (or whatever you have chosen for the __Event Hub**s**__ namespace previously)
-        - Event hub name: ***healthcareeh*** (or whatever you have chosen for the event hub previously)
+        - Service bus namespace: ***healthcareeehns*** (or whatever you have chosen for the Event Hub namespace previously)
+        - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously)
         - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
         - Event hub consumer group: leave empty
         - Event serialization format : CSV
@@ -298,7 +298,7 @@ select now, then click on **Start**.
 Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severity/, stream/raw/core/, stream/raw/charges/ and stream/raw/dxpr/ with the directory structure defined by *Path prefix pattern* above) after approximately 5 minutes.
 
 ## Hot Path Stream
-  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **HealthCareHotPath**. 
+  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **healthcareHotPath**. 
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
   - In the left hand menu select *Resource groups*
@@ -306,12 +306,12 @@ Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severi
   - At the top of the Resource Group blade click __+Add__.
   - In the *Search Everything* search box enter ***Stream Analytics job***
   - Choose ***Stream Analytics job*** from the results then click *Create*
-  - Enter ***HealthCareHotPath*** as the Job name.
+  - Enter ***healthcareHotPath*** as the Job name (e.g. Mary Jane would enter healthcaremj01HotPath).
   - Subscription, resource group, and location should be correctly set.
   - Click *Create*  
   - The creation step may take several minutes.  
   - Return to the resource group blade.
-  - Select the ***HealthCareHotPath*** resource to open the Stream Analytics job to modify the job settings (specify Inputs, Outputs and Query).  
+  - Select the ***healthcareHotPath*** resource to open the Stream Analytics job to modify the job settings (specify Inputs, Outputs and Query).  
   
 - In the Stream Analytics job blade click ***Inputs*** 
     - At the top of the *Inputs* page click ***+ Add***
@@ -319,8 +319,8 @@ Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severi
         - Source Type : Data Stream
         - Source : Event hub
         - Import Option: Use event hub from current subscription
-        - Service bus namespace: ***healthcareeehns*** (or whatever you have chosen for the __Event Hub**s**__ namespace previously)
-        - Event hub name: ***healthcareeh*** (or whatever you have chosen for the event hub previously, NO it is healthcareeh)
+        - Service bus namespace: ***healthcareehns*** (or whatever you have chosen for the __Event Hub**s**__ namespace previously)
+        - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously, NO it is healthcareeh)
         - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
         - Event hub consumer group: **hotpathcg** (we created this above)
         - Event serialization format : CSV
@@ -356,7 +356,7 @@ select *Now*, then click on **Start**.
   - At the top of the Resource Group blade click __+Add__.
   - In the *Search Everything* search box enter ***Data Lake Analytics***
   - Choose ***Data Lake Analytics*** from the results then click *Create*
-  - Enter ***healtcahreadla*** as the name.
+  - Enter ***healtcahreadla*** as the name (e.g. Mary Jane would enter healthcaremj01adla).
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
   - Click on *Data Lake Store* and choose the Azure Data Lake store created in the previous step. (Data Lake Analytics account has an Azure Data Lake Store account dependency and is referred as the default Data Lake Store account.)
   - Click ***Create***  
@@ -379,7 +379,7 @@ select *Now*, then click on **Start**.
   - At the top of the Resource Group blade click __+Add__.
   - In the *Search Everything* search box enter ***Data Factory***
   - Choose ***Data Factory*** from the results then click *Create*
-  - Enter ***healthcareadf*** as the name. 
+  - Enter ***healthcareadf*** as the name (e.g. Mary Jane would enter healthcaremj01adf). 
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
   - Click ***Create***  
   - The creation step may take several minutes.  
