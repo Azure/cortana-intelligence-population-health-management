@@ -21,7 +21,7 @@
   ![Step 7](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy7.PNG?token=AKE1nb8tILMiVtMpZ5Qa6rGnrfWTWDZcks5ZLjFbwA%3D%3D)
   - Specify Data Lake Store connection and choose Authentication Type *OAuth*
    ![Step 8](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy8.PNG?token=AKE1nciIBkMoLohutnOMt7iIQFB_AJCBks5ZLjGwwA%3D%3D)
-  - For output folder select **forphmdeploymentadf** and click Next
+  - For output folder *select* **forphmdeploymentbyadf** and click Next
    ![Step 9](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy9.PNG?token=AKE1naIjc4JwcE2-YJSv0_AbtKXew039ks5ZLjHnwA%3D%3D)
   - You will be presented a  summary. Before clicking Next, click on *Authorize*
    ![Step 10](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adfcopy10.PNG?token=AKE1neZJbfZpSCM-otdoVRWcQ-qKPKG-ks5ZLjHLwA%3D%3D)
