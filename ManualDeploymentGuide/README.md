@@ -132,7 +132,7 @@ Navigate back to the storage account blade to collect important information that
   - You should see *scripts* appear in the list of containers
   - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt?token=AKE1nYOIVk9_QjxSFVJqw9G-YXAosxpSks5ZLyPiwA%3D%3D) command 
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
-  - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) four usql files appear in your container *scripts*
+  - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob) four usql files appear in your container *scripts*
   - Click __+ Container__  to create the third container.
   - Enter the name ***forphmdeploymentbyadf*** and change the *Access type* to **blob**.
   - Click ***Create***
