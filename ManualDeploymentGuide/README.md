@@ -472,7 +472,7 @@ select *Now*, then click on **Start**.
 
   #### Joining
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql?token=AKE1nbzw6MDZdCO0qoEbsYSR1de5-8Tjks5ZL9E0wA%3D%3D) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result 
   is a single output file with the results for the 15 minute window this activity should cover. 
 
@@ -480,7 +480,7 @@ select *Now*, then click on **Start**.
   
   #### Scoring
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql?token=AKE1nfKVqHwIbXUVsTRW6P89DE_QB-Fuks5ZL9FdwA%3D%3D) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
   a single output file with the scoring results for the 15 minute window this activity should cover.
 
@@ -488,13 +488,13 @@ select *Now*, then click on **Start**.
 
   #### Processing for PBI
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql?token=AKE1nQUfc7i_H4bsc357cDbrlwXNGm1Xks5ZL9F3wA%3D%3D) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to create data for visualization, and output the results of that work to
   a single output file for the 15 minute window this activity should cover.
 
   #### Appending
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage/hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
+  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql?token=AKE1nTvBM3CuJdJEy5De65f8fwLfk3ceks5ZL9GPwA%3D%3D) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
 
   #### Activity Period
 
