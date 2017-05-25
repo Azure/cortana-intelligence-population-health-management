@@ -319,8 +319,8 @@ Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severi
         - Source Type : Data Stream
         - Source : Event hub
         - Import Option: Use event hub from current subscription
-        - Service bus namespace: ***healthcareehns*** (or whatever you have chosen for the __Event Hub**s**__ namespace previously)
-        - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously, NO it is healthcareeh)
+        - Service bus namespace: ***healthcareehns*** (or whatever you have chosen for the Event Hub namespace previously)
+        - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously)
         - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
         - Event hub consumer group: **hotpathcg** (we created this above)
         - Event serialization format : CSV
