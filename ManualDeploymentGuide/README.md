@@ -442,7 +442,7 @@ select *Now*, then click on **Start**.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade click on *...More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
   - You will be presented a template.
-  - The template contains quite a few settings, which we will not cover. Instead download the file *outputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/TechnicalDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains quite a few settings, which we will not cover. Instead download the file *outputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file.
   - Change the *name* field to *02JoinedData*
