@@ -12,8 +12,8 @@ For this solution we have used simulated data based on State Inpatient Data ([SI
 
 The Healthcare Cost and Utilization Project (HCUP) is a group of healthcare databases that contain the the largest collection of longitudinal hospital care data in the United States. It is a national information resource for encounter-level health care data. It captures information extracted from administrative data (patients' billing records) after a patient is discharged from the hospital. The State Inpatient Databases (SID) are part of this family of databases and contain inpatient care records from community hospitals in that State. With forty-eight States participating in the SID, it now encompass about 97 percent of all U.S. community hospital discharges. The SID files contain a core set of clinical and nonclinical information on all patients, regardless of payer, providing a unique view of inpatient care over time. 
 
-# Population Health Report
-A population health report lets the health care providers get an insight into the population they server and get actionable intelligence. In this solution we have created some reports for you based on data described above. Some of the reports created with a brief description of insights can be found here.
+# [Population Health Report](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization/PopulationHealthReport)
+A population health report lets the health care providers get an insight into the population they server and get actionable intelligence. In this solution we have created some reports for you based on data described above. Some of the reports created with a brief description of insights can be found [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization/PopulationHealthReport).
 
 <a name="cold"></a>
 # Visualize Data from Data Lake Store
@@ -30,7 +30,7 @@ Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerb
 
   -  We will get the connection query by connecting a new Power BI desktop file to our two csv files in ADLS. Open  a **new** Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
   -	You will see a list of all the folders in your Data Lake store. Click **Load**. 
-  -	After the data has been successfully loaded into Power BI, you will see under Fields tab on the right, a table (data source) Query1 appear with fields like Content, Date accessed, Date Created etc.
+  -	After the data has been successfully loaded into Power BI, you will see under Fields tab on the right, a table (data source) Query1 appear with fields [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbiconnect1.PNG?token=AKE1nfCbzixVTKDoP29lxwewzo3O1tPBks5ZL8fewA%3D%3D) Content, Date accessed, Date Created etc.
   -	From the Home ribbon, click Edit Queries. In the Query Editor, you will see the first column as Content and second column as Name.
   -	Under Content column *click on Table* in the *row with pbidataforPHM* in the Name column.
   -	In the next screen under Content Column *click on Binary*. (You will see data4visualization_latest.csv under Name column)
