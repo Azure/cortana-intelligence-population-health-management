@@ -502,9 +502,9 @@ select *Now*, then click on **Start**.
   #### Activity Period
 
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
-  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects) the start and end are listed as such 
-  "start": "2017-05-20T10:00:00Z",
-  "end": "2017-05-30T18:51:55Z", 
+  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects) the start and end are listed as such -     
+  "start": "2017-05-20T10:00:00Z",      
+  "end": "2017-05-30T18:51:55Z",        
   Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your data factory will not be producing data over too long a period of time and we do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
 
   Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
