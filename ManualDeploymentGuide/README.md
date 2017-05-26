@@ -204,7 +204,7 @@ Navigate back to the storage account blade to collect important information that
   - Download and install AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358).
   - Open Command Prompt by typing cmd in search field and navigate to the folder where AdlCopy was [installed](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlcopy1.PNG?token=AKE1nUJIxLtXqqcp2Fzob6rilufbb147ks5ZMeVzwA%3D%3D). e.g. cd C:\Users\<username>\Documents\AdlCopy
   - Type adlcopy to ensure the command is [available](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlcopy2.PNG?token=AKE1nQd9d3mgwhk9JQWul4J2eR6BltS3ks5ZMeWWwA%3D%3D).
-  - On the prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt?token=AKE1nV3AXlool_PZFhVAzcJJso6fKWZQks5ZMeUtwA%3D%3D) command
+  - On the prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt?token=AKE1nZaK1jc5pjB1w79TkefgUl0bU6Qjks5ZMeefwA%3D%3D) command
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key, \<storageaccountname\> with your storage account name and \<adlsccountname\> with your Data Lake Store name in the command before executing. 
   - If prompted 'Do you wish to continue' type 'Y'
   - In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder forphmdeploymentbyadf in your Data Lake Store.
