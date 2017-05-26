@@ -265,19 +265,19 @@ Navigate back to the storage account blade to collect important information that
           
  - Navigate back to the Stream Analytics job blade and click *Outputs*
    - **NOTE** for each of the four outputs you will create the only step that differs between them is the *Output alias* and *Path prefix pattern*. Use these steps for each output and look into the following sections for the values to put in for each output.  
-   - At the top of the *Outputs* page click ***+ Add***
-	     - Output alias : **Find Value Below**  
-         - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
-         - Import option: Select Data Lake Store form your subscription
-         - Subscription: Should be set correctly
-         - Account Name: Choose the Azure Data Lake Store created previously. 
-         - Path prefix pattern: **Find value below**
-         - Date format: *YYYY/MM/DD*
-         - Time format: *HH*
-         - Event serialization format: CSV (**not** json)
-         - Delimiter: remains comma (,)
-         - Encoding: remains comma UTF-8
-         - Click the **Create** button to complete  
+   - At the top of the *Outputs* page click ***+ Add***   
+	    - Output alias : **Find Value Below**  
+        - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
+        - Import option: Select Data Lake Store form your subscription
+        - Subscription: Should be set correctly
+        - Account Name: Choose the Azure Data Lake Store created previously. 
+        - Path prefix pattern: **Find value below**
+        - Date format: *YYYY/MM/DD*
+        - Time format: *HH*
+        - Event serialization format: CSV (**not** json)
+        - Delimiter: remains comma (,)
+        - Encoding: remains comma UTF-8
+        - Click the **Create** button to complete  
    - Output 1
      - *Output alias* : SeverityOutput
      - *Path prefix pattern* : stream/raw/severity/{date}/{time}_severity
