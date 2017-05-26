@@ -440,7 +440,7 @@ select *Now*, then click on **Start**.
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade instead of *New data store* click on *... More* and from the drop down choose **New dataset** and then *Azure Data Lake Store* from the list.
-  - The template contains quite a few settings, which we will not cover. Instead download the file *inputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains quite a few settings, which we will not cover. Instead download the file [*inputdataset.json*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/inputdataset.json?token=AKE1nXBpPSdfNf84d6sI2_NVhFkYK9cXks5ZMenuwA%3D%3D) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - At the top of the blade, click *Deploy*
@@ -452,7 +452,7 @@ select *Now*, then click on **Start**.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade click on *...More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
   - You will be presented a template.
-  - The template contains quite a few settings, which we will not cover. Instead download the file *outputdataset.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains quite a few settings, which we will not cover. Instead download the file [*outputdataset.json*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json?token=AKE1nc5mgAdsHAXnKX5c9n4NZTHCWL8Lks5ZMeqOwA%3D%3D) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file.
   - Change the *name* field to *02JoinedData*
@@ -476,7 +476,7 @@ select *Now*, then click on **Start**.
  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - Right click on *Pipelines* and choose *New pipeline*
-  - The template contains an empty pipeline. Download the file *pipeline.json* from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains an empty pipeline. Download the file [*pipeline.json*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json?token=AKE1nYHRlMg2NTSOs1bUixLHDS2yiPhiks5ZMeqywA%3D%3D) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - **DO NOT** click  *Deploy* yet
@@ -512,7 +512,7 @@ select *Now*, then click on **Start**.
   #### Activity Period
 
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
-  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects) the start and end are listed as such -     
+  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json?token=AKE1nYHRlMg2NTSOs1bUixLHDS2yiPhiks5ZMeqywA%3D%3D) the start and end are listed as such -     
   "start": "2017-05-20T10:00:00Z",      
   "end": "2017-05-30T18:51:55Z",        
   Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your data factory will not be producing data over too long a period of time and we do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
