@@ -202,18 +202,14 @@ Navigate back to the storage account blade to collect important information that
   - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
   - We will move resources to this folder in Data Lake Store using AdlCopy
   - Download and install AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358).
-  - Open Command Prompt by typing cmd in search field and navigate to the folder where AdlCopy was installed. e.g. cd C:\Users\<username>\Documents\AdlCopy
-  - Type adlcopy to ensure the command is available.
-  - On the prompt type [this]() command
+  - Open Command Prompt by typing cmd in search field and navigate to the folder where AdlCopy was [installed](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlcopy1.PNG?token=AKE1nUJIxLtXqqcp2Fzob6rilufbb147ks5ZMeVzwA%3D%3D). e.g. cd C:\Users\<username>\Documents\AdlCopy
+  - Type adlcopy to ensure the command is [available](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlcopy2.PNG?token=AKE1nQd9d3mgwhk9JQWul4J2eR6BltS3ks5ZMeWWwA%3D%3D).
+  - On the prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt?token=AKE1nV3AXlool_PZFhVAzcJJso6fKWZQks5ZMeUtwA%3D%3D) command
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key, \<storageaccountname\> with your storage account name and \<adlsccountname\> with your Data Lake Store name in the command before executing. 
   - If prompted 'Do you wish to continue' type 'Y'
   - In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder forphmdeploymentbyadf in your Data Lake Store.
-  - We will move resources to this folder in Data Lake Store using Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md).Since we have not created a Data Factory yet, we can do these steps only after creating a Data Factory.
-  - For the Azure Data Factory to run we need these files to be in this folder.
-  - Alternatively you can download AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358). 
-  - Download and install it in C:/
-  - Open cmd and type cd C:\Users\gshaheen\Documents\AdlCopy
-  - On the prompt type [this]() command
+  - Alternatively we can move resources to this folder in Data Lake Store using Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md). Since we have not created a Data Factory yet, we can do these steps only after creating a Data Factory.
+  - For the Azure Data Factory to run we need these files to be in the folder forphmdeploymentbyadf in Data Lake Store.
   
 
 ##   Start the Generator now 
