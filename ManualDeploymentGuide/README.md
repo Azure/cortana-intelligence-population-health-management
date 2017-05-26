@@ -200,9 +200,20 @@ Navigate back to the storage account blade to collect important information that
   - Navigate back to the Resource group and select the Data lake Store you just created. 
   - In the next blade, click on Data Explorer at the top.
   - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
-  - We will move resources to this folder in Data Lake Store using Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md).
-  - Since we have not created a Data Factory yet, we will do these steps after creating a Data Factory.
+  - We will move resources to this folder in Data Lake Store using AdlCopy
+  - Download and install AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358).
+  - Open Command Prompt by typing cmd in search field and navigate to the folder where AdlCopy was installed. e.g. cd C:\Users\<username>\Documents\AdlCopy
+  - Type adlcopy to ensure the command is available.
+  - On the prompt type [this]() command
+  - Replace 'EnterYourStorageAccountkeyhere' with your storage account key, \<storageaccountname\> with your storage account name and \<adlsccountname\> with your Data Lake Store name in the command before executing. 
+  - If prompted 'Do you wish to continue' type 'Y'
+  - In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder forphmdeploymentbyadf in your Data Lake Store.
+  - We will move resources to this folder in Data Lake Store using Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md).Since we have not created a Data Factory yet, we can do these steps only after creating a Data Factory.
   - For the Azure Data Factory to run we need these files to be in this folder.
+  - Alternatively you can download AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358). 
+  - Download and install it in C:/
+  - Open cmd and type cd C:\Users\gshaheen\Documents\AdlCopy
+  - On the prompt type [this]() command
   
 
 ##   Start the Generator now 
@@ -296,7 +307,7 @@ Navigate back to the storage account blade to collect important information that
     - Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
     - Click *SAVE*  
 - When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
-select now, then click on **Start**.   
+select **now,** then click on **Start**.   
 
 Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severity/, stream/raw/core/, stream/raw/charges/ and stream/raw/dxpr/ with the directory structure defined by *Path prefix pattern* above) after approximately 5 minutes.
 
