@@ -214,6 +214,7 @@ Navigate back to the storage account blade to collect important information that
  - Unzip this file to the local disk drive of a Windows Machine. 
  - Unzip in C:/ to ensure a short path name to avoid the 255 character limit on folder names. 
  - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
+ **NOTE:** If you do not see the .config file, in your explorer window, click on View and check 'File name extensions'.
     - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
     - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nTMdNyLOAmJjatV1hPHM4wQegojgks5ZLgLuwA%3D%3D) after creating the Azure Event Hub.
     - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nb5k9XP4_eSxJ9Qlluwc4ucw5imKks5ZLgMLwA%3D%3D) after creating the Azure Storage account.
@@ -245,10 +246,11 @@ Navigate back to the storage account blade to collect important information that
   - Click *Create*  
   - The creation step may take several minutes.  
   - Return to the resource group blade.
+  - Next we will add Inputs, Outputs and Query for the Stream Analytics job
   - Select the ***healthcareColdPath*** resource to open the Stream Analytics job to modify the job settings.  
   - In the Stream Analytics job blade click *Inputs* 
     - At the top of the *Inputs* page click ***+ Add***
-      - Input alias : InputHub
+        - Input alias : InputHub
         - Source Type : Data Stream
         - Source : Event hub
         - Import Option: Use event hub from current subscription
@@ -256,7 +258,7 @@ Navigate back to the storage account blade to collect important information that
         - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously)
         - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
         - Event hub consumer group: leave empty
-        - Event serialization format : CSV
+        - Event serialization format : CSV (**not** json)
         - Delimiter: remains comma(,)
         - Encoding: remains UTF-8
         - Click the bottom **Create** button to complete.  
@@ -264,14 +266,15 @@ Navigate back to the storage account blade to collect important information that
  - Navigate back to the Stream Analytics job blade and click *Outputs*
    - **NOTE** for each of the four outputs you will create the only step that differs between them is the *Output alias* and *Path prefix pattern*. Use these steps for each output and look into the following sections for the values to put in for each output.  
    - At the top of the *Outputs* page click ***+ Add***
-	   - Output alias : **Find Value Below**  
+	     - Output alias : **Find Value Below**  
          - Sink: Data Lake Store, then Click **Authorize** to allow access to the Data Lake  
+         - Import option: Select Data Lake Store form your subscription
          - Subscription: Should be set correctly
          - Account Name: Choose the Azure Data Lake Store created previously. 
          - Path prefix pattern: **Find value below**
          - Date format: *YYYY/MM/DD*
          - Time format: *HH*
-         - Event serialization format: CSV
+         - Event serialization format: CSV (**not** json)
          - Delimiter: remains comma (,)
          - Encoding: remains comma UTF-8
          - Click the **Create** button to complete  
@@ -315,34 +318,34 @@ Raw data will start to appear in the Azure Data Lake Store (in stream/raw/severi
   
 - In the Stream Analytics job blade click ***Inputs*** 
     - At the top of the *Inputs* page click ***+ Add***
-        - Input alias : **HotPathInput**
-        - Source Type : Data Stream
-        - Source : Event hub
-        - Import Option: Use event hub from current subscription
-        - Service bus namespace: ***healthcareehns*** (or whatever you have chosen for the Event Hub namespace previously)
-        - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously)
-        - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
-        - Event hub consumer group: **hotpathcg** (we created this above)
-        - Event serialization format : CSV
-        - Delimiter: remains comma(,)
-        - Encoding: remains UTF-8
-        - Click the bottom **Create** button to complete.  
+    - Input alias : **HotPathInput**
+    - Source Type : Data Stream
+    - Source : Event hub
+    - Import Option: Use event hub from current subscription
+    - Service bus namespace: ***healthcareehns*** (or whatever you have chosen for the Event Hub namespace previously)
+    - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously)
+    - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
+    - Event hub consumer group: **hotpathcg** (we created this above)
+    - Event serialization format : CSV (not json)
+    - Delimiter: remains comma(,)
+    - Encoding: remains UTF-8
+    - Click the bottom **Create** button to complete.  
            
  - Navigate back to the Stream Analytics job blade and click ***Outputs***
     - **NOTE** We will add one output below. To add more you would simply repeat the steps below with different names for your Output alias and Dataset name.
     - At the top of the *Outputs* page click ***+ Add*** to add the first output
-   
-	    - Output alias : PBIoutputcore   
-        - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
-        - Group Workspace: My Workspace
-        - Dataset Name: **hotpathcore** 
-        - Table Name: same as Dataset Name above
-        - Click the **Create** button to complete  
+	- Output alias : PBIoutputcore   
+    - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
+    - Group Workspace: My Workspace
+    - Dataset Name: **hotpathcore** 
+    - Table Name: same as Dataset Name above
+    - Click the **Create** button to complete  
    
  - Navigate back to the Stream Analytics job blade and click ***Query***  
     - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window. 
-    - Click *SAVE*  
-- When all inputs, functions, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
+    - Click *SAVE*    
+    
+- When all inputs, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
 select *Now*, then click on **Start**.   
 - After some time in the Datasets section of your PowerBI, this new dataset *hotpathcore* will appear.
  
