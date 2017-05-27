@@ -208,7 +208,6 @@ Navigate back to the storage account blade to collect important information that
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key, \<storageaccountname\> with your storage account name and \<adlsccountname\> with your Data Lake Store name in the command before executing. 
   - If prompted 'Do you wish to continue' type 'Y'
   - In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder forphmdeploymentbyadf in your Data Lake Store.
-  - Alternatively we can move resources to this folder in Data Lake Store using Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md). Since we have not created a Data Factory yet, we can do these steps only after creating a Data Factory.
   - For the Azure Data Factory to run we need these files to be in the folder forphmdeploymentbyadf in Data Lake Store.
   
 
@@ -393,9 +392,6 @@ select *Now*, then click on **Start**.
   - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
   - Click ***Create***  
   - The creation step may take several minutes.  
-
-### One time copy using Azure Data Factory
-  - We will move resources to the folder **forphmdeploymentadf** in Data Lake Store from the container **forphmdeploymentadf** in our storage account using copy activity in Azure Data Factory. The steps to follow are [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/OneTimeADFcopy.md).
 
 
 ### Azure Data Factory Linked Services
