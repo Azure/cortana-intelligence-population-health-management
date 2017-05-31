@@ -123,7 +123,7 @@ Navigate back to the storage account blade to collect important information that
   - Enter the name ***data*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *data* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt?token=AKE1neHB2wqJmtWR7xCWza99BaGdqMPhks5ZLdTIwA%3D%3D) command
+  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt?token=AKE1nS1SxXX5kks01buBZfRGFMwsXS3cks5ZOCAywA%3D%3D) command
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing. 
   - Click refresh and you should see [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files appear in your container *data*
   - Click __+ Container__  to create the second container.
