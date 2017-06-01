@@ -218,10 +218,10 @@ With the [inpur data for the generator](https://github.com/Azure/cortana-intelli
 <a name="gen"></a>
 ### Download and configure the data generator  
 1. On your Windows machine, download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository. The folder choice will keep the path length short, avoiding the 255 character limit on folder names.
-1. Navigate to the folder *C:\healthcaregenerator* where all the extracted files are found.
+1. Navigate to the folder `C:\healthcaregenerator` where all the extracted files are found.
 1. Open the file **HealthCareGenerator.exe.config** in Notepad and modify the [following](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/configfile.PNG?raw=true) AppSettings. (**NOTE:** If you do not see the .config file, in your Explorer window, click on View and check "File name extensions".)
     1. EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
-    1. EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub.
+    1. EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub namespace.
     1. StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.
     1. StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.  
     1. Save and close **HealthCareGenerator.exe.config** 
@@ -236,49 +236,45 @@ Next we will **test that that data generator is working correctly** by running i
    ```
    then your data generator was configured correctly and we can shut it down.
 1. **Shut down the generator** now by simply closing the console.
-1. Zip the contents of the folder healthcaregenerator by selecting all the files in this folder, then right-clickling and selecting "Send To Compressed (zipped) folder".
+1. Zip the contents of the folder `healthcaregenerator` by selecting all the files in this folder, then right-clickling and selecting "Send To Compressed (zipped) folder".
 
-Look for the zipped file in the folder and rename it if if you like. This zipped file will be uploaded to Azure Portal for the Web Job.
+Look for the zipped file in the folder and rename it if you like. This zipped file will be uploaded to Azure Portal for the Web Job.
 
 <a name="webjob"></a>
 ## Create an Azure WebJob
-We will use Azure [App Service](https://docs.microsoft.com/en-us/azure/app-service/app-service-value-prop-what-is) to create a Web App to run Data Generator Web Job which will simulate streaming data from hospitals. [Azure WebJobs](https://docs.microsoft.com/en-us/azure/app-service-web/websites-webjobs-resources) provide an easy way to run scripts or programs as background processes. We can upload and run an executable file such as cmd, bat, exe (.NET), ps1, sh, php, py, js, and jar. These programs run as WebJobs and can be configured to run on a schedule, on demand or continuously. Below we show how to use Azure portal to create a Web App with a new App Service Plan (S1 standard) and then create a Web Job. We will upload the zip file (created above after modifying the settings in .config file) and set the Web Job as continuous and single instance.
+We will use an Azure [App Service](https://docs.microsoft.com/en-us/azure/app-service/app-service-value-prop-what-is) to create a Web App to run Data Generator Web Job which will simulate streaming data from hospitals. [Azure WebJobs](https://docs.microsoft.com/en-us/azure/app-service-web/websites-webjobs-resources) provide an easy way to run scripts or programs as background processes. We can upload and run an executable file such as cmd, bat, exe (.NET), ps1, sh, php, py, js, and jar. These programs run as WebJobs and can be configured to run on a schedule, on demand or continuously. Below we show how to use Azure Portal to create a Web App with a new App Service Plan (S1 standard) and then create a WebJob. We will upload the zip file (created above after modifying the settings in .config file) and set the Web Job as continuous and single instance.
   
- - Log into the [Azure Portal](https://ms.portal.azure.com/). 
- - Press the "+ New" button at the upper left portion of the screen.
- - Type "Web App" into the search box and then press Enter.
- - Click on the "Web App" option published by Microsoft from the search results. Click the blue "Create" button that appears on the right pane.
- -  In the "Web App" pane that appears:
-    - Enter ***healthcarewebapp*** in the "App name" field (e.g. Mary Jane would enter healthcaremj01webapp).
-    - Select the appropriate subscription and resource group.
-    - Next we will select an App Service Plan
-    - Click on App Service plan/Location to load more options.
-    - Click "+ Create New".
-    - Enter ***healthcarewebappplan*** in the "App Service plan" field.
-    - Choose your desired location and pricing tier (select '+new' to select our recommended option "S1 Standard").
-    - Click "OK" and then click "Create".
-    - Wait for your Web App deployment to complete (will take a few seconds).
+1. Log into the [Azure Portal](https://ms.portal.azure.com/) and press the "+ New" button at the upper left portion of the screen.
+1. Type "Web App" into the search box and then press Enter.
+1. Click on the "Web App" option published by Microsoft from the search results. Click the blue "Create" button that appears on the right pane.
+1.  In the "Web App" pane that appears:
+    1. Enter ***healthcarewebapp*** in the "App name" field (e.g. Mary Jane would enter healthcaremj01webapp).
+    1. Select the appropriate subscription and resource group.
+    1. Next we will select an App Service Plan:
+        1. Click on App Service plan/Location to load more options.
+        1. Click "+ Create New".
+        1. Enter ***healthcarewebappplan*** in the "App Service plan" field.
+        1. Choose your desired location and pricing tier (select '+new' to select our recommended option "S1 Standard").
+        1.Click "OK".
+    1. Click "Create".
+1. Wait for your Web App deployment to complete (will take a few seconds).
+1. Navigate back to the Resource group and select the App Service just created.
+1. In the App Service blade on the left, click on *WebJobs* under Settings. (You may need to scroll down or use the search feature.)
+1.  In the WebJobs blade, click ***+ Add***.
+    1. Enter ***healthcarewebjob*** in the "Name" field (e.g. Mary Jane would enter healthcaremj01webjob).
+    1. Upload the zipped file created above.
+    1. Select ***Continuous*** from drop-down menu for the "Type" field.
+    1. Select ***Single Instance*** from drop-down menu for the "Scale" field.
+    1. Click "OK".
+1. The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
+1. To monitor your WebJob, select the WebJob and click on Logs at the top. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages to what you saw in the console when you tested the generator locally:   
+    ```
+    EVENTHUB: Upload 600 Records Complete   
+    EVENTHUB: Starting Raw Upload    
+    EVENTHUB: Upload 600 Records Complete    
+    ```
 
- - Navigate back to the Resource group and select the App Service just created.
- - In the App Service blade on the left scroll down and under Settings locate WebJobs
- - Click on WebJobs.
- - In the WebJobs blade click ***+ Add*** 
-    - In the Add WebJob pane 
-    - Enter ***healthcarewebjob*** in the "Name" field (e.g. Mary Jane would enter healthcaremj01webjob).
-    - Upload the zipped file created above.
-    - Select ***Continuous*** from drop down for "Type" field.
-    - Select ***Single Instance*** from drop down for "Scale" field.
-    - Click "OK".
- - The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
- - To monitor your WebJob select the WebJob and click on Logs at the top. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages as you saw in console when you tested the generator locally:   
-EVENTHUB: Upload 600 Records Complete   
-EVENTHUB: Starting Raw Upload    
-EVENTHUB: Upload 600 Records Complete    
-
-- Once the data generator is running you should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?raw=true) incoming data in your Event Hub within a few minutes.
- 
-    ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when the WebJob is running.  
-    
+Once the data generator is running, you should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?raw=true) incoming data in your Event Hub within a few minutes. ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when the WebJob is running.  
 
 <a name="azurestra"></a>
 ## Create Azure Stream Analytics Job - Cold and Hot Paths
