@@ -92,22 +92,23 @@ This section will walk you through the steps to manually create the population h
 
 <a name="azuresa"></a>
 ## Create Azure Storage Account 
-  The Azure Storage Account is required for several parts of this solution
-  - It is used as a the storage location for the raw event data used by the data generator that will feed the Azure Event Hub. 
+  The Azure Storage Account is required for several parts of this solution:
+  - It is used as the storage location for the raw event data used by the data generator that will feed the Azure Event Hub. 
   - It is used as a Linked Service in the Azure Data Factory and holds the USQL scripts required to submit Data Lake Analytics jobs to process data by Azure Data Factory.
 
   ### Creation Steps
-  - Log into the [Azure Management Portal](https://portal.azure.com) 
-  - In the left hand menu select *Resource groups*
-  - Locate the resource group  you created for this project and click on it displaying the resources associated with the group in the resource group blade.
-  - At the top of the Resource Group blade click __+Add__.
-  - In the *Search Everything* search box enter **Storage account**
-  - Choose ***Storage account*** from the results, then click *Create*
-  -	Change the deployment model to *Classic* and click create.
-  -	Set the name to **healtcarestorage** 
-  -	Subscription, resource group, and location should be correctly set. 
-  -	Click ***Create***
-  - The creation step may take several minutes. 
+  1. Log into the [Azure Management Portal](https://portal.azure.com) 
+  1. In the left hand menu select *Resource groups*
+  1. Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+  1. At the top of the Resource Group blade click __+Add__.
+  1. In the *Search Everything* search box, enter **Storage account**.
+  1. Choose ***Storage account*** from the results, then click ***Create***.
+     1. Change the deployment model to *Classic* and click ***Create***.
+     1. Set the name to **healthcarestorage** (modified to include your unique initials and number, e.g. **healthcaremj01storage**). 
+     1. Correctly set the subscription, resource group, and location. 
+     1. Click ***Create***.
+  
+The creation step may take several minutes. 
 
 Navigate back to the storage account blade to collect important information that will be required in future steps. 
   - On the storage account blade, select [**Access keys**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) from the menu on the left.
