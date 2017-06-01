@@ -148,29 +148,32 @@ Next we will create some containers and move the necessary files into the newly 
 ## Create an Azure Event Hub
   The Azure Event Hub is the ingestion point of raw records that will be processed in this solution. The role of Event Hub in solution architecture is as the "front door" for an event pipeline. It is often called an event ingestor.
 
- - Log into the [Azure Management Portal](https://portal.azure.com) 
- - In the left hand menu select *Resource groups*
- - Locate the resource group  you created for this project and click on it displaying the resources associated with the group in the resource group blade.
- - At the top of the Resource Group blade click __+Add__.
- - In the *Search Everything* search box enter **Event Hubs**
- - Choose ***Event Hubs*** from the results, then click *Create*, this will create the **namespace** for the Azure Event Hub.
- - For the name, use ***healthcareehns*** (e.g. Mary Jane would enter healthcaremj01ehns).
- - Subscription, resource group, and location should be correctly set.
- - Click ***Create*** 
- - The creation step may take several minutes.  
- - Navigate back to *Resource groups* and choose the resource group for this solution.
- - Click on ***healthcareehns***, then on the subsequent blade click __+Event Hub__
- - Enter ***healthcareehub*** as the Even Hub name (e.g. Mary Jane would enter healthcaremj01ehub), move partition count to 16 and click *Create*
+1. In the left-hand menu of the [Azure Management Portal](https://portal.azure.com), select *Resource groups*.
+1. Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+1. At the top of the Resource Group blade, click __+Add__.
+1. In the *Search Everything* search box enter **Event Hubs**.
+1. Choose ***Event Hubs*** from the results, then click *Create*. This will create the **namespace** for the Azure Event Hub.
+1. For the name, use ***healthcareehns*** (e.g. Mary Jane would enter healthcaremj01ehns).
+1. Correct set the subscription, resource group, and location.
+1. Click ***Create***.
+
+The creation step may take several minutes.  Navigate back to *Resource groups* and choose the resource group for this solution. Refresh until the event hub namespace appears in the list of resources, then continue with the instructions below:
+
+1. Click on ***healthcareehns*** in the resource list, then on the subsequent blade click __+Event Hub__.
+1. Enter ***healthcareehub*** as the Event Hub name (e.g. Mary Jane would enter healthcaremj01ehub), move the partition count slider to 16, and click *Create*.
  
- Once the Event Hub is created we will create Consumer Groups. In a stream processing architecture, each downstream application equates to a consumer group. We will create two Consumer Groups here corresponding to writing event data to two separate locations: Data Lake Store (cold path) and Power BI (hotpath). (There is always a default consumer group in an event hub)
+Once the Event Hub is created, we will create Consumer Groups. In a stream processing architecture, each downstream application equates to a consumer group. We will create two Consumer Groups here corresponding to writing event data to two separate locations: Data Lake Store (cold path) and Power BI (hotpath). (There is always a default consumer group in an event hub.)
 
- - Click on the Event Hub ***healthcareehub*** you just created, then on the subsequent blade click __+ Consumer Group__
- - Enter coldpathcg as Name
- - Add the second consumer group by clicking on __+ Consumer Group__ again.
- - Enter hotpathcg as Name 
- - You will need the names (coldpathcg and hotpathcg) when setting up stream analytics job.
+1. Click on the Event Hub ***healthcareehub*** you just created. (You may need to scroll down to see it listed on the event hub namespace's overview pane.)
+1. Click __+ Consumer Group__.
+    1. Enter `coldpathcg` as the "Name".
+    1. Click *Create*.
+1. Add the second consumer group by clicking on __+ Consumer Group__ again.
+    1. Enter `hotpathcg` as the "Name". 
 
- From the **healthcareehns** you will collect the following information as it will be required in future steps to set up Stream Analytics Jobs.
+You will need the consumer group names (coldpathcg and hotpathcg) when setting up the stream analytics job.
+
+From the **healthcareehns** you will collect the following information, as it will be required in future steps to set up Stream Analytics Jobs:
 
  - On the ***healthcareeehns*** blade choose [*Shared access policies*](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
  - Select [**RootManageSharedAccessKey**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
