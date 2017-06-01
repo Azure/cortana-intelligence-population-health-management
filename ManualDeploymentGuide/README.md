@@ -247,27 +247,27 @@ We will use an Azure [App Service](https://docs.microsoft.com/en-us/azure/app-se
 1. Log into the [Azure Portal](https://ms.portal.azure.com/) and press the "+ New" button at the upper left portion of the screen.
 1. Type "Web App" into the search box and then press Enter.
 1. Click on the "Web App" option published by Microsoft from the search results. Click the blue "Create" button that appears on the right pane.
-1.  In the "Web App" pane that appears:
+1. In the "Web App" pane that appears:
     1. Enter ***healthcarewebapp*** in the "App name" field (e.g. Mary Jane would enter healthcaremj01webapp).
     1. Select the appropriate subscription and resource group.
     1. Next we will select an App Service Plan:
         1. Click on App Service plan/Location to load more options.
         1. Click "+ Create New".
         1. Enter ***healthcarewebappplan*** in the "App Service plan" field.
-        1. Choose your desired location and pricing tier (select '+new' to select our recommended option "S1 Standard").
-        1.Click "OK".
+        1. Choose your desired location and pricing tier (our recommended option "S1 Standard").
+        1. Click "OK".
     1. Click "Create".
 1. Wait for your Web App deployment to complete (will take a few seconds).
 1. Navigate back to the Resource group and select the App Service just created.
 1. In the App Service blade on the left, click on *WebJobs* under Settings. (You may need to scroll down or use the search feature.)
-1.  In the WebJobs blade, click ***+ Add***.
+1. In the WebJobs blade, click ***+ Add***.
     1. Enter ***healthcarewebjob*** in the "Name" field (e.g. Mary Jane would enter healthcaremj01webjob).
     1. Upload the zipped file created above.
     1. Select ***Continuous*** from drop-down menu for the "Type" field.
     1. Select ***Single Instance*** from drop-down menu for the "Scale" field.
     1. Click "OK".
 1. The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
-1. To monitor your WebJob, select the WebJob and click on Logs at the top. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages to what you saw in the console when you tested the generator locally:   
+1. To monitor your WebJob, select the WebJob and click on Logs at the top of the screen. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages to what you saw in the console when you tested the generator locally:   
     ```
     EVENTHUB: Upload 600 Records Complete   
     EVENTHUB: Starting Raw Upload    
