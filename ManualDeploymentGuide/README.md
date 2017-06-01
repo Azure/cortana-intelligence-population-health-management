@@ -20,6 +20,7 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create an Azure Event Hub](#azureeh) 
 - [Create an Azure Data Lake Store](#azuredls)
 - [Download and configure the data generator](#gen)
+- [Create an Azure Web Job](#webjob)
 - [Create Azure Data Lake Analtytics](#azuredla)
 - [Create Azure Stream Analytics Job](#azurestra) 
 - [Create Azure Data Factory](#azuredf) 
@@ -211,28 +212,73 @@ Navigate back to the storage account blade to collect important information that
   - For the Azure Data Factory to run we need these files to be in the folder forphmdeploymentbyadf in Data Lake Store.
   
 
-##   Start the Generator now 
-  With the [data for generator](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and Data Lake Store created, we can start the generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
+##   Start the Data Generator now 
+  With the [data for generator](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and Data Lake Store created, we can start the data generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
 
 <a name="gen"></a>
 ## Download and configure the data generator  
  - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository.  
  - Unzip this file to the local disk drive of a Windows Machine. 
  - Unzip in C:/ to ensure a short path name to avoid the 255 character limit on folder names. 
- - Open the file **HealthCareGenerator.exe.config** and modify the following AppSettings  
+ - Navigate to the *folder healthcaregenerator* where all the extracted files.
+ - Open the file **HealthCareGenerator.exe.config** in a notepad and modify the [following]() AppSettings  
  **NOTE:** If you do not see the .config file, in your explorer window, click on View and check 'File name extensions'.
     - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
     - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nTMdNyLOAmJjatV1hPHM4wQegojgks5ZLgLuwA%3D%3D) after creating the Azure Event Hub.
     - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nb5k9XP4_eSxJ9Qlluwc4ucw5imKks5ZLgMLwA%3D%3D) after creating the Azure Storage account.
     - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nb5k9XP4_eSxJ9Qlluwc4ucw5imKks5ZLgMLwA%3D%3D) after creating the Azure Storage account.  
 	- Save and close **HealthCareGenerator.exe.config** 
- - Double click the file **HealthCareGenerator.exe** to start data generation. This will open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
- - Once the data generator is running you should [see](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?token=AKE1nW-W3OLSRFim3KeWQPxwYG3akBKBks5ZLxExwA%3D%3D) incoming data in your Event Hub within a few minutes.
- - To shut down the generator simply close the console.
+ - Next we will **test that that data generator is working correctly** before setting up a Web Job.
+ - Double click the file **HealthCareGenerator.exe** to start data generation. This should open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
+ - If you see messages on your console that look like   
+EVENTHUB: Starting Raw Upload  
+EVENTHUB: Upload 600 Records Complete  
+EVENTHUB: Starting Raw Upload  
+   then your data generator was configured correctly and we can shut it down.
+ - **Shut down the generator** now by simply closing the console.
+ - Zip the contents of the folder healthcaregenerator by selecting all the files in this folder -> right click and Send To Compressed (zipped) folder.
+ - Look for the zipped file in the folder. You can rename it if you want. This zipped file will be uploaded to Azure portal for the Web Job.
  
-    ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when this generator is running.  
-    ***NOTE:*** Data generator can also be run in the cloud, using an Azure [Virtual Machine](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-windows-hero-tutorial). For some of the snapshots we show here, a Windows Server 2008 R2 SP1 [Virtual Machine](https://azure.microsoft.com/en-us/marketplace/virtual-machines/) was used with A4 Basic (8 Cores, 14 GB, 16 Data disks, 16x300 Max IOPS) configuration.
 
+<a name="webjob"></a>
+### Create an Azure WebJob
+We will use Azure [App Service](https://docs.microsoft.com/en-us/azure/app-service/app-service-value-prop-what-is) to create a Web App to run Data Generator Web Job which will simulate streaming data from hospitals. Azure WebJobs provide an easy way to run scripts or programs as background processes. We can upload and run an executable file such as cmd, bat, exe (.NET), ps1, sh, php, py, js, and jar. These programs run as WebJobs and can be configured to run on a schedule, on demand or continuously. Below we show how to use Azure portal to create a Web App with a new App Service Plan (S1 standard) and then create a Web Job. We will upload the zip file (created above after modifying the settings in .config file) and set the Web Job as continuous and single instance.
+  
+ - Log into the [Azure Portal](https://ms.portal.azure.com/). 
+ - Press the "+ New" button at the upper left portion of the screen.
+ - Type "Web App" into the search box and then press Enter.
+ - Click on the "Web App" option published by Microsoft from the search results. Click the blue "Create" button that appears on the right pane.
+ -  In the "Web App" pane that appears:
+    - Enter ***healthcareWebApp*** in the "App name" field (e.g. Mary Jane would enter healthcaremj01WebApp).
+    - Select the appropriate subscription and resource group.
+    - Next we will select an App Service Plan
+    - Click on App Service plan/Location to load more options.
+    - Click "+ Create New".
+    - Enter ***healthcareWebAppPlan*** in the "App Service plan" field.
+    - Choose your desired location and pricing tier (select '+new' to select our recommended option "S1 Standard").
+    - Click "OK" and then click "Create".
+    - Wait for your Web App deployment to complete (will take a few seconds).
+
+ - Navigate back to the Resource group and select the App Service just created.
+ - In the App Service blade on the left scroll down and under Settings locate WebJobs
+ - Click on WebJobs.
+ - In the WebJobs blade click ***+ Add*** 
+    - In the Add WebJob pane 
+    - Enter ***healthcareWebJob*** in the "Name" field (e.g. Mary Jane would enter healthcaremj01WebJob).
+    - Upload the zipped file created above.
+    - Select *Continuous* from drop down for "Type" field.
+    - Select *Single Instance* from drop down for "Scale" field.
+    - Click "OK".
+ - The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
+ - To monitor your WebJob select the WebJob and click on Logs at the top. You should similar messages as you saw in console when you testes the generator locally.   EVENTHUB: Starting Raw Upload
+EVENTHUB: Upload 600 Records Complete
+EVENTHUB: Starting Raw Upload
+EVENTHUB: Upload 600 Records Complete
+
+- Once the data generator is running you should [see](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?token=AKE1nW-W3OLSRFim3KeWQPxwYG3akBKBks5ZLxExwA%3D%3D) incoming data in your Event Hub within a few minutes.
+ 
+    ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when the WebJob is running.  
+    
 
 <a name="azurestra"></a>
 ## Create Azure Stream Analytics Job - Cold and Hot Paths
