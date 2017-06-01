@@ -65,7 +65,7 @@ You can download or view individual files by navigating through the repository f
 
 ### Installing AzCopy Command-Line Utility
 
-AzCopy is a Windows command-line utility designed for copying data to and from Microsoft Azure storage. Download AzCopy from [here](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy). Open this desktop App you just installed by [searching](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy1.jpg?token=AKE1nQrJ204qRnprULTFa5APQBGY43g4ks5ZLbawwA%3D%3D) for ‘Microsoft Azure Storage command line’ or simple ‘azure storage command’. Open this app and you will get a [command prompt](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nVnp0yWCsgwyopVrNOIS4-NmbLSSks5ZLbbJwA%3D%3D). We will use this utility to transfer files to and from blob.
+AzCopy is a Windows command-line utility designed for copying data to and from Microsoft Azure storage. Download AzCopy from [here](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy). Open this desktop App you just installed by [searching](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy1.jpg?raw=true) for ‘Microsoft Azure Storage command line’ or simple ‘azure storage command’. Open this app and you will get a [command prompt](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true). We will use this utility to transfer files to and from blob.
 
 
 ----------
@@ -110,7 +110,7 @@ This section will walk you through the steps to manually create the population h
   - The creation step may take several minutes. 
 
 Navigate back to the storage account blade to collect important information that will be required in future steps. 
-  - On the storage account blade, select [**Access keys**](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nbeKGf8s4WfcRtjjYfw0yZyJy5ZBks5ZLbnvwA%3D%3D) from the menu on the left.
+  - On the storage account blade, select [**Access keys**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) from the menu on the left.
   - Record the *STORAGE ACCOUNT NAME*, *KEY* and *CONNECTION STRING* values for *key1*.
   - You will need these three credentials to upload files to your storage account below, when setting up a Linked Service to access the files in your blob through Azure Data Factory and when starting the data generator.
   - Next we will create some containers and move the necessary files into the newly created containers. These files are the raw events used by the data generator as well as usql scripts that will be called by the Azure Data Factory pipeline. 
@@ -124,21 +124,21 @@ Navigate back to the storage account blade to collect important information that
   - Enter the name ***data*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *data* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt?token=AKE1nS1SxXX5kks01buBZfRGFMwsXS3cks5ZOCAywA%3D%3D) command
+  - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing. 
   - Click refresh and you should see [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files appear in your container *data*
   - Click __+ Container__  to create the second container.
   - Enter the name ***scripts*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *scripts* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt?token=AKE1nYOIVk9_QjxSFVJqw9G-YXAosxpSks5ZLyPiwA%3D%3D) command 
+  - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt) command 
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
   - Click refresh and you should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob) four usql files appear in your container *scripts*
   - Click __+ Container__  to create the third container.
   - Enter the name ***forphmdeploymentbyadf*** and change the *Access type* to **blob**.
   - Click ***Create***
   - You should see *forphmdeploymentbyadf* appear in the list of containers
-  - On the [AzCopy terminal](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/azcopy2.PNG?token=AKE1nb9u5bYbePzq9r-wHL85y-qvMtN4ks5ZLbbqwA%3D%3D) command prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt?token=AKE1nXF52h4kF_kx02M7gzZxpLUJvlkQks5ZOCEewA%3D%3D) command 
+  - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt) command 
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
   - Click refresh and you should see seventeen files listed [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container *forphmdeploymentbyadf*. 
 
@@ -172,8 +172,8 @@ Navigate back to the storage account blade to collect important information that
 
  From the **healthcareehns** you will collect the following information as it will be required in future steps to set up Stream Analytics Jobs.
 
- - On the ***healthcareeehns*** blade choose [*Shared access policies*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub1.PNG?token=AKE1nbxn0yvjW04vjuNLprBto3cyzmieks5ZLbz7wA%3D%3D) from the menu under Settings.
- - Select [**RootManageSharedAccessKey**](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nXUjKUgJL3wh1vgoyn9wKU8jTntHks5ZLb0kwA%3D%3D) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
+ - On the ***healthcareeehns*** blade choose [*Shared access policies*](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
+ - Select [**RootManageSharedAccessKey**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
  - Return to the ***healthcareehns*** blade and choose *Overview* from the menu, click on Event Hub under Entities and record the event hub name you just created.
  - Click on **healthcareehub** and choose *Overview* from the menu. 
  - Click on Consumer Groups under Entities and it will open a pane containing the list of Consumer Groups you just added. Copy the names coldpathcg and hotpathcg. You will need these when setting up the stream analytics job.
@@ -194,7 +194,7 @@ Navigate back to the storage account blade to collect important information that
   - Click ***Create***  
   - The creation step may take several minutes. 
   - When completed, navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store and record the *ADL URI*
-  value which from the Data Lake Store blade which will be in the [form](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nZJeOG7q3pFgLOTS-Cp-7CHCOKZIks5ZLcgEwA%3D%3D) **adl://__********__.azuredatalakestore.net**  
+  value which from the Data Lake Store blade which will be in the [form](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**  
   - You will need this to connect PBI to the data in your Data Lake Store. 
 
   ### Move resources to Data Lake Store
@@ -203,9 +203,9 @@ Navigate back to the storage account blade to collect important information that
   - In the Data Explorer blade, click on New Folder. You will be prompted to enter folder name. Enter **forphmdeploymentbyadf**. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
   - We will move resources to this folder in Data Lake Store using AdlCopy
   - Download and install AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358).
-  - Open Command Prompt by typing cmd in search field and navigate to the folder where AdlCopy was [installed](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlcopy1.PNG?token=AKE1nUJIxLtXqqcp2Fzob6rilufbb147ks5ZMeVzwA%3D%3D). e.g. cd C:\Users\\\<username>\Documents\AdlCopy
-  - Type adlcopy to ensure the command is [available](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlcopy2.PNG?token=AKE1nQd9d3mgwhk9JQWul4J2eR6BltS3ks5ZMeWWwA%3D%3D).
-  - On the prompt type [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt?token=AKE1nZaK1jc5pjB1w79TkefgUl0bU6Qjks5ZMeefwA%3D%3D) command
+  - Open Command Prompt by typing cmd in search field and navigate to the folder where AdlCopy was [installed](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy1.PNG?raw=true). e.g. cd C:\Users\\\<username>\Documents\AdlCopy
+  - Type adlcopy to ensure the command is [available](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy2.PNG?raw=true).
+  - On the prompt type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt) command
   - Replace 'EnterYourStorageAccountkeyhere' with your storage account key, \<storageaccountname\> with your storage account name and \<adlsccountname\> with your Data Lake Store name in the command before executing. 
   - If prompted 'Do you wish to continue' type 'Y'
   - In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder forphmdeploymentbyadf in your Data Lake Store.
@@ -221,12 +221,12 @@ Navigate back to the storage account blade to collect important information that
  - Unzip this file to the local disk drive of a Windows Machine. 
  - Unzip in C:/ to ensure a short path name to avoid the 255 character limit on folder names. 
  - Navigate to the *folder healthcaregenerator* where all the extracted files.
- - Open the file **HealthCareGenerator.exe.config** in a notepad and modify the [following](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/configfile.PNG?token=AKE1nQA4mCO26xSQUIW769KncrUpniCHks5ZOX7hwA%3D%3D) AppSettings  
+ - Open the file **HealthCareGenerator.exe.config** in a notepad and modify the [following](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/configfile.PNG?raw=true) AppSettings  
  **NOTE:** If you do not see the .config file, in your explorer window, click on View and check 'File name extensions'.
     - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
-    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/eventhub2.PNG?token=AKE1nTMdNyLOAmJjatV1hPHM4wQegojgks5ZLgLuwA%3D%3D) after creating the Azure Event Hub.
-    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nb5k9XP4_eSxJ9Qlluwc4ucw5imKks5ZLgMLwA%3D%3D) after creating the Azure Storage account.
-    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?token=AKE1nb5k9XP4_eSxJ9Qlluwc4ucw5imKks5ZLgMLwA%3D%3D) after creating the Azure Storage account.  
+    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub.
+    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.
+    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.  
 	- Save and close **HealthCareGenerator.exe.config** 
  - Next we will **test that that data generator is working correctly** before setting up a Web Job.
  - Double click the file **HealthCareGenerator.exe** to start data generation. This should open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
@@ -270,12 +270,12 @@ We will use Azure [App Service](https://docs.microsoft.com/en-us/azure/app-servi
     - Select ***Single Instance*** from drop down for "Scale" field.
     - Click "OK".
  - The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
- - To monitor your WebJob select the WebJob and click on Logs at the top. You should [see](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/webjob2.PNG?token=AKE1nY950d_-IioHtLuVmEMOvRKVFkKoks5ZOX6kwA%3D%3D) similar messages as you saw in console when you tested the generator locally:   
-EVENTHUB: Upload 600 Records Complete 
-EVENTHUB: Starting Raw Upload  
-EVENTHUB: Upload 600 Records Complete  
+ - To monitor your WebJob select the WebJob and click on Logs at the top. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages as you saw in console when you tested the generator locally:   
+EVENTHUB: Upload 600 Records Complete   
+EVENTHUB: Starting Raw Upload    
+EVENTHUB: Upload 600 Records Complete    
 
-- Once the data generator is running you should [see](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?token=AKE1nW-W3OLSRFim3KeWQPxwYG3akBKBks5ZLxExwA%3D%3D) incoming data in your Event Hub within a few minutes.
+- Once the data generator is running you should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/datageneratorstarted.PNG?raw=true) incoming data in your Event Hub within a few minutes.
  
     ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when the WebJob is running.  
     
@@ -418,7 +418,7 @@ select *Now*, then click on **Start**.
   - The creation step may take several minutes.
   - When completed, navigate back to the resource group blade and select the ***healthcareadla*** Data Lake Account.
   - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
-  - In the Sample Scripts [blade](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adla_install.PNG?token=AKE1nX-aGvhIuARaBrFRaCHlaMhlwn7cks5ZLcd2wA%3D%3D), click on Install U-SQL Extensions to install U-SQL Extensions to your account.
+  - In the Sample Scripts [blade](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adla_install.PNG?raw=true), click on Install U-SQL Extensions to install U-SQL Extensions to your account.
   - This step will enable R (and python) extensions to work with ADLA.
 
 <a name="azuredf"></a>
@@ -482,7 +482,7 @@ select *Now*, then click on **Start**.
   - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade instead of *New data store* click on *... More* and from the drop down choose **New dataset** and then *Azure Data Lake Store* from the list.
-  - The template contains quite a few settings, which we will not cover. Instead download the file [*inputdataset.json*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/inputdataset.json?token=AKE1nXBpPSdfNf84d6sI2_NVhFkYK9cXks5ZMenuwA%3D%3D) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains quite a few settings, which we will not cover. Instead download the file [*inputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/inputdataset.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - At the top of the blade, click *Deploy*
@@ -494,7 +494,7 @@ select *Now*, then click on **Start**.
   - Under *Actions* select *Author and deploy*
   - At the top of the blade click on *...More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
   - You will be presented a template.
-  - The template contains quite a few settings, which we will not cover. Instead download the file [*outputdataset.json*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json?token=AKE1nc5mgAdsHAXnKX5c9n4NZTHCWL8Lks5ZMeqOwA%3D%3D) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains quite a few settings, which we will not cover. Instead download the file [*outputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file.
   - Change the *name* field to *02JoinedData*
@@ -518,7 +518,7 @@ select *Now*, then click on **Start**.
  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
   - Under *Actions* select *Author and deploy*
   - Right click on *Pipelines* and choose *New pipeline*
-  - The template contains an empty pipeline. Download the file [*pipeline.json*](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json?token=AKE1nYHRlMg2NTSOs1bUixLHDS2yiPhiks5ZMeqywA%3D%3D) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+  - The template contains an empty pipeline. Download the file [*pipeline.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
   - Replace the content in the editor with the content of the downloaded file. 
   - **DO NOT** click  *Deploy* yet
@@ -527,7 +527,7 @@ select *Now*, then click on **Start**.
 
   #### Joining
 
-  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql?token=AKE1nbzw6MDZdCO0qoEbsYSR1de5-8Tjks5ZL9E0wA%3D%3D) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result 
   is a single output file with the results for the 15 minute window this activity should cover. 
 
@@ -535,7 +535,7 @@ select *Now*, then click on **Start**.
   
   #### Scoring
 
-  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql?token=AKE1nfKVqHwIbXUVsTRW6P89DE_QB-Fuks5ZL9FdwA%3D%3D) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
   a single output file with the scoring results for the 15 minute window this activity should cover.
 
@@ -543,21 +543,24 @@ select *Now*, then click on **Start**.
 
   #### Processing for PBI
 
-  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql?token=AKE1nQUfc7i_H4bsc357cDbrlwXNGm1Xks5ZL9F3wA%3D%3D) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
   parameters and the exact work going on internally, but the effect is to create data for visualization, and output the results of that work to
   a single output file for the 15 minute window this activity should cover.
 
   #### Appending
 
-  This activity executes a [USQL script](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql?token=AKE1nTvBM3CuJdJEy5De65f8fwLfk3ceks5ZL9GPwA%3D%3D) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
 
   #### Activity Period
 
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
-  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json?token=AKE1nYHRlMg2NTSOs1bUixLHDS2yiPhiks5ZMeqywA%3D%3D) the start and end are listed as such -     
-  "start": "2017-05-20T10:00:00Z",      
-  "end": "2017-05-30T18:51:55Z",        
-  Set the *start* property to the time right now, and set the *end* property to 1 week from now. This will ensure that your data factory will not be producing data over too long a period of time and we do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
+  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such -     
+  "start": "2017-mm-ddT10:00:00Z",      
+  "end": "2017-mm-ddT19:51:55Z",        
+  **The mm and dd in these strings need to be replaced by month and date.** Set the *start* property to the time right now, and set the *end* property to 1 week from now. e.g. If you were starting the Data Factory on August 18th, the start and end could be entered as -     
+  "start": "2017-08-18T10:00:00Z",      
+  "end": "2017-08-24T19:51:55Z",       
+  This will ensure that your data factory will not be producing data over too long a period of time and we do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
 
   Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
 
