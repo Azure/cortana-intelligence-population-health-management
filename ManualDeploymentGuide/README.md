@@ -205,7 +205,7 @@ You will need this URI to connect Power BI to the data in your Data Lake Store.
     1. Open Command Prompt by typing `cmd` in the Windows search field.
     1. Navigate to the folder where AdlCopy was [installed](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy1.PNG?raw=true), e.g.
     ```cd C:\Users\\\<username>\Documents\AdlCopy```
-    1. Type `adlcopy` and press Enter. Confirm from the output that the program is [available](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy2.PNG?raw=true).
+    1. Type `AdlCopy` and press Enter. Confirm from the output that the program is [available](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy2.PNG?raw=true).
     1. On the command prompt, enter [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt) command.
          - Replace `EnterYourStorageAccountkeyhere` with your storage account key, `<storageaccountname>` with your storage account name and `<adlsaccountname>` with your Data Lake Store name in the command before executing. 
     1. If prompted with "Do you wish to continue?", type "Y".
@@ -213,32 +213,32 @@ You will need this URI to connect Power BI to the data in your Data Lake Store.
 In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder `forphmdeploymentbyadf` in your Data Lake Store. These files must be in place before the Azure Data Factory pipelines (described below) can be run.
 
 ##   Start the Data Generator now 
-  With the [data for generator](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and Data Lake Store created, we can start the data generator at this point before carrying out the next steps. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
+With the [inpur data for the generator](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and the Data Lake Store created, we are ready to start the data generator. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
 
 <a name="gen"></a>
-## Download and configure the data generator  
- - Download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository.  
- - Unzip this file to the local disk drive of a Windows Machine. 
- - Unzip in C:/ to ensure a short path name to avoid the 255 character limit on folder names. 
- - Navigate to the *folder healthcaregenerator* where all the extracted files.
- - Open the file **HealthCareGenerator.exe.config** in a notepad and modify the [following](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/configfile.PNG?raw=true) AppSettings  
- **NOTE:** If you do not see the .config file, in your explorer window, click on View and check 'File name extensions'.
-    - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
-    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub.
-    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.
-    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.  
-	- Save and close **HealthCareGenerator.exe.config** 
- - Next we will **test that that data generator is working correctly** before setting up a Web Job.
- - Double click the file **HealthCareGenerator.exe** to start data generation. This should open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
- - If you see messages on your console that look like   
-EVENTHUB: Starting Raw Upload  
-EVENTHUB: Upload 600 Records Complete  
-EVENTHUB: Starting Raw Upload  
+### Download and configure the data generator  
+1. On your Windows machine, download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository. The folder choice will keep the path length short, avoiding the 255 character limit on folder names.
+1. Navigate to the folder *C:\healthcaregenerator* where all the extracted files are found.
+1. Open the file **HealthCareGenerator.exe.config** in Notepad and modify the [following](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/configfile.PNG?raw=true) AppSettings. (**NOTE:** If you do not see the .config file, in your Explorer window, click on View and check "File name extensions".)
+    1. EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
+    1. EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub.
+    1. StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.
+    1. StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.  
+    1. Save and close **HealthCareGenerator.exe.config** 
+
+Next we will **test that that data generator is working correctly** by running it locally, before attempting to run it as a Web Job.
+1. Double-click the file **HealthCareGenerator.exe** to start data generation. This should open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
+1. If you see messages on your console that look like   
+   ```
+   EVENTHUB: Starting Raw Upload  
+   EVENTHUB: Upload 600 Records Complete  
+   EVENTHUB: Starting Raw Upload  
+   ```
    then your data generator was configured correctly and we can shut it down.
- - **Shut down the generator** now by simply closing the console.
- - Zip the contents of the folder healthcaregenerator by selecting all the files in this folder -> right click and Send To Compressed (zipped) folder.
- - Look for the zipped file in the folder. You can rename it if you want. This zipped file will be uploaded to Azure portal for the Web Job.
- 
+1. **Shut down the generator** now by simply closing the console.
+1. Zip the contents of the folder healthcaregenerator by selecting all the files in this folder, then right-clickling and selecting "Send To Compressed (zipped) folder".
+
+Look for the zipped file in the folder and rename it if if you like. This zipped file will be uploaded to Azure Portal for the Web Job.
 
 <a name="webjob"></a>
 ## Create an Azure WebJob
