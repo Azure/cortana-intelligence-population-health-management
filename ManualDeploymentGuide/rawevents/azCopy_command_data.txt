@@ -1,3 +1,3 @@
-AzCopy /Source:https://phm.blob.core.windows.net/generatordata /Dest:https://<storageaccountname>.blob.core.windows.net/data  /SourceSAS:"?sv=2016-05-31&ss=bfqt&srt=sco&sp=rlp&se=2017-05-26T21:16:13Z&st=2017-05-22T13:16:13Z&spr=https&sig=i8p33kul6dQEsO1befl%2F9uXMe3OB6kYWAJQf9i6exao%3D" /DestKey:EnterYourStorageAccountkeyhere /s
+AzCopy /Source:https://phm.blob.core.windows.net/generatordata /Dest:https://<storageaccountname>.blob.core.windows.net/data  /SourceSAS:"?st=2017-06-01T18%3A33%3A00Z&se=2027-06-01T18%3A33%3A00Z&sp=rl&sv=2016-05-31&sr=c&sig=B47dQmtSVRiM92UcBZIyrbFzQwY6T3fmfl8Ra9vpgj4%3D" /DestKey:EnterYourStorageAccountkeyhere /s
   
   
