@@ -21,8 +21,8 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create an Azure Data Lake Store](#azuredls)
 - [Download and configure the data generator](#gen)
 - [Create an Azure Web Job](#webjob)
-- [Create Azure Data Lake Analytics](#azuredla)
 - [Create Azure Stream Analytics Job](#azurestra) 
+- [Create Azure Data Lake Analytics](#azuredla)
 - [Create Azure Data Factory](#azuredf) 
 
 Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
@@ -387,42 +387,41 @@ After some time, this new dataset *hotpathcore* will appear in the Datasets sect
  
 <a name="azuredla"></a>
 ## Create Azure Data Lake Analytics 
-  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The usql script for various jobs (joining, scoring etc. ) can be found at [scripts/datafactory/scripts_storage/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder of this repository and will need to be uploaded to storage from where Azure Data Factory will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (viz. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store in the folders adfrscripts, historicdata and models. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One additional important step is to Install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end to end data science scenarios covering: merging various data files, feature engineering, partitioned data model building, and post deployment, massively parallel FE and scoring.
+  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [USQL](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The USQL script for various jobs (joining, scoring etc.) can be found at [scripts/datafactory/scripts_storage/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder of this repository and was uploaded to storage in a previous step, from whence Azure Data Factory will access them to automatically submit the various jobs. The USQL scripts will deploy various resources (viz. R scripts, trained models, CSV files with historic and metadata etc.) to your Data Lake Store in the folders `adfrscripts`, `historicdata` and `models`. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One additional important step is to install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end-to-end data science scenarios covering: merging various data files, feature engineering, partitioned data model building and, post-deployment, massively parallel FE and scoring.
 
-  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
-  - In the left hand menu select *Resource groups*
-  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
-  - At the top of the Resource Group blade click __+Add__.
-  - In the *Search Everything* search box enter ***Data Lake Analytics***
-  - Choose ***Data Lake Analytics*** from the results then click *Create*
-  - Enter ***healtcahreadla*** as the name (e.g. Mary Jane would enter healthcaremj01adla).
-  - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
-  - Click on *Data Lake Store* and choose the Azure Data Lake store created in the previous step. (Data Lake Analytics account has an Azure Data Lake Store account dependency and is referred as the default Data Lake Store account.)
-  - Click ***Create***  
-  - The creation step may take several minutes.
-  - When completed, navigate back to the resource group blade and select the ***healthcareadla*** Data Lake Account.
-  - In the Overview Panel on the left, scroll down to the GETTING STARTED section, locate and click on 'Sample Scripts'.
-  - In the Sample Scripts [blade](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adla_install.PNG?raw=true), click on Install U-SQL Extensions to install U-SQL Extensions to your account.
-  - This step will enable R (and python) extensions to work with ADLA.
+- Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on *Resource groups* in the left-hand menu.
+- Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click ***+Add***.
+- In the *Search Everything* search box, enter `Data Lake Analytics`.
+- Choose *Data Lake Analytics* from the results, then click ***Create***.
+- Enter `healtcareadla` as the name (e.g. Mary Jane would enter healthcaremj01adla).
+- Correctly set the subscription and resource group.
+- Choose the location closest to the one chosen for the resource group.
+- Click on *Data Lake Store* and choose the Azure Data Lake Store created in the previous step (*healthcareadls*).
+- Click ***Create***. The deployment step may take several minutes.
+- When deployment has finished, navigate back to the resource group blade and click on the *healthcareadla* Data Lake Analytics resource.
+- In the data lake analytics blade, locate and click on *Sample Scripts* under the *GETTING STARTED* section in the left-hand menu. (You may need to scroll down or use the search feature.)
+- In the Sample Scripts [blade](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adla_install.PNG?raw=true), click on ***Install U-SQL Extensions*** to install U-SQL Extensions to your account.
+  - This step will enable R (and Python) extensions to work with ADLA.
+  - This step may take several minutes to complete.
 
 <a name="azuredf"></a>
 ## Create Azure Data Factory
-  Azure Data Factory is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows (called pipelines). A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory we have only one pipeline with four different activities. The compute service we will be using for data transformation in this Data Factory is Data Lake Analytics.
-  
-  
-### Azure Data Factory - get started
+  Azure Data Factory is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows called "pipelines." A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory, we will have only one pipeline with four different activities. The compute service we will be using for data transformation in this Data Factory is Data Lake Analytics.
 
-  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
-  - In the left hand menu select *Resource groups*
-  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
-  - At the top of the Resource Group blade click __+Add__.
-  - In the *Search Everything* search box enter ***Data Factory***
-  - Choose ***Data Factory*** from the results then click *Create*
-  - Enter ***healthcareadf*** as the name (e.g. Mary Jane would enter healthcaremj01adf). 
-  - Subscription and resource group should be correctly set and the location should be the closest location to the one chosen for the resource group.
-  - Click ***Create***  
-  - The creation step may take several minutes.  
+### Getting started with Azure Data Factory
 
+- Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on ***Resource groups*** in the left-hand menu.
+- Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click ***+Add***.
+- In the *Search Everything* search box, enter `Data Factory`.
+- Choose *Data Factory* from the results, then click ***Create***.
+- Enter `healthcareadf` as the name (e.g. Mary Jane would enter healthcaremj01adf). 
+- Correctly set the subscription and resource group.
+- Choose the location closest to the one chosen for the resource group.
+- Click ***Create***.
+
+The deployment step may take several minutes. Wait until deployment has finished before continuing with the steps below.
 
 ### Azure Data Factory Linked Services
   In order for data factory to link to the data locations, we will need to create a '[Linked Service](https://docs.microsoft.com/en-us/rest/api/datafactory/data-factory-linked-service)' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create Linked Service for Azure Storage account which contains the USQL scripts, the Azure Data Lake Store where the data resides, and finally the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
