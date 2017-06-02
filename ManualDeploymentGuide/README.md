@@ -471,64 +471,57 @@ The deployment step may take several minutes. Wait until deployment has finished
 When finished, you will have a total of five datasets.
   
 ### Azure Data Factory Pipeline
-  With the services and datasets in place it is time to set up a pipeline that will process the data. 
+  With the services and datasets in place, it is time to set up a pipeline that will process the data.
 
-  ***Note***: The shortest execution time of data factory is 15 minutes.
-
- - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
-  - Under *Actions* select *Author and deploy*
-  - Right click on *Pipelines* and choose *New pipeline*
-  - The template contains an empty pipeline. Download the file [*pipeline.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
+- Navigate back to the resource group blade and select the *healthcareadf* data factory.
+- Under *Actions* select *Author and deploy*.
+- Right-click on *Pipelines* and choose *New pipeline*.
+- The template contains an empty pipeline. Download the file [*pipeline.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
   folder.
-  - Replace the content in the editor with the content of the downloaded file. 
-  - **DO NOT** click  *Deploy* yet
+- Replace the content in the editor with the content of the downloaded file. 
+- **DO NOT** click  *Deploy* yet!
 
-  Lets look closely at these activities and what they are doing. 
+Let's look closely at these activities and what they are doing. 
 
-  #### Joining
+#### Joining
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters - *queryTime*, *queryLength* and *outputFile*. You can learn more about the 
-  parameters and the exact work going on internally, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result 
-  is a single output file with the results for the 15 minute window this activity should cover. 
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters -- *queryTime*, *queryLength* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result is a single output file with the results for the 15 minute window this activity should cover. 
 
-  The output of this activity is then tied to the input of the *Scoring* activity, which will not execute until this activity is complete. 
+  The output of this activity is used as the input of the *Scoring* activity, which will not execute until this activity is complete. 
   
-  #### Scoring
+#### Scoring
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
-  parameters and the exact work going on internally, but the effect is to perform feature engineering, score the data, and output the results of that work to
-  a single output file with the scoring results for the 15 minute window this activity should cover.
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters -- *inputFile* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to perform feature engineering, score the data, and output the results of that work to a single output file with the scoring results for the 15 minute window this activity should cover.
 
-  The output of this activity is then tied to the input of the *Process for PBI* activity, which will not execute until this activity is complete.  
+  The output of this activity is used as the input of the *Process for PBI* activity, which will not execute until this activity is complete.  
 
-  #### Processing for PBI
+#### Processing for PBI
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the 
-  parameters and the exact work going on internally, but the effect is to create data for visualization, and output the results of that work to
-  a single output file for the 15 minute window this activity should cover.
+  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to create data for visualization, and output the results of that work to a single output file for the 15 minute window this activity should cover.
 
-  #### Appending
+#### Appending
 
   This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
 
-  #### Activity Period
+#### Activity Period
 
-  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the 
-  properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the json for pipeline provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such -     
-  "start": "2017-mm-ddT10:00:00Z",      
-  "end": "2017-mm-ddT19:51:55Z",        
-  **The mm and dd in these strings need to be replaced by month and date.** Set the *start* property to the time right now, and set the *end* property to 1 week from now. e.g. If you were starting the Data Factory on August 18th, the start and end could be entered as -     
+  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the pipeline JSON template provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such -     
+  "start": "yyyy-mm-ddT10:00:00Z",      
+  "end": "yyyy-mm-ddT19:51:55Z",        
+  **The yyyy, mm and dd in these strings need to be replaced by the four-digit year and two-digit month and day.** Set the *start* property to the time right now, and set the *end* property to 1 week from now. e.g. If you were starting the Data Factory on August 18, the start and end could be entered as:
+  ```
   "start": "2017-08-18T10:00:00Z",      
-  "end": "2017-08-24T19:51:55Z",       
-  This will ensure that your data factory will not be producing data over too long a period of time and we do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
+  "end": "2017-08-24T19:51:55Z",
+  ```
+  This will ensure that your data factory will not be producing data over too long a period of time. We do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
 
-  Once you have updated the *start* and *end* properties ***you should now click the *Deploy* button at the top of the blade***.
+  Once you have updated the *start* and *end* properties, *click the **Deploy** button at the top of the blade*.
 
- **Azure Data Factory is deployed now**. Joined results will start to appear in the Azure Data Lake store in stream/joined followed by scored results in stream/scoring etc. For more on how to monitor the pipeline read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
+  Now that Azure Data Facotry has been deployed, joined results will start to appear in the Azure Data Lake Store in `stream/joined` followed by scored results in `stream/scoring` etc. For more on how to monitor the pipeline, read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
 
 ## Visualization
 
- Congratulations! You have successfully deployed a Cortana Intelligence Solution. After completion of hot path stream steps above, the data is being pushed to Power BI for real time visualization. Additionally we also connect to the streaming data and predictions being stored in the Data Lake Store (cold path) along with historic data from Power BI for visualization. A picture is worth a thousand words. Lets head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
+  Congratulations! You have successfully deployed a Cortana Intelligence Solution. The hot path stream created above is pushing data to Power BI for real-time visualization. Our Power BI dashboard will also connect to the streaming data and predictions being stored in the Data Lake Store (cold path) along with historic data for visualization. A picture is worth a thousand words. Let's head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
  
   
 
