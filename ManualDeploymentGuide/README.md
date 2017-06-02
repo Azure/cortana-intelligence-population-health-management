@@ -341,56 +341,52 @@ The deployment step may take several minutes.  When deployment has finished, we 
 Raw data will start to appear in the Azure Data Lake Store (in `/stream/raw/severity/`, `/stream/raw/core/`, `/stream/raw/charges/` and `/stream/raw/dxpr/` with the directory structure defined by path prefix patterns given above) after approximately 5 minutes.
 
 ## Hot Path Stream
-  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name the Steam Analytics Job that we create for this, **healthcareHotPath**. 
+  For the hot path, the Azure Stream Analytics job will process events from the Azure Event Hub and push them to Power BI for real time visualisation. We will name this Steam Analytics Job  **healthcareHotPath**.
 
-  - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
-  - In the left hand menu select *Resource groups*
-  - Locate the resource group you created for this project and click on it displaying the resources associated with the group in the resource group blade.
-  - At the top of the Resource Group blade click __+Add__.
-  - In the *Search Everything* search box enter ***Stream Analytics job***
-  - Choose ***Stream Analytics job*** from the results then click *Create*
-  - Enter ***healthcareHotPath*** as the Job name (e.g. Mary Jane would enter healthcaremj01HotPath).
-  - Subscription, resource group, and location should be correctly set.
-  - Click *Create*  
-  - The creation step may take several minutes.  
-  - Return to the resource group blade.
-  - Select the ***healthcareHotPath*** resource to open the Stream Analytics job to modify the job settings (specify Inputs, Outputs and Query).  
-  
-- In the Stream Analytics job blade click ***Inputs*** 
-    - At the top of the *Inputs* page click ***+ Add***
-    - Input alias : **HotPathInput**
-    - Source Type : Data Stream
-    - Source : Event hub
-    - Import Option: Use event hub from current subscription
-    - Service bus namespace: ***healthcareehns*** (or whatever you have chosen for the Event Hub namespace previously)
-    - Event hub name: ***healthcareehub*** (or whatever you have chosen for the event hub previously)
-    - Event hub policy name: leave unchanged at *RootManageSharedAccessKey*
-    - Event hub consumer group: **hotpathcg** (we created this above)
-    - Event serialization format : CSV (not json)
-    - Delimiter: remains comma(,)
-    - Encoding: remains UTF-8
-    - Click the bottom **Create** button to complete.  
-           
- - Navigate back to the Stream Analytics job blade and click ***Outputs***
-    - **NOTE** We will add one output below. To add more you would simply repeat the steps below with different names for your Output alias and Dataset name.
-    - At the top of the *Outputs* page click ***+ Add*** to add the first output
-	- Output alias : PBIoutputcore   
-    - Sink: PowerBI, then Click **Authorize** to Authorize Connection 
-    - Group Workspace: My Workspace
-    - Dataset Name: **hotpathcore** 
-    - Table Name: same as Dataset Name above
-    - Click the **Create** button to complete  
-   
- - Navigate back to the Stream Analytics job blade and click ***Query***  
-    - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window. 
-    - Click *SAVE*    
-    
-- When all inputs, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job and for *Job output start time*
-select *Now*, then click on **Start**.   
-- After some time in the Datasets section of your PowerBI, this new dataset *hotpathcore* will appear.
+- Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on *Resource groups* in the left-hand menu.
+- Click on the resource group you created for this project, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click __+Add__.
+- In the *Search Everything* search box, enter `Stream Analytics job`.
+- Choose *Stream Analytics job* from the results, then click ***Create***.
+- Enter `healthcareHotPath` as the Job name (e.g. Mary Jane would enter healthcaremj01HotPath).
+- Correctly set the subscription, resource group, and location.
+- Click ***Create***.
+
+The deployment step may take several minutes.  When deployment has finished, we are ready to add the Inputs, Outputs and Query for the Stream Analytics job:
+
+- Return to the resource group blade and click on the ***healthcareHotPath*** resource to open the Stream Analytics job's blade.
+- In the Stream Analytics job blade, click *Inputs*.
+- At the top of the *Inputs* page, click ***+ Add***. Then enter the following settings:
+    - Enter `HotPathInput` as the input alias.
+    - Select *Data Stream* as the source type.
+    - Select *Event hub* as the source.
+    - Select *Use event hub from current subscription* as the import option.
+    - Select *healthcareeehns* (or whatever you have chosen for the Event Hub namespace previously) as the service bus namespace.
+    - Select *healthcareehub* (or whatever you have chosen for the Event Hub previously) as the event hub name.
+    - Leave the event hub policy name unchanged on the *RootManageSharedAccessKey* setting.
+    - Enter `hotpathcg` as the event hub consumer group.
+    - Select *CSV* (**not** JSON) as the event serialization format.
+    - Leave the delimiter set to *comma(,)*.
+    - Leave the encoding set to *UTF-8*.
+    - Finally, click the **Create** button. 
+- Navigate back to the Stream Analytics job blade, and click *Outputs*. 
+- At the top of the *Outputs* page, click ***+ Add***. Then enter the following settings to create the output:
+   - Enter `PBIoutputcore` as the output alias.
+   - Select *PowerBI* as the sink, then click the **Authorize** button that appears.
+   - Set the group workspace to *My Workspace*.
+   - Enter `hotpathcore` as the dataset name.
+   - Enter `hotpathcore` as the table name.
+   - Click **Create**.
+- Navigate back to the Stream Analytics job blade and click *Query*.
+- Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window (after removing any text already present).  
+- Click ***SAVE*** .
+- When all inputs, outputs and the query have been entered, click ***Start*** at the top of the Overview page for the Stream Analytics job. 
+    - When asked for the desired job output start time, select *now*, then click on ***Start***.
+
+After some time, this new dataset *hotpathcore* will appear in the Datasets section of your PowerBI.
  
 <a name="azuredla"></a>
-##   Create Azure Data Lake Analtytics 
+## Create Azure Data Lake Analytics 
   Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [usql](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The usql script for various jobs (joining, scoring etc. ) can be found at [scripts/datafactory/scripts_storage/](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder of this repository and will need to be uploaded to storage from where Azure Data Factory will access them to automatically submit the various jobs. The usql scripts  will deploy various resources (viz. R scipts, trained models, csv files with historic and metadata etc), these can be found in your data lake store in the folders adfrscripts, historicdata and models. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One additional important step is to Install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end to end data science scenarios covering: merging various data files, feature engineering, partitioned data model building, and post deployment, massively parallel FE and scoring.
 
   - Log into the [Azure Management Portal](https://ms.portal.azure.com) 
