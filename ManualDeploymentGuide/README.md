@@ -460,12 +460,13 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Download the file [*inputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/inputdataset.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects) folder of this repository.
 - Replace the content in the editor with the content of the downloaded file. 
 - At the top of the blade, click ***Deploy***. You should see `01StreamedData` appear under *Datasets*.
-- Repeat the steps above using the contents of the [*outputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json) file from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects). You should see `02JoinedData` appear under *Datasets*.
-- Add three additional datasets by cloning and modifying `02JoinedData`:
-    - Click on the `02JoinedData` dataset in the list at left.
-    - Click the ***Clone*** button at the top of the blade.
-    - Enter `03ScoredData` as the name, then click ***Deploy***.
-    - Repeat the cloning, renaming, and deployment steps using the dataset names `04ProcessedForPBIData` and `05AppendedToHistoricData`.
+- Repeat the steps above to generate four more datasets:
+    - All four datasets will use the JSON template from the file [*outputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json) in the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects) folder of this repository.
+    - Before deploying each dataset, you will need to substitute `<replace name with instructions>` with one of the four names below:
+        - `02JoinedData`
+        - `03ScoredData`
+        - `04ProcessedForPBIData`
+        - `05AppendedToHistoricData`
 
 When finished, you will have a total of five datasets.
   
