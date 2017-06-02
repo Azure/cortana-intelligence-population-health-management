@@ -31,12 +31,12 @@ Detailed instructions to carry out these steps can be found below under Deployme
 
 This tutorial will require:
 
- - An Azure subscription, which will be used to deploy the project 
+- An Azure subscription, which will be used to deploy the project 
    (a [one-month free
    trial](https://azure.microsoft.com/en-us/pricing/free-trial/) is
    available for new users)
- - A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.
- - Download a copy of this repository to gain access to the necessary files that will be used in certain setup steps.     
+- A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.
+- Download a copy of this repository to gain access to the necessary files that will be used in certain setup steps.     
  
 ### Naming Convention  
 
@@ -54,8 +54,8 @@ where [UI] is the user's initials (in lowercase), N is a random integer(01-99) t
 To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. A user, say, *Mary Jane* might use a base service name of healthcare**mj01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
 Hub" below: 
 
- - healthcareehns should actually be spelled healthcare**mj01**ehns 
- - healthcareeh should actually be spelled healthcare**mj01**eh  
+- healthcareehns should actually be spelled healthcare**mj01**ehns 
+- healthcareeh should actually be spelled healthcare**mj01**eh  
 
 ### Accessing Files in the Git Repository
 
@@ -80,10 +80,10 @@ This section will walk you through the steps to manually create the population h
 ## Create an Azure Resource Group for the solution
   The Azure Resource Group is used to logically group the resources needed for this architecture. To better understand the Azure Resource Manager click [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview). 
 
- - Log into the [Azure Management Portal](https://portal.azure.com) 
- - Click "Resource groups" button in the menu bar on the left, and then click __+Add__ at the top of the blade. 
- - Enter in a name for the resource group and choose your subscription.
- - For *Resource Group Location* you should choose one of the following:
+- Log into the [Azure Management Portal](https://portal.azure.com) 
+- Click "Resource groups" button in the menu bar on the left, and then click __+Add__ at the top of the blade. 
+- Enter in a name for the resource group and choose your subscription.
+- For *Resource Group Location* you should choose one of the following:
     - South Central US
     - West Europe
     - Southeast Asia  
@@ -93,25 +93,25 @@ This section will walk you through the steps to manually create the population h
 <a name="azuresa"></a>
 ## Create Azure Storage Account 
   The Azure Storage Account is required for several parts of this solution:
-  - It is used as the storage location for the raw event data used by the data generator that will feed the Azure Event Hub. 
-  - It is used as a Linked Service in the Azure Data Factory and holds the USQL scripts required to submit Data Lake Analytics jobs to process data by Azure Data Factory.
+- It is used as the storage location for the raw event data used by the data generator that will feed the Azure Event Hub. 
+- It is used as a Linked Service in the Azure Data Factory and holds the USQL scripts required to submit Data Lake Analytics jobs to process data by Azure Data Factory.
 
 ### Creation Steps
-  1. Log into the [Azure Management Portal](https://portal.azure.com) 
-  1. In the left hand menu select *Resource groups*
-  1. Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
-  1. At the top of the Resource Group blade, click __+Add__.
-  1. In the *Search Everything* search box, enter **Storage account**.
-  1. Choose ***Storage account*** from the results, then click ***Create***.
-     1. Change the deployment model to *Classic* and click ***Create***.
-     1. Set the name to **healthcarestorage** (modified to include your unique initials and number, e.g. **healthcaremj01storage**). 
-     1. Correctly set the subscription, resource group, and location. 
-     1. Click ***Create***.
+- Log into the [Azure Management Portal](https://portal.azure.com) 
+- In the left hand menu select *Resource groups*
+- Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click __+Add__.
+- In the *Search Everything* search box, enter **Storage account**.
+- Choose ***Storage account*** from the results, then click ***Create***.
+    - Change the deployment model to *Classic* and click ***Create***.
+    - Set the name to **healthcarestorage** (modified to include your unique initials and number, e.g. **healthcaremj01storage**). 
+    - Correctly set the subscription, resource group, and location. 
+    - Click ***Create***.
   
 The creation step may take several minutes. Navigate back to your resource group's blade and click "Refresh" until the storage account appears. Then follow the instructions below to collect important information that will be required in future steps:
-1. Click on the storage account's name in your resource group to load the storage account blade.
-1. On the storage account blade, select [**Access keys**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) from the menu on the left.
-1. Record the *STORAGE ACCOUNT NAME*, *KEY* and *CONNECTION STRING* values for *key1*.
+- Click on the storage account's name in your resource group to load the storage account blade.
+- On the storage account blade, select [**Access keys**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) from the menu on the left.
+- Record the *STORAGE ACCOUNT NAME*, *KEY* and *CONNECTION STRING* values for *key1*.
 
 You will need these three credentials to upload files to your storage account below, when starting the data generator and when setting up a Linked Service to access the files in your blob through Azure Data Factory.
 
@@ -119,96 +119,96 @@ You will need these three credentials to upload files to your storage account be
   
 Next we will create some containers and move the necessary files into the newly created containers. These files are the raw events used by the data generator as well as USQL scripts that will be called by the Azure Data Factory pipeline. We will create three containers: `data`, `scripts` and `forphmdeploymentbyadf`.
 
-1. Navigate to the storage account's overview blade. (If you are still on the **Access keys** page, click on **Overview** in the menu at left.)
-1. Click on *Blobs* in the storage account blade.
-1. Copy the input for the data generator:
-    1. Click __+ Container__.
-       1. Enter the name `data` and change the *Access type* to **Blob**.
-       1. Click ***Create***. You should see `data` appear in the list of containers.
-    1. On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command.
+- Navigate to the storage account's overview blade. (If you are still on the **Access keys** page, click on **Overview** in the menu at left.)
+- Click on *Blobs* in the storage account blade.
+- Copy the input for the data generator:
+    - Click __+ Container__.
+       - Enter the name `data` and change the *Access type* to **Blob**.
+       - Click ***Create***. You should see `data` appear in the list of containers.
+    - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command.
        - Replace `EnterYourStorageAccountkeyhere` with your storage account key and `<storageaccountname>` with your storage account name in the command before executing. 
-    1. Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `data`. You should see that [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files have appeared in your container `data`.
-1. Copy the USQL scripts:
-    1. Click __+ Container__.
-        1. Enter the name `scripts` and change the *Access type* to **blob**.
-        1. Click ***Create***. You should see `scripts` appear in the list of containers.
-    1. On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt) command.
+    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `data`. You should see that [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files have appeared in your container `data`.
+- Copy the USQL scripts:
+    - Click __+ Container__.
+        - Enter the name `scripts` and change the *Access type* to **blob**.
+        - Click ***Create***. You should see `scripts` appear in the list of containers.
+    - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt) command.
         - Replace `EnterYourStorageAccountkeyhere` with your storage account key and `<storageaccountname>` with your storage account name in the command before executing.
-    1. Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `scripts`. You should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob) four USQL files have appeared in your container `scripts`.
-1. Copy the supporting files for ADF:
-    1. Click __+ Container__.
-        1. Enter the name `forphmdeploymentbyadf` and change the *Access type* to **blob**.
-        1. Click ***Create***. You should see `forphmdeploymentbyadf` appear in the list of containers.
-    1. On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt) command.
+    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `scripts`. You should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob) four USQL files have appeared in your container `scripts`.
+- Copy the supporting files for ADF:
+    - Click __+ Container__.
+        - Enter the name `forphmdeploymentbyadf` and change the *Access type* to **blob**.
+        - Click ***Create***. You should see `forphmdeploymentbyadf` appear in the list of containers.
+    - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt) command.
         - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
-    1. Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `forphmdeploymentbyadf`. You should see seventeen files listed [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container `forphmdeploymentbyadf`. 
+    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `forphmdeploymentbyadf`. You should see seventeen files listed [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container `forphmdeploymentbyadf`. 
   
   
 <a name="azureeh"></a>
 ## Create an Azure Event Hub
   The Azure Event Hub is the ingestion point of raw records that will be processed in this solution. The role of Event Hub in solution architecture is as the "front door" for an event pipeline. It is often called an event ingestor.
 
-1. In the left-hand menu of the [Azure Management Portal](https://portal.azure.com), select *Resource groups*.
-1. Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
-1. At the top of the Resource Group blade, click __+Add__.
-1. In the *Search Everything* search box enter **Event Hubs**.
-1. Choose ***Event Hubs*** from the results, then click *Create*. This will create the **namespace** for the Azure Event Hub.
-1. For the name, use ***healthcareehns*** (e.g. Mary Jane would enter healthcaremj01ehns).
-1. Correct set the subscription, resource group, and location.
-1. Click ***Create***.
+- In the left-hand menu of the [Azure Management Portal](https://portal.azure.com), select *Resource groups*.
+- Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click __+Add__.
+- In the *Search Everything* search box enter **Event Hubs**.
+- Choose ***Event Hubs*** from the results, then click *Create*. This will create the **namespace** for the Azure Event Hub.
+- For the name, use ***healthcareehns*** (e.g. Mary Jane would enter healthcaremj01ehns).
+- Correct set the subscription, resource group, and location.
+- Click ***Create***.
 
 The creation step may take several minutes.  Navigate back to *Resource groups* and choose the resource group for this solution. Refresh until the event hub namespace appears in the list of resources, then continue with the instructions below:
 
-1. Click on ***healthcareehns*** in the resource list, then on the subsequent blade click __+Event Hub__.
-1. Enter ***healthcareehub*** as the Event Hub name (e.g. Mary Jane would enter healthcaremj01ehub), move the partition count slider to 16, and click *Create*.
+- Click on ***healthcareehns*** in the resource list, then on the subsequent blade click __+Event Hub__.
+- Enter ***healthcareehub*** as the Event Hub name (e.g. Mary Jane would enter healthcaremj01ehub), move the partition count slider to 16, and click *Create*.
  
 Once the Event Hub is created, we will create Consumer Groups. In a stream processing architecture, each downstream application equates to a consumer group. We will create two Consumer Groups here corresponding to writing event data to two separate locations: Data Lake Store (cold path) and Power BI (hotpath). (There is always a default consumer group in an event hub.)
 
-1. Click on the Event Hub ***healthcareehub*** you just created. (You may need to scroll down to see it listed on the event hub namespace's overview pane.)
-1. Click __+ Consumer Group__.
-    1. Enter `coldpathcg` as the "Name".
-    1. Click *Create*.
-1. Add the second consumer group by clicking on __+ Consumer Group__ again.
-    1. Enter `hotpathcg` as the "Name". 
-    1. Click *Create*.
+- Click on the Event Hub ***healthcareehub*** you just created. (You may need to scroll down to see it listed on the event hub namespace's overview pane.)
+- Click __+ Consumer Group__.
+    - Enter `coldpathcg` as the "Name".
+    - Click *Create*.
+- Add the second consumer group by clicking on __+ Consumer Group__ again.
+    - Enter `hotpathcg` as the "Name". 
+    - Click *Create*.
 
 From the **healthcareehns** resource (i.e. the event hub namespace that you created first), you will collect the following information required in future steps to set up Stream Analytics Jobs:
 
-1. On the ***healthcareeehns*** blade, choose [*Shared access policies*](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
-1. Select [**RootManageSharedAccessKey**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
+- On the ***healthcareeehns*** blade, choose [*Shared access policies*](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
+- Select [**RootManageSharedAccessKey**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
 
 <a name="azuredls"></a>
 ## Create an Azure Data Lake Store
   The Azure Data Lake store is used as to hold raw and scored results from the raw data points generated by the data generator and streamed in through Stream Analytics job.
 
-1. In the left-hand menu of the [Azure Management Portal](https://ms.portal.azure.com), select *Resource groups*.
-1. Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
-1. At the top of the Resource Group blade, click __+Add__.
-1. In the *Search Everything* search box, enter ***Data Lake Store***.
-1. Choose ***Data Lake Store*** from the results then click *Create*.
-1. Enter ***healthcareadls*** as the name (e.g. Mary Jane would enter healthcaremj01adls).
-1. Correctly set the subscription and resource group.
-1. Choose the location closest to the one used for the resource group.
-1. Click ***Create***.
+- In the left-hand menu of the [Azure Management Portal](https://ms.portal.azure.com), select *Resource groups*.
+- Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click __+Add__.
+- In the *Search Everything* search box, enter ***Data Lake Store***.
+- Choose ***Data Lake Store*** from the results then click *Create*.
+- Enter ***healthcareadls*** as the name (e.g. Mary Jane would enter healthcaremj01adls).
+- Correctly set the subscription and resource group.
+- Choose the location closest to the one used for the resource group.
+- Click ***Create***.
 
 The creation step may take several minutes. When deployment has finished, retrieve the Data Lake Store's URI as follows:
-1. Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
-1. In the main pane, record the *ADL URI* value, which will be in the [form](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**.  
+- Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
+- In the main pane, record the *ADL URI* value, which will be in the [form](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**.  
 
 You will need this URI to connect Power BI to the data in your Data Lake Store. 
 
 ### Move resources to Data Lake Store
-1. In your Data Lake Store's overview pane, click the "Data Explorer" button along the top.
-1. In the Data Explorer blade, click on "New Folder". Enter **forphmdeploymentbyadf** when prompted for the folder name. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
-1. We will move resources to this folder in Data Lake Store using AdlCopy:
-    1. Download and install AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358).
-    1. Open Command Prompt by typing `cmd` in the Windows search field.
-    1. Navigate to the folder where AdlCopy was [installed](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy1.PNG?raw=true), e.g.
+- In your Data Lake Store's overview pane, click the "Data Explorer" button along the top.
+- In the Data Explorer blade, click on "New Folder". Enter **forphmdeploymentbyadf** when prompted for the folder name. This folder will contain all the scripts, models and files needed for deployment that will be used by Data Factory.
+- We will move resources to this folder in Data Lake Store using AdlCopy:
+    - Download and install AdlCopy from [here](https://www.microsoft.com/en-us/download/details.aspx?id=50358).
+    - Open Command Prompt by typing `cmd` in the Windows search field.
+    - Navigate to the folder where AdlCopy was [installed](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy1.PNG?raw=true), e.g.
     ```cd C:\Users\\\<username>\Documents\AdlCopy```
-    1. Type `AdlCopy` and press Enter. Confirm from the output that the program is [available](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy2.PNG?raw=true).
-    1. On the command prompt, enter [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt) command.
+    - Type `AdlCopy` and press Enter. Confirm from the output that the program is [available](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlcopy2.PNG?raw=true).
+    - On the command prompt, enter [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt) command.
          - Replace `EnterYourStorageAccountkeyhere` with your storage account key, `<storageaccountname>` with your storage account name and `<adlsaccountname>` with your Data Lake Store name in the command before executing. 
-    1. If prompted with "Do you wish to continue?", type "Y".
+    - If prompted with "Do you wish to continue?", type "Y".
 
 In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder `forphmdeploymentbyadf` in your Data Lake Store. These files must be in place before the Azure Data Factory pipelines (described below) can be run.
 
@@ -217,26 +217,26 @@ With the [inpur data for the generator](https://github.com/Azure/cortana-intelli
 
 <a name="gen"></a>
 ### Download and configure the data generator  
-1. On your Windows machine, download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository. The folder choice will keep the path length short, avoiding the 255 character limit on folder names.
-1. Navigate to the folder `C:\healthcaregenerator` where all the extracted files are found.
-1. Open the file **HealthCareGenerator.exe.config** in Notepad and modify the [following](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/configfile.PNG?raw=true) AppSettings. (**NOTE:** If you do not see the .config file, in your Explorer window, click on View and check "File name extensions".)
-    1. EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
-    1. EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub namespace.
-    1. StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.
-    1. StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.  
-    1. Save and close **HealthCareGenerator.exe.config** 
+- On your Windows machine, download the file ***healthcaregenerator.zip*** from the [datagenerator folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/datagenerator) of this repository. The folder choice will keep the path length short, avoiding the 255 character limit on folder names.
+- Navigate to the folder `C:\healthcaregenerator` where all the extracted files are found.
+- Open the file **HealthCareGenerator.exe.config** in Notepad and modify the [following](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/configfile.PNG?raw=true) AppSettings. (**NOTE:** If you do not see the .config file, in your Explorer window, click on View and check "File name extensions".)
+    - EventHubName : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).  
+    - EventHubConnectionString : Enter the value of *CONNECTION STRING -PRIMARY KEY* (not the PRIMARY KEY value) that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) after creating the Azure Event Hub namespace.
+    - StorageAccountName: Enter the value of *STORAGE ACCOUNT NAME* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.
+    - StorageAccountKey: Enter the value of *PRIMARY ACCESS KEY* that was [collected](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/storageaccountcredentials.PNG?raw=true) after creating the Azure Storage account.  
+    - Save and close **HealthCareGenerator.exe.config** 
 
 Next we will **test that that data generator is working correctly** by running it locally, before attempting to run it as a Web Job.
-1. Double-click the file **HealthCareGenerator.exe** to start data generation. This should open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
-1. If you see messages on your console that look like   
+- Double-click the file **HealthCareGenerator.exe** to start data generation. This should open a console and show messages as data are streamed from the local computer into the event hub **healthcareeh**.  
+- If you see messages on your console that look like   
    ```
    EVENTHUB: Starting Raw Upload  
    EVENTHUB: Upload 600 Records Complete  
    EVENTHUB: Starting Raw Upload  
    ```
    then your data generator was configured correctly and we can shut it down.
-1. **Shut down the generator** now by simply closing the console.
-1. Zip the contents of the folder `healthcaregenerator` by selecting all the files in this folder, then right-clickling and selecting "Send To Compressed (zipped) folder".
+- **Shut down the generator** now by simply closing the console.
+- Zip the contents of the folder `healthcaregenerator` by selecting all the files in this folder, then right-clickling and selecting "Send To Compressed (zipped) folder".
 
 Look for the zipped file in the folder and rename it if you like. This zipped file will be uploaded to Azure Portal for the Web Job.
 
@@ -244,30 +244,30 @@ Look for the zipped file in the folder and rename it if you like. This zipped fi
 ## Create an Azure WebJob
 We will use an Azure [App Service](https://docs.microsoft.com/en-us/azure/app-service/app-service-value-prop-what-is) to create a Web App to run Data Generator Web Job which will simulate streaming data from hospitals. [Azure WebJobs](https://docs.microsoft.com/en-us/azure/app-service-web/websites-webjobs-resources) provide an easy way to run scripts or programs as background processes. We can upload and run an executable file such as cmd, bat, exe (.NET), ps1, sh, php, py, js, and jar. These programs run as WebJobs and can be configured to run on a schedule, on demand or continuously. Below we show how to use Azure Portal to create a Web App with a new App Service Plan (S1 standard) and then create a WebJob. We will upload the zip file (created above after modifying the settings in .config file) and set the Web Job as continuous and single instance.
   
-1. Log into the [Azure Portal](https://ms.portal.azure.com/) and press the "+ New" button at the upper left portion of the screen.
-1. Type "Web App" into the search box and then press Enter.
-1. Click on the "Web App" option published by Microsoft from the search results. Click the blue "Create" button that appears on the right pane.
-1. In the "Web App" pane that appears:
-    1. Enter ***healthcarewebapp*** in the "App name" field (e.g. Mary Jane would enter healthcaremj01webapp).
-    1. Select the appropriate subscription and resource group.
-    1. Next we will select an App Service Plan:
-        1. Click on App Service plan/Location to load more options.
-        1. Click "+ Create New".
-        1. Enter ***healthcarewebappplan*** in the "App Service plan" field.
-        1. Choose your desired location and pricing tier (our recommended option "S1 Standard").
-        1. Click "OK".
-    1. Click "Create".
-1. Wait for your Web App deployment to complete (will take a few seconds).
-1. Navigate back to the Resource group and select the App Service just created.
-1. In the App Service blade on the left, click on *WebJobs* under Settings. (You may need to scroll down or use the search feature.)
-1. In the WebJobs blade, click ***+ Add***.
-    1. Enter ***healthcarewebjob*** in the "Name" field (e.g. Mary Jane would enter healthcaremj01webjob).
-    1. Upload the zipped file created above.
-    1. Select ***Continuous*** from drop-down menu for the "Type" field.
-    1. Select ***Single Instance*** from drop-down menu for the "Scale" field.
-    1. Click "OK".
-1. The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
-1. To monitor your WebJob, select the WebJob and click on Logs at the top of the screen. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages to what you saw in the console when you tested the generator locally:   
+- Log into the [Azure Portal](https://ms.portal.azure.com/) and press the "+ New" button at the upper left portion of the screen.
+- Type "Web App" into the search box and then press Enter.
+- Click on the "Web App" option published by Microsoft from the search results. Click the blue "Create" button that appears on the right pane.
+- In the "Web App" pane that appears:
+    - Enter `healthcarewebapp` in the "App name" field (e.g. Mary Jane would enter healthcaremj01webapp).
+    - Select the appropriate subscription and resource group.
+    - Next we will select an App Service Plan:
+        - Click on App Service plan/Location to load more options.
+        - Click "+ Create New".
+        - Enter `healthcarewebappplan` in the "App Service plan" field.
+        - Choose your desired location and pricing tier (our recommended option "S1 Standard").
+        - Click "OK".
+    - Click "Create".
+- Wait for your Web App deployment to complete (will take a few seconds).
+- Navigate back to the Resource group and select the App Service just created.
+- In the App Service blade on the left, click on *WebJobs* under Settings. (You may need to scroll down or use the search feature.)
+- In the WebJobs blade, click ***+ Add***.
+    - Enter `healthcarewebjob` in the "Name" field (e.g. Mary Jane would enter healthcaremj01webjob).
+    - Upload the zipped file created above.
+    - Select ***Continuous*** from drop-down menu for the "Type" field.
+    - Select ***Single Instance*** from drop-down menu for the "Scale" field.
+    - Click "OK".
+- The WebJob will appear in the WebJobs list in a few seconds. Once the STATUS field says Running, data should start pumping in your Event Hub.
+- To monitor your WebJob, select the WebJob and click on Logs at the top of the screen. You should [see](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages to what you saw in the console when you tested the generator locally:   
     ```
     EVENTHUB: Upload 600 Records Complete   
     EVENTHUB: Starting Raw Upload    
@@ -283,57 +283,57 @@ Once the data generator is running, you should [see](https://github.com/Azure/co
 ## Cold Path Stream
   For the cold path stream, the Azure Stream Analytics job will process events from the Azure Event Hub and store them into the Azure Data Lake Store. We will name this Steam Analytics Job **healthcareColdPath**. 
 
-1. Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on *Resource groups* in the left-hand menu.
-1. Click on the resource group you created for this project, displaying the resources associated with the group in the resource group blade.
-1. At the top of the Resource Group blade, click __+Add__.
-1. In the *Search Everything* search box, enter ***Stream Analytics job***.
-1. Choose ***Stream Analytics job*** from the results, then click *Create*.
-1. Enter ***healthcareColdPath*** as the Job name (e.g. Mary Jane would enter healthcaremj01ColdPath).
-1. Correctly set the subscription, resource group, and location.
-1. Click *Create*.
+- Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on *Resource groups* in the left-hand menu.
+- Click on the resource group you created for this project, displaying the resources associated with the group in the resource group blade.
+- At the top of the Resource Group blade, click __+Add__.
+- In the *Search Everything* search box, enter ***Stream Analytics job***.
+- Choose ***Stream Analytics job*** from the results, then click *Create*.
+- Enter `healthcareColdPath` as the Job name (e.g. Mary Jane would enter healthcaremj01ColdPath).
+- Correctly set the subscription, resource group, and location.
+- Click *Create*.
 
 The deployment step may take several minutes.  When deployment has finished, we are ready to add the Inputs, Outputs and Query for the Stream Analytics job:
-1. Return to the resource group blade and click on the ***healthcareColdPath*** resource to open the Stream Analytics job's blade.
-1. In the Stream Analytics job blade, click *Inputs*.
-1. At the top of the *Inputs* page, click ***+ Add***. Then enter the following settings:
-    - Enter ***InputHub*** as the input alias.
+- Return to the resource group blade and click on the ***healthcareColdPath*** resource to open the Stream Analytics job's blade.
+- In the Stream Analytics job blade, click *Inputs*.
+- At the top of the *Inputs* page, click ***+ Add***. Then enter the following settings:
+    - Enter `InputHub` as the input alias.
     - Select *Data Stream* as the source type.
     - Select "Event hub" as the source.
     - Select *Use event hub from current subscription* as the import option.
-    - Enter ***healthcareeehns*** (or whatever you have chosen for the Event Hub namespace previously) as the service bus namespace.
-    - Enter ***healthcareehub*** (or whatever you have chosen for the Event Hub previously) as the event hub name.
+    - Select ***healthcareeehns*** (or whatever you have chosen for the Event Hub namespace previously) as the service bus namespace.
+    - Select ***healthcareehub*** (or whatever you have chosen for the Event Hub previously) as the event hub name.
     - Leave the event hub policy name unchanged on the *RootManageSharedAccessKey* setting.
     - Leave the event hub consumer group field empty.
     - Select *CSV* (**not** JSON) as the event serialization format.
     - Leave the delimiter set to *comma(,)*.
     - Leave the encoding set to *UTF-8*.
     - Finally, click the **Create** button.  
-1. Navigate back to the Stream Analytics job blade, and click *Outputs*. 
-1. At the top of the *Outputs* page, click ***+ Add***. Then enter the following settings to create the first output.
-   1. Enter ***SeverityOutput*** as the output alias.
-   1. Select *Data Lake Store* as the sink, then click the **Authorize** button that appears.
-   1. Leave the import option field set to *Select Data Lake Store from your subscription*.
-   1. Ensure the correct subscription has been selected.
-   1. Select **healthcareadls** (or whatever you have chosen for the ADLS previously) as the account name.
-   1. Enter ***stream/raw/severity/{date}/{time}_severity*** as the path prefix pattern.
-   1. Leave *YYYY/MM/DD* selected as the date format.
-   1. Leave *HH* selected as the time format.
-   1. Select *CSV* (**not** JSON) as the event serialization format.
-   1. Leave the delimiter set to *comma (,)*.
-   1. Leave the encoding set to *UTF-8*.
-   1. Click **Create**.
-1. Repeat the steps above to create the second, third, and fourth outputs. You will need to modify the output alias (step i) and path prefix pattern (step vi) for each output:
+- Navigate back to the Stream Analytics job blade, and click *Outputs*. 
+- At the top of the *Outputs* page, click ***+ Add***. Then enter the following settings to create the first output.
+   - Enter `SeverityOutput` as the output alias.
+   - Select *Data Lake Store* as the sink, then click the **Authorize** button that appears.
+   - Leave the import option field set to *Select Data Lake Store from your subscription*.
+   - Ensure the correct subscription has been selected.
+   - Select **healthcareadls** (or whatever you have chosen for the ADLS previously) as the account name.
+   - Enter `stream/raw/severity/{date}/{time}_severity` as the path prefix pattern.
+   - Leave *YYYY/MM/DD* selected as the date format.
+   - Leave *HH* selected as the time format.
+   - Select *CSV* (**not** JSON) as the event serialization format.
+   - Leave the delimiter set to *comma (,)*.
+   - Leave the encoding set to *UTF-8*.
+   - Click **Create**.
+1. Repeat the twelve steps used to create the first output in order to generate the second, third, and fourth outputs. You will need to modify the output alias and path prefix pattern for each output:
    1. Settings for the second output:
-      - Output alias: ***ChargesOutput***
-      - Path prefix pattern: ***stream/raw/charges/{date}/{time}_charges***
+      - Output alias: `ChargesOutput`
+      - Path prefix pattern: `stream/raw/charges/{date}/{time}_charges`
    1. Settings for the third output:
-      - Output alias: ***CoreOutput***
-      - Path prefix pattern: ***stream/raw/core/{date}/{time}_core***
+      - Output alias: `CoreOutput***
+      - Path prefix pattern: `stream/raw/core/{date}/{time}_core`
    1. Settings for the fourth output:
-      - Output alias: ***DxprOutput***
-      - Path prefix pattern: ***stream/raw/dxpr/{date}/{time}_dxpr***
+      - Output alias: `DxprOutput`
+      - Path prefix pattern: `stream/raw/dxpr/{date}/{time}_dxpr`
 1. Navigate back to the Stream Analytics job blade and click *Query*.
-1. Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window.  
+1. Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window (after removing any text already present).  
 1. Click *SAVE* .
 1. When all inputs, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job.
    1. When asked for the desired job output start time, select *now*, then click on ***Start***.
