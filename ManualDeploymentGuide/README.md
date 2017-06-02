@@ -286,11 +286,11 @@ Once the data generator is running, you should [see](https://github.com/Azure/co
 - Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on *Resource groups* in the left-hand menu.
 - Click on the resource group you created for this project, displaying the resources associated with the group in the resource group blade.
 - At the top of the Resource Group blade, click __+Add__.
-- In the *Search Everything* search box, enter ***Stream Analytics job***.
-- Choose ***Stream Analytics job*** from the results, then click *Create*.
+- In the *Search Everything* search box, enter `Stream Analytics job`.
+- Choose *Stream Analytics job* from the results, then click ***Create***.
 - Enter `healthcareColdPath` as the Job name (e.g. Mary Jane would enter healthcaremj01ColdPath).
 - Correctly set the subscription, resource group, and location.
-- Click *Create*.
+- Click ***Create***.
 
 The deployment step may take several minutes.  When deployment has finished, we are ready to add the Inputs, Outputs and Query for the Stream Analytics job:
 - Return to the resource group blade and click on the ***healthcareColdPath*** resource to open the Stream Analytics job's blade.
@@ -298,10 +298,10 @@ The deployment step may take several minutes.  When deployment has finished, we 
 - At the top of the *Inputs* page, click ***+ Add***. Then enter the following settings:
     - Enter `InputHub` as the input alias.
     - Select *Data Stream* as the source type.
-    - Select "Event hub" as the source.
+    - Select *Event hub* as the source.
     - Select *Use event hub from current subscription* as the import option.
-    - Select ***healthcareeehns*** (or whatever you have chosen for the Event Hub namespace previously) as the service bus namespace.
-    - Select ***healthcareehub*** (or whatever you have chosen for the Event Hub previously) as the event hub name.
+    - Select *healthcareeehns* (or whatever you have chosen for the Event Hub namespace previously) as the service bus namespace.
+    - Select *healthcareehub* (or whatever you have chosen for the Event Hub previously) as the event hub name.
     - Leave the event hub policy name unchanged on the *RootManageSharedAccessKey* setting.
     - Leave the event hub consumer group field empty.
     - Select *CSV* (**not** JSON) as the event serialization format.
@@ -322,21 +322,21 @@ The deployment step may take several minutes.  When deployment has finished, we 
    - Leave the delimiter set to *comma (,)*.
    - Leave the encoding set to *UTF-8*.
    - Click **Create**.
-1. Repeat the twelve steps used to create the first output in order to generate the second, third, and fourth outputs. You will need to modify the output alias and path prefix pattern for each output:
-   1. Settings for the second output:
+- Repeat the twelve steps used to create the first output in order to generate the second, third, and fourth outputs. You will need to modify the output alias and path prefix pattern for each output:
+   - Settings for the second output:
       - Output alias: `ChargesOutput`
       - Path prefix pattern: `stream/raw/charges/{date}/{time}_charges`
-   1. Settings for the third output:
+   - Settings for the third output:
       - Output alias: `CoreOutput***
       - Path prefix pattern: `stream/raw/core/{date}/{time}_core`
-   1. Settings for the fourth output:
+   - Settings for the fourth output:
       - Output alias: `DxprOutput`
       - Path prefix pattern: `stream/raw/dxpr/{date}/{time}_dxpr`
-1. Navigate back to the Stream Analytics job blade and click *Query*.
-1. Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window (after removing any text already present).  
-1. Click *SAVE* .
-1. When all inputs, outputs and the query have been entered, click *Start* at the top of the Overview page for the Stream Analytics job.
-   1. When asked for the desired job output start time, select *now*, then click on ***Start***.
+- Navigate back to the Stream Analytics job blade and click *Query*.
+- Download the file StreamAnalyticsJobQueryColdPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window (after removing any text already present).  
+- Click ***SAVE*** .
+- When all inputs, outputs and the query have been entered, click ***Start*** at the top of the Overview page for the Stream Analytics job.
+    - When asked for the desired job output start time, select *now*, then click on ***Start***.
 
 Raw data will start to appear in the Azure Data Lake Store (in `/stream/raw/severity/`, `/stream/raw/core/`, `/stream/raw/charges/` and `/stream/raw/dxpr/` with the directory structure defined by path prefix patterns given above) after approximately 5 minutes.
 
