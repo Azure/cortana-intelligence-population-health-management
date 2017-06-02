@@ -505,10 +505,12 @@ Let's look closely at these activities and what they are doing.
 
 #### Activity Period
 
-  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the pipeline JSON template provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such -     
+  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the pipeline JSON template provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such:
+  ```
   "start": "yyyy-mm-ddT10:00:00Z",      
-  "end": "yyyy-mm-ddT19:51:55Z",        
-  **The yyyy, mm and dd in these strings need to be replaced by the four-digit year and two-digit month and day.** Set the *start* property to the time right now, and set the *end* property to 1 week from now. e.g. If you were starting the Data Factory on August 18, the start and end could be entered as:
+  "end": "yyyy-mm-ddT19:51:55Z",
+  ```
+  *The yyyy, mm and dd in these strings need to be replaced by the four-digit year and two-digit month and day.* Set the *start* property to the time right now, and set the *end* property to 1 week from now. e.g. If you were starting the Data Factory on August 18, 2017, the start and end could be entered as:
   ```
   "start": "2017-08-18T10:00:00Z",      
   "end": "2017-08-24T19:51:55Z",
@@ -517,7 +519,7 @@ Let's look closely at these activities and what they are doing.
 
   Once you have updated the *start* and *end* properties, *click the **Deploy** button at the top of the blade*.
 
-  Now that Azure Data Facotry has been deployed, joined results will start to appear in the Azure Data Lake Store in `stream/joined` followed by scored results in `stream/scoring` etc. For more on how to monitor the pipeline, read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
+  Now that Azure Data Factory has been deployed, joined results will start to appear in the Azure Data Lake Store in `stream/joined` followed by scored results in `stream/scoring` etc. For more on how to monitor the pipeline, read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
 
 ## Visualization
 
