@@ -507,12 +507,12 @@ Let's look closely at these activities and what they are doing.
 
   Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the pipeline JSON template provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such:
   ```
-  "start": "yyyy-mm-ddT10:00:00Z",      
+  "start": "yyyy-mm-ddT00:00:00Z",      
   "end": "yyyy-mm-ddT19:51:55Z",
   ```
   *The yyyy, mm and dd in these strings need to be replaced by the four-digit year and two-digit month and day.* Set the *start* property to the time right now, and set the *end* property to 1 week from now. e.g. If you were starting the Data Factory on August 18, 2017, the start and end could be entered as:
   ```
-  "start": "2017-08-18T10:00:00Z",      
+  "start": "2017-08-18T00:00:00Z",      
   "end": "2017-08-24T19:51:55Z",
   ```
   This will ensure that your data factory will not be producing data over too long a period of time. We do that only because the [data generator](#gen) (which you set up earlier and should be running) will not run infinitely. 
