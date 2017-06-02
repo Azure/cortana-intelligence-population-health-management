@@ -141,8 +141,8 @@
                 "linkedServiceName": "AzureDataLakeAnalyticsLinkedService"
             }
         ],
-        "start": "2017-mm-ddT10:00:00Z",
-        "end": "2017-mm-ddT19:51:55Z",
+        "start": "yyyy-mm-ddT10:00:00Z",
+        "end": "yyyy-mm-ddT19:51:55Z",
         "isPaused": false,
         "pipelineMode": "Scheduled"
     }
