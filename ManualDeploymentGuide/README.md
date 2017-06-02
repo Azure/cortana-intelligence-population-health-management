@@ -424,40 +424,32 @@ After some time, this new dataset *hotpathcore* will appear in the Datasets sect
 The deployment step may take several minutes. Wait until deployment has finished before continuing with the steps below.
 
 ### Azure Data Factory Linked Services
-  In order for data factory to link to the data locations, we will need to create a '[Linked Service](https://docs.microsoft.com/en-us/rest/api/datafactory/data-factory-linked-service)' which are much like connection strings, which define the connection information needed for Data Factory to connect to external resources. We will create Linked Service for Azure Storage account which contains the USQL scripts, the Azure Data Lake Store where the data resides, and finally the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
+  In order for the data factory to link to the data locations, we will need to create *[Linked Services](https://docs.microsoft.com/en-us/rest/api/datafactory/data-factory-linked-service)*, which define the connection information needed for Data Factory to connect to external resources (much like connection strings). We will create a Linked Service for the Azure Storage account which contains the USQL scripts, another Linked Service for the Azure Data Lake Store where the data resides, and finally a Linked Service for the Azure Data Lake Analytics instance. We will set up these Linked Services first before we define the Datasets.
 
-  Azure Storage Linked Service
+#### Azure Storage Linked Service
+- Navigate back to the resource group blade and click on the *healthcareadf* data factory.
+- Under *Actions*, click *Author and deploy*.
+- At the top of the blade, choose *New data store* and select *Azure Storage* from the list. You will be presented with a draft.
+- For the *connectionString* setting, copy in the *PRIMARY CONNECTION STRING* value you retrieved from the Azure Storage account earlier.
+- At the top of the blade, click *Deploy*.
 
-  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
-  - Under *Actions* select *Author and deploy*
-  - At the top of the blade choose *New data store* and choose **Azure Storage** from the list
-  - You will be presented a draft
-  - At the setting *connectionString* copy the *PRIMARY CONNECTION STRING* value retrieved from the Azure Storage account earlier.
-  - At the top of the blade, click *Deploy*
+#### Azure Data Lake Store Linked Service
+- Navigate back to the resource group blade and click on the *healthcareadf* data factory.
+- Under *Actions*, click *Author and deploy*.
+- At the top of the blade choose *New data store* and select *Azure Data Lake Store* from the list. You will be presented with a draft.
+- For the *dataLakeStoreUri* setting, copy in the *ADL URI* value saved during the creation of the Azure Data Lake Store. 
+- Remove the properties marked as [Optional]. (These would be *accountName*, *resourceGroupName*, and *subscriptionId*.)
+- At the top of the page, click ***Authorize***. You will notice some fields will get auto-filled after authorization. 
+- At the top of the blade, click ***Deploy***.
 
-  Azure Data Lake Store Linked Service
-
-  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
-  - Under *Actions* select *Author and deploy*
-  - At the top of the blade choose *New data store* and choose **Azure Data Lake Store** from the list
-  - You will be presented a draft
-  - At the setting *dataLakeStoreUri* copy the *ADL URI* value saved during the creation of the Azure Data Lake Store. 
-  - Remove the properties marked as [Optional]. These would be *accountName*, *resourceGroupName*, and *subscriptionId*.
-  - At the top of the page, click **Authorize** . 
-  - You will notice some fields will get auto filled after authorization. 
-  - At the top of the blade, click *Deploy*
-
-  Azure Data Lake Analytics Linked Service Compute Service
-
-  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
-  - Under *Actions* select *Author and deploy*
-  - At the top of the blade instead of *New data store* click on **...More** and from the drop down select **New compute** and choose *Azure Data Lake Analytics* from the list
-  - You will be presented a draft.
-  - At the setting *accountName* enter the Azure Data Lake Analytics resource name you provided earlier. 
-  - You **must** remove the properties marked as [Optional]. These would be *resourceGroupName*, and *subscriptionId*. 
-  - At the top of the page, click **Authorize**.
-  - You will notice some fields will get auto filled after authorization. 
-  - At the top of the blade, click *Deploy*
+#### Azure Data Lake Analytics Linked Service Compute Service
+- Navigate back to the resource group blade and click on the *healthcareadf* data factory.
+- Under *Actions*, click *Author and deploy*.
+- At the top of the blade choose *New data store* and click on ***...More***. Select *New compute* from the drop-down list, then choose *Azure Data Lake Analytics*. You will be presented with a draft.
+- For the *accountName* setting, enter the Azure Data Lake Analytics resource name you provided earlier (`healthcareadla`).
+- You **must** remove the properties marked as [Optional]. (These would be *resourceGroupName* and *subscriptionId*.)
+- At the top of the page, click ***Authorize***. You will notice some fields will get auto filled after authorization. 
+- At the top of the blade, click ***Deploy***.
 
 ### Azure Data Factory Datasets
   Now that we have the Linked Services out of the way, we need to set up [Datasets](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-create-datasets) which will act as inputs and outputs for each of the activity in the Data Factory pipeline. In Azure Data Factory these are defined in JSON format. The input dataset for the first activity in the pipeline will have external flag set to true as it is not explicitly produced by a data factory pipeline (this is the streaming data that is being collected in Data Lake Store through Stream Analytics job). This flag is set to false otherwise. The processing window is defined by availability and is set to 15 minutes which means a data slice will be produced every 15 minutes.
