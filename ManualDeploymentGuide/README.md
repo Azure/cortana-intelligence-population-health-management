@@ -21,7 +21,7 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create an Azure Data Lake Store](#azuredls)
 - [Download and configure the data generator](#gen)
 - [Create an Azure Web Job](#webjob)
-- [Create Azure Data Lake Analtytics](#azuredla)
+- [Create Azure Data Lake Analytics](#azuredla)
 - [Create Azure Stream Analytics Job](#azurestra) 
 - [Create Azure Data Factory](#azuredf) 
 
@@ -327,7 +327,7 @@ The deployment step may take several minutes.  When deployment has finished, we 
       - Output alias: `ChargesOutput`
       - Path prefix pattern: `stream/raw/charges/{date}/{time}_charges`
    - Settings for the third output:
-      - Output alias: `CoreOutput***
+      - Output alias: `CoreOutput`
       - Path prefix pattern: `stream/raw/core/{date}/{time}_core`
    - Settings for the fourth output:
       - Output alias: `DxprOutput`
@@ -372,7 +372,7 @@ The deployment step may take several minutes.  When deployment has finished, we 
 - Navigate back to the Stream Analytics job blade, and click *Outputs*. 
 - At the top of the *Outputs* page, click ***+ Add***. Then enter the following settings to create the output:
    - Enter `PBIoutputcore` as the output alias.
-   - Select *PowerBI* as the sink, then click the **Authorize** button that appears.
+   - Select *Power BI* as the sink, then click the **Authorize** button that appears.
    - Set the group workspace to *My Workspace*.
    - Enter `hotpathcore` as the dataset name.
    - Enter `hotpathcore` as the table name.
@@ -380,10 +380,10 @@ The deployment step may take several minutes.  When deployment has finished, we 
 - Navigate back to the Stream Analytics job blade and click *Query*.
 - Download the file StreamAnalyticsJobQueryHotPath.txt from the [scripts/streamanalytics folder](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/streamanalytics) of this repository. Copy and paste the content into the query window (after removing any text already present).  
 - Click ***SAVE*** .
-- When all inputs, outputs and the query have been entered, click ***Start*** at the top of the Overview page for the Stream Analytics job. 
+- When the input, the output and the query have been entered, click ***Start*** at the top of the Overview page for the Stream Analytics job. 
     - When asked for the desired job output start time, select *now*, then click on ***Start***.
 
-After some time, this new dataset *hotpathcore* will appear in the Datasets section of your PowerBI.
+After some time, this new dataset *hotpathcore* will appear in the Datasets section of your Power BI account.
  
 <a name="azuredla"></a>
 ## Create Azure Data Lake Analytics 
