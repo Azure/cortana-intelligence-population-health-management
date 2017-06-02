@@ -445,45 +445,29 @@ The deployment step may take several minutes. Wait until deployment has finished
 #### Azure Data Lake Analytics Linked Service Compute Service
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
-- At the top of the blade choose *New data store* and click on ***...More***. Select *New compute* from the drop-down list, then choose *Azure Data Lake Analytics*. You will be presented with a draft.
+- At the top of the blade, click on ***...More***. Select *New compute* from the drop-down list, then choose *Azure Data Lake Analytics*. You will be presented with a draft.
 - For the *accountName* setting, enter the Azure Data Lake Analytics resource name you provided earlier (`healthcareadla`).
 - You **must** remove the properties marked as [Optional]. (These would be *resourceGroupName* and *subscriptionId*.)
 - At the top of the page, click ***Authorize***. You will notice some fields will get auto filled after authorization. 
 - At the top of the blade, click ***Deploy***.
 
 ### Azure Data Factory Datasets
-  Now that we have the Linked Services out of the way, we need to set up [Datasets](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-create-datasets) which will act as inputs and outputs for each of the activity in the Data Factory pipeline. In Azure Data Factory these are defined in JSON format. The input dataset for the first activity in the pipeline will have external flag set to true as it is not explicitly produced by a data factory pipeline (this is the streaming data that is being collected in Data Lake Store through Stream Analytics job). This flag is set to false otherwise. The processing window is defined by availability and is set to 15 minutes which means a data slice will be produced every 15 minutes.
+  Now that we have the Linked Services out of the way, we need to set up [Datasets](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-create-datasets), which will act as inputs and outputs for each of the activities in the Data Factory pipeline. In Azure Data Factory, these are defined in JSON format. The input dataset for the first activity in the pipeline will have the external flag set to true, as it is not explicitly produced by a data factory pipeline (this is the streaming data that is being collected in Data Lake Store through a Stream Analytics job). This flag is set to false otherwise. The processing window is defined by availability and is set to 15 minutes which means a data slice will be produced every 15 minutes.
  
-  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
-  - Under *Actions* select *Author and deploy*
-  - At the top of the blade instead of *New data store* click on *... More* and from the drop down choose **New dataset** and then *Azure Data Lake Store* from the list.
-  - The template contains quite a few settings, which we will not cover. Instead download the file [*inputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/inputdataset.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
-  folder.
-  - Replace the content in the editor with the content of the downloaded file. 
-  - At the top of the blade, click *Deploy*
-  - You should see 01StreamedData appear under Datasets.
+- Navigate back to the resource group blade and select the *healthcareadf* data factory.
+- Under *Actions*, click *Author and deploy*.
+- At the top of the blade, click on *... More*. Choose *New dataset* from the drop-down list, then click on *Azure Data Lake Store*.
+- Download the file [*inputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/inputdataset.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects) folder of this repository.
+- Replace the content in the editor with the content of the downloaded file. 
+- At the top of the blade, click ***Deploy***. You should see `01StreamedData` appear under *Datasets*.
+- Repeat the steps above using the contents of the [*outputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json) file from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects). You should see `02JoinedData` appear under *Datasets*.
+- Add three additional datasets by cloning and modifying `02JoinedData`:
+    - Click on the `02JoinedData` dataset in the list at left.
+    - Click the ***Clone*** button at the top of the blade.
+    - Enter `03ScoredData` as the name, then click ***Deploy***.
+    - Repeat the cloning, renaming, and deployment steps using the dataset names `04ProcessedForPBIData` and `05AppendedToHistoricData`.
 
-  The input datasets for the other three activities is produced by the current pipeline and will have external flag set to false. Let us set these up. 
- 
-  - Navigate back to the resource group blade and select the ***healthcareadf*** data factory.
-  - Under *Actions* select *Author and deploy*
-  - At the top of the blade click on *...More* and choose **New dataset** and then *Azure Data Lake Store* from the list.
-  - You will be presented a template.
-  - The template contains quite a few settings, which we will not cover. Instead download the file [*outputdataset.json*](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/outputdataset.json) from the [scripts/datafactoryobjects](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactoryobjects)
-  folder.
-  - Replace the content in the editor with the content of the downloaded file.
-  - Change the *name* field to *02JoinedData*
-  - At the top of the blade, click *Deploy*
-  - You should see *02JoinedData* appear under Datasets
-  - Create three more datasets by cloning 02JoinedData and replacing the name with the names below.
-  - Click on the newly created set *02JoinedData* 
-  - Click the *Clone* button at the top of the blade
-  - Enter in one of the names below and hit the *Deploy* button at the top of the blade:
-  - Repeat for      
-      - 03ScoredData      
-      - 04ProcessedForPBIData      
-      - 05AppendedToHistoricData      
-   - When finished you will have a total of five datasets.
+When finished, you will have a total of five datasets.
   
 ### Azure Data Factory Pipeline
   With the services and datasets in place it is time to set up a pipeline that will process the data. 
