@@ -104,7 +104,7 @@ With Power BI, you are enabled to create many kinds of visualizations for your b
 
   -	Click **"Stacked Column Chart"** icon.
 
-  -	Click **“ATYPE”** and make sure it shows under "Axis". Click **“VisitLink”** and make sure it shows under "Values". Select 'Count' and Show value as 'Percent pf grand total'
+  -	Click **“ATYPE”** and make sure it shows under "Axis". Click **“VisitLink”** and make sure it shows under "Values".
 
   -	Click **'Save'** on the top and name the report as “PHMreport”. The report named “PHMreport” will be shown in Reports section in the Navigator pane on left.
 
