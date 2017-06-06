@@ -24,13 +24,13 @@ Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerb
 
 #### 1) Get the credentials.
 
-  - Through Azure portal, navigate to your Data Lake Store and copy the **ADL URI**. The uri looks [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/adlsuri1.PNG?token=AKE1nUk2pot2YgxNXQ_GjDSeOIdQx_xDks5ZLy1awA%3D%3D) adl://************.adlsdefault.azuredatalakestore.net/. 
+  - Through Azure portal, navigate to your Data Lake Store and copy the **ADL URI**. The uri looks [like](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) adl://************.adlsdefault.azuredatalakestore.net/. 
 
 #### 2)	Get the query connection strings
 
   -  We will get the connection query by connecting a new Power BI desktop file to our two csv files in Data Lake store. Open  a **new** Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
   -	You will see a list of all the folders in your Data Lake store. Click **Load**. 
-  -	After the data has been successfully loaded into Power BI, you will see under Fields tab on the right, a table (data source) Query1 appear with fields [like](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/pbiconnect1.PNG?token=AKE1nfCbzixVTKDoP29lxwewzo3O1tPBks5ZL8fewA%3D%3D) Content, Date accessed, Date Created etc.
+  -	After the data has been successfully loaded into Power BI, you will see under Fields tab on the right, a table (data source) Query1 appear with fields [like](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/pbiconnect1.PNG?raw=true) Content, Date accessed, Date Created etc.
   -	From the Home ribbon, click Edit Queries. In the Query Editor, you will see the first column as Content and second column as Name.
   -	Under Content column *click on Table* in the *row with pbidataforPHM* in the Name column.
   -	In the next screen under Content Column *click on Binary*. (You will see data4visualization_latest.csv under Name column)
@@ -49,8 +49,8 @@ Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerb
   -	In the next screen you will see the actual data.  
   -	From the Home ribbon, click Close and Apply. Once the query is updated, the Fields tab the table Query2 will show the new fields available for visualization. These will be the columns from ReadmittanceTarget.csv file.
   -	Your data is now available in a format that you can use to create visualizations. 
-  -	Now that the Power BI is connected to the two data files in Data Lake Store, click on *Edit Queries*, select Query1 and then click on *Advanced Editor* in the Home Ribbon. An editor will pop out with the connection query. It should look similar to [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/connectionquery1.txt?token=AKE1nUWIPrvacgdulv1rXjv7rYGbon62ks5ZL8K5wA%3D%3D). Copy the contents of the editor in a notepad. We will use it to replace the contents of the Advanced Editor in the provided .pbix file in order to change the data source form a local csv to the csv file in ADLS.
-  -	Close the advanced editor and select Query2 this time and then click on *Advanced Editor* in the Home Ribbon. An editor will pop out with the connection query for the second table (similar to [this](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/connectionquery2.txt?token=AKE1nS1DjXoLYeXzO7MXMgZCjX7d8hQBks5ZL8NewA%3D%3D)). Copy the contents of the editor in a notepad.
+  -	Now that the Power BI is connected to the two data files in Data Lake Store, click on *Edit Queries*, select Query1 and then click on *Advanced Editor* in the Home Ribbon. An editor will pop out with the connection query. It should look similar to [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/media/connectionquery1.txt). Copy the contents of the editor in a notepad. We will use it to replace the contents of the Advanced Editor in the provided .pbix file in order to change the data source form a local csv to the csv file in ADLS.
+  -	Close the advanced editor and select Query2 this time and then click on *Advanced Editor* in the Home Ribbon. An editor will pop out with the connection query for the second table (similar to [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/media/connectionquery2.txt)). Copy the contents of the editor in a notepad.
   -	With the two connection queries collected in a notepad, we can close this Power BI file now.
   
 #### 3)	Update the data source of the Power BI file
