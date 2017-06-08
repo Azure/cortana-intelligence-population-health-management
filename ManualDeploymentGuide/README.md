@@ -394,7 +394,7 @@ After some time, this new dataset *hotpathcore* will appear in the Datasets sect
 - At the top of the Resource Group blade, click ***+Add***.
 - In the *Search Everything* search box, enter `Data Lake Analytics`.
 - Choose *Data Lake Analytics* from the results, then click ***Create***.
-- Enter `healtcareadla` as the name (e.g. Mary Jane would enter healthcaremj01adla).
+- Enter `healthcareadla` as the name (e.g. Mary Jane would enter healthcaremj01adla).
 - Correctly set the subscription and resource group.
 - Choose the location closest to the one chosen for the resource group.
 - Click on *Data Lake Store* and choose the Azure Data Lake Store created in the previous step (*healthcareadls*).
