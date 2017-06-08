@@ -103,7 +103,7 @@ This section will walk you through the steps to manually create the population h
 - At the top of the Resource Group blade, click __+Add__.
 - In the *Search Everything* search box, enter **Storage account**.
 - Choose ***Storage account*** from the results, then click ***Create***.
-    - Change the deployment model to *Classic* and click ***Create***.
+    - Change the deployment model to *Classic*.
     - Set the name to **healthcarestorage** (modified to include your unique initials and number, e.g. **healthcaremj01storage**). 
     - Correctly set the subscription, resource group, and location. 
     - Click ***Create***.
