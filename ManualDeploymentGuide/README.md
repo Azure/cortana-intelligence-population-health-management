@@ -130,14 +130,14 @@ Next we will create some containers and move the necessary files into the newly 
     - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `data`. You should see that [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files have appeared in your container `data`.
 - Copy the USQL scripts:
     - Click __+ Container__.
-        - Enter the name `scripts` and change the *Access type* to **blob**.
+        - Enter the name `scripts` and change the *Access type* to **Blob**.
         - Click ***Create***. You should see `scripts` appear in the list of containers.
     - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt) command.
         - Replace `EnterYourStorageAccountkeyhere` with your storage account key and `<storageaccountname>` with your storage account name in the command before executing.
     - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `scripts`. You should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob) four USQL files have appeared in your container `scripts`.
 - Copy the supporting files for ADF:
     - Click __+ Container__.
-        - Enter the name `forphmdeploymentbyadf` and change the *Access type* to **blob**.
+        - Enter the name `forphmdeploymentbyadf` and change the *Access type* to **Blob**.
         - Click ***Create***. You should see `forphmdeploymentbyadf` appear in the list of containers.
     - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt) command.
         - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
@@ -292,7 +292,7 @@ Once the data generator is running, you should [see](https://github.com/Azure/co
 - Correctly set the subscription, resource group, and location.
 - Click ***Create***.
 
-The deployment step may take several minutes.  When deployment has finished, we are ready to add the Inputs, Outputs and Query for the Stream Analytics job:
+The deployment step may take several minutes.  When deployment has finished, we are ready to add the *Inputs*, *Outputs* and *Query* for the Stream Analytics job:
 - Return to the resource group blade and click on the ***healthcareColdPath*** resource to open the Stream Analytics job's blade.
 - In the Stream Analytics job blade, click *Inputs*.
 - At the top of the *Inputs* page, click ***+ Add***. Then enter the following settings:
@@ -302,6 +302,7 @@ The deployment step may take several minutes.  When deployment has finished, we 
     - Select *Use event hub from current subscription* as the import option.
     - Select *healthcareeehns* (or whatever you have chosen for the Event Hub namespace previously) as the service bus namespace.
     - Select *healthcareehub* (or whatever you have chosen for the Event Hub previously) as the event hub name.
+    - Enter coldpathcg for Event hub consumer group.
     - Leave the event hub policy name unchanged on the *RootManageSharedAccessKey* setting.
     - Leave the event hub consumer group field empty.
     - Select *CSV* (**not** JSON) as the event serialization format.
