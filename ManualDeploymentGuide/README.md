@@ -431,7 +431,8 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade, choose *New data store* and select *Azure Storage* from the list. You will be presented with a draft.
-- For the *connectionString* setting, copy in the *PRIMARY CONNECTION STRING* value you retrieved from the Azure Storage account earlier.
+- Replace `<accountname>` with the name of your storage account, `healthcarestorage` (e.g. Mary Jane would use `healthcaremj01`).
+- Replace `<accountkey>` with the storage account key you recorded earlier.
 - At the top of the blade, click *Deploy*.
 
 #### Azure Data Lake Store Linked Service
