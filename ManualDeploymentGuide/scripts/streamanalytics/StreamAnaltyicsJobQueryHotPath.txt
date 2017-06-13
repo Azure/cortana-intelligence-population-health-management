@@ -1,5 +1,6 @@
 SELECT
-recordTime,
+System.TIMESTAMP AS TIME,
+CAST(recordTime AS datetime) as recordTime,
 [key] as id,
 age,
 atype,
