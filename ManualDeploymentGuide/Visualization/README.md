@@ -87,32 +87,25 @@ Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerb
 
 > Note: A [Power BI online](http://www.powerbi.com/) account is required to perform the following steps. If you don't have an account, you can [create one here](https://powerbi.microsoft.com/pricing).
 
-The essential goal of this part is to get real time overview of the population being admitted to different hospitals. To carry out the steps below you must have successfully completed the 'Hot Path' steps (for both manual and automated deployment) to connect Power BI to your real-time data stream through Azure Stream Analytics.  
+The Power BI Dashboard created above displays statistics on the cumulative set of patient visit records processed using Azure Data Factory. Here, we show how you can display real-time data in Power BI dashboards to monitor very recent trends. This process uses the "Hot Path" Azure Stream Analytics output that you produced during deployment.
 
-
-#### 1) Login on [Power BI online](http://www.powerbi.com) 
-
-  - On the left panel Datasets section in My Workspace, you should be able to see a new dataset *hotpathcore* showing on the left panel of Power BI. This is the streaming data you pushed from Azure Stream Analytics.
-  - Make sure the ***Visualizations*** pane is open and is shown on the right side of the screen.
-
-  
-
-#### 2) Create a visualization on PowerBI online
-With Power BI, you are enabled to create many kinds of visualizations for your business needs. We will use this example to show you how to create a visual for the "total patients admitted  by admit type" 
-
-  -	Click dataset **hotpathcore** on the left panel Datasets section.
-
-  -	Click **"Stacked Column Chart"** icon.
-
-  -	Click **“ATYPE”** and make sure it shows under "Axis". Click **“VisitLink”** and make sure it shows under "Values".
-
-  -	Click **'Save'** on the top and name the report as “PHMreport”. The report named “PHMreport” will be shown in Reports section in the Navigator pane on left.
-
-  -	Click **“Pin Visual”** icon on top right corner of this line chart, a "Pin to Dashboard" window may show up for you to choose a dashboard. Please select the dashboard "PHM demo" that we created earlier, then click "Pin".
-
-  - Once the visualization is pinned to dashboard, it will automatically refresh when Power BI receives new data from stream analytics job.
-
-
-
-
-
+- Begin creating a new report in Power BI:
+   - Login on [Power BI online](http://www.powerbi.com).
+   - After logging in, locate and click "My Workspace" on the left-hand menu.
+   - Click the "+ Create" button in the upper-right corner of the screen, and select "Reports" from the drop-down menu.
+   - In the "Create Report" dialog box that appears, select the dataset named `hotpathcore` created by your ASA hot path, then click the "Create" button.
+- Create a bar chart showing the total number of patients admitted by admission type (`atype`):
+   - In the "Visualizations" pane at the right-hand side of the screen, click on the "stacked column chart" button (top row, second from the left) to add a new chart to the report.
+   - With this chart selected,
+      - Drag `atype` (under "Fields") into the "Drag data fields here" box under the "Axis" setting. 
+      - Drag `visitlink` (under "Fields") into the "Drag data fields here" box under the "Value" setting.  
+- Create a bar chart showing the number of patients admitted in each time interval:
+   - In the "Visualizations" pane at the right-hand side of the screen, click on the "stacked column chart" button (top row, second from the left) to add a new chart to the report.
+   - With this chart selected,
+      - Drag `recordtime` (under "Fields") into the "Drag data fields here" box under the "Axis" setting. 
+      - Drag `visitlink` (under "Fields") into the "Drag data fields here" box under the "Value" setting.
+- Publish the report to a dashboard for live updates
+   - Click on "File -> Save", and save the report with the name `hotpathreport`.
+   - Click the "Pin Live Page" button in the upper-right corner.
+   - Pin the report to the dashboard you created in the "Visualize Data from Data Lake Store" section.
+   - Refresh while viewing the dashboard to update the visuals with real-time data.
