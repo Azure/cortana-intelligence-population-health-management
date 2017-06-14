@@ -92,17 +92,23 @@ Before you can update the sample Power BI dashboard we have supplied, you will n
     - The data sources will update and point to the files in your Data Lake Store.
 - In the backend, model is scheduled to be refreshed every 1 hour. You can click **'Refresh'** button on the top to get the latest visualization as time moves forward.
 
-#### 4) Publish the dashboard to [Power BIonline](http://www.powerbi.com/)
-  Note that this step needs a Power BI account (or Office 365 account).
+#### 4) Publish the dashboard to [Power BI Online](http://www.powerbi.com/)
+  Note that to complete this step, you will need a (free) Power BI or Office 365 account.
 
-  - Click **"Publish"** on the top panel. You will be prompted to sign into your Power BI account. Sign in with your work or school account. Next you will be prompted to select a destination. Choose **'My Workspace'**. It will take about a minute to publish at the end of which you will see a  "Success!" message with a link to open your published report in Power BI. More on how to publish [here](https://powerbi.microsoft.com/en-us/documentation/powerbi-desktop-upload-desktop-files/).
+- Click **"Publish"** on the ribbon along the top of your screen, You will be prompted to sign into your Power BI account.
+- Sign in with your work or school account.
+- When prompted to select a destination, choose **'My Workspace'**.
+- After about a minute, you will see a  "Success!" message containing a link to open your published report in Power BI.
+    - If you have any trouble, you can learn more about how to publish dashboard to Power BI [here](https://powerbi.microsoft.com/en-us/documentation/powerbi-desktop-upload-desktop-files/).
+- Click the link in the "Success!" message to view your Power BI desktop file in a browser. If prompted, enter your Power BI online credentials.
 
-  - Click this link to view your Power BI desktop file in a browser. You will be prompted to enter your Power BI online credentials. Once you successfully log in you will be able to see all the reports from your Power BI desktop file in the browser.  
+Once you successfully log in, you will be able to see all the reports from your Power BI desktop file in the browser. Next, we will pin individual visualizations from some of our reports into a dashboard:
+- Select a visualization from a report that you want in your dashboard and click on the thumbtack symbol at the upper-right of the visual (which will say 'Pin Visual' when your mouse hovers over the icon).
+- You will be prompted to select an existing dashboard or create a new one. Let's create a new dashboard.
+- Enter a name for your dashboard, e.g. "PHM demo".
+- When you press Enter, you will see a notification that your visualization has been pinned to your dashboard and a "Go to dashboard" link is provided at upper-right. Click on the link to go to your dashboard.
 
-  - Next we want to pin individual visualizations from some of our reports into a dashboard. Select a visualization from a report that you want in your dashboard and click on the thumbtack symbol at the top left that says 'Pin Visual' on hover. You will be prompted to select an existing dashboard or create a new one. Lets create a new dashboard. You will need to enter a name for your dashboard, we will call it "PHM demo". When you press enter you will see a notification that your visualization has been pinned to your dashboard with a link to go to dashboard. Click on the link to go to your dashboard. More on dashboards [here](https://powerbi.microsoft.com/en-us/guided-learning/powerbi-learning-4-2-create-configure-dashboards/).
- 
-
-  - Power BI Q&A enables users to ask natural language questions and get answer in the form of visuals or reports automatically created with the data that best answers their question.
+Power BI Q&A enables users to ask natural language questions and get answer in the form of visuals or reports automatically created with the data that best answers their question. For more information on dashboards, click [here](https://powerbi.microsoft.com/en-us/guided-learning/powerbi-learning-4-2-create-configure-dashboards/).
 
 <a name="hot"></a>
 # Visualize Data From Real-time Data Stream
