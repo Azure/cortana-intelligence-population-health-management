@@ -101,9 +101,9 @@ DECLARE @outputFile                 = @"/pbidataforPHM/data4visualization_latest
 ////////////////////////////////////////////////////////////////////// 
 
  @InputData = 
-    SELECT   
-	dshospid ,
+    SELECT   	
 	id ,
+	dshospid ,
 	age ,
 	amonth ,
 	atype ,
@@ -164,9 +164,9 @@ DECLARE @outputFile                 = @"/pbidataforPHM/data4visualization_latest
 ////////////////////////////////////////////////////////////////////////////////////////////////////////// 
         
 @HistoricData =
-     EXTRACT 
-	dshospid string,
+     EXTRACT 	
 	id string,
+	dshospid string,
 	age string,
 	amonth string,
 	atype string,
