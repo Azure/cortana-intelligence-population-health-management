@@ -20,17 +20,19 @@ A population health report helps healthcare providers glean insights into the po
 <a name="cold"></a>
 # Visualize Data from Data Lake Store
 
-> Note:  1) In this step, the prerequisite is to download and install the free software [Power BI desktop](https://powerbi.microsoft.com/desktop). 2) We recommend you start this process 2-3 hours after you deploy the solution so that you have more data points to visualize.
+> Note:  1) Before beginning this section, you must download and install the (free) [Power BI Desktop](https://powerbi.microsoft.com/desktop) program. 2) We recommend that you start this process 2-3 hours after you deploy the solution, so that you have more data points to visualize.
 
-Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near real time as new patients get admitted to the hospital. The provided PBI file needs to connect to two data files in Data Lake store: data4visualization_latest.csv and ReadmittanceTarget.csv. In the steps below we will change the source of the Power BI file from local to the csv files in Data  Lake Store.
+Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near-real time as new patients get admitted to the hospital. The [provided PBI Dashboard file](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/Visualization/PopulationHealthManagement.pbix) needs to connect to two data files in Data Lake store: `data4visualization_latest.csv` and `ReadmittanceTarget.csv`. In the steps below, we will change the source of the Power BI file from local files to the csv files in Data Lake Store.
 
 #### 1) Get the credentials.
 
-  - Through Azure portal, navigate to your Data Lake Store and copy the **ADL URI**. The uri looks [like](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) adl://************.adlsdefault.azuredatalakestore.net/. 
+  - Navigate to your Data Lake Store's overview pane in Azure Portal, and copy the **ADL URI**. The URI will look [like](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) `adl://************.adlsdefault.azuredatalakestore.net/`. 
 
 #### 2)	Get the query connection strings
 
-  -  We will get the connection query by connecting a new Power BI desktop file to our two csv files in Data Lake store. Open  a **new** Power BI desktop file and click on Get Data -> Azure -> Azure Data Lake Store -> Connect. You will be prompted to enter Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
+We will get the connection query by connecting a new Power BI desktop file to our two csv files in Data Lake store.
+- Open a **new** Power BI desktop file and click on "Get Data -> Azure -> Azure Data Lake Store -> Connect".
+- You will be prompted to enter the Azure Data Lake Store URL. Enter the **ADL URI** collected in step 1. You will be prompted to sign in. Enter your credentials and click Connect. More on connecting PowerBI to Data Lake Store [here](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-power-bi).
   -	You will see a list of all the folders in your Data Lake store. Click **Load**. 
   -	After the data has been successfully loaded into Power BI, you will see under Fields tab on the right, a table (data source) Query1 appear with fields [like](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/pbiconnect1.PNG?raw=true) Content, Date accessed, Date Created etc.
   -	From the Home ribbon, click Edit Queries. In the Query Editor, you will see the first column as Content and second column as Name.
