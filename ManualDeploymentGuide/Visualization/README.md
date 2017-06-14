@@ -62,10 +62,13 @@ Before you can update the sample Power BI dashboard we have supplied, you will n
     -	In the ribbon at the top of your screen, ensure that the "Home" tab is selected, then click "Edit Queries".
     - Click on "Query2" in the list at left. You will again see a summary of the folders in the root directory for your Data Lake Store.
     -	Find the row in this table that contains the value "forphmdeploymentbyadf" in the "Name" column (row 2). Click on the "Table" hyperlink in the "Content" column of that row.
+    
         In the next screen, you will see a table describing the files in the `/forphmdeploymentbyadf` subdirecory of your ADLS. 
     -	Find the row in this table that contains the value "ReadmittanceTarget.csv" in the "Name" column (row 1). Click on the "Binary" hyperlink in the "Content" column of that row.
+    
         You should now see a table containing data relevant to readmission.
     - On the ribbon at the top of the screen, click "Close and Apply".
+    
         You should now see that "Query2" under the "Fields" menu at right contains the readmission fields, i.e. the columns from `ReadmittanceTarget.csv` file.   
 - Record the query strings
   -	Under Content column click on *Table* in the *row with Name forphmdeploymentbyadf*.
