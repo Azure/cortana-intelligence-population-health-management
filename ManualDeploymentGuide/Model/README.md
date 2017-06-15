@@ -23,7 +23,7 @@ The HCUP SID dataset consists of four files in ASCII format:
 - Severity of pre-existing conditions that may affect outcomes [[sample](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/Model/SampleHCUPdata/Sample_WA_SID_2011_SEVERITY.asc) | [full description](https://www.hcup-us.ahrq.gov/db/state/sidc/tools/filespecs/WA_SID_2011_SEVERITY.loc)]  
 - Diagnostic and procedure groups [[sample](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/Model/SampleHCUPdata/Sample_WA_SID_2011_DX_PR_GRPS.asc) | [full description](https://www.hcup-us.ahrq.gov/db/state/sidc/tools/filespecs/WA_SID_2011_DX_PR_GRPS.loc)] 
 
-We will use these description files to help convert the sample ASCII data files to CSV files with headers, which we will then use for subsequent analysis. 
+We will use these description files to help convert the sample ASCII data files to CSV files with headers, which we can then be used for subsequent analysis. 
 
 See notebook [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/Model/ReadHCUPdata.ipynb)
 
@@ -38,12 +38,12 @@ Recent legislative changes have standardized payments for procedures performed, 
 Extended lengths of stay costs hospitals millions of dollars a year. By identifying patients at risk for an extended stay, they can take proactive measures to formulate a treatment plan to reduce the expected length of stay.
 
 ### When should the prediction be used?
-Hospitals want to predict the length of each patient's stay at the time of admission and provide this information to the admitting nurse or staff. Our model is trained using encounter-level records for a million or so patients from 23 hospitals (obtained from the Healthcare Cost and Utilization Project, or HCUP) and is suitable for use on similar patient populations, though we recommend that hospitals retrain the model using their own historical patient data for best results. To be applied to newly-admitted patients, the model must be trained using only features that are available for each patient at the time of their admission.
-<a name="lm"></a>
+Hospitals want to predict the length of each patient's stay at the time of admission and provide this information to the admitting nurse or staff for resource allocation purposes. The models are created using only features that are available for each patient at the time of their admission.
 
 ### Data for modeling
-For this solution, we have used simulated patient hospital visit records based on State Inpatient Data (SID) from the Healthcare Cost and Utilization Project (HCUP). The records we produce match the HCUP schema to facilitate the solution's use with real HCUP data. The solution simulates 610 clinical and demographic features, including age, gender, zipcode, diagnoses, procedures, charges, etc. for about a million patients across 23 hospitals.
+Our model is trained using encounter-level records for a million or so patients. The schema for data matches the State Inpatient Databases (SID) data from HCUP to facilitate the solution's use with real HCUP data. It is suitable for use on similar patient populations, though we recommend that hospitals retrain the model using their own historical patient data for best results. The solution simulates 610 clinical and demographic features, including age, gender, zipcode, diagnoses, procedures, charges, etc. for about a million patients across 23 hospitals. To be applied to newly-admitted patients, the model must be trained using only features that are available for each patient at the time of their admission.
 
+<a name="lm"></a>
 ## Length of stay model using lm
 See notebook [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/Model/Length%20Of%20Stay%20Models%20-%20lm.ipynb).
 
