@@ -1,14 +1,12 @@
 # Visualizing the Population Health Report with Power BI
 
-After deploying the [Population Health Management Solution](https://github.com/Azure/cortana-intelligence-population-health-management), simulated patient data and predictions will begin to accumulate. This README describes the steps necessary to display and glean insights from the data using Power BI. Below you will find instructions on how to connect your Power BI to: 1) the data in your Data Lake Store and 2) real time stream through your Azure Stream Analytics. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard. After uploading this dashboard to [Power BI Online](https://powerbi.microsoft.com/en-us/landing/signin/), you will add visualizations based on the real-time Azure Stream Analytics "hot path" data.
+After deploying the [Population Health Management Solution](https://github.com/Azure/cortana-intelligence-population-health-management), simulated patient data and predictions will begin to accumulate. This README describes the steps necessary to display and glean insights from the data using Power BI. The instructions below outline how to connect your Power BI to the data in your Data Lake Store and display real-time data streaming through your Azure Stream Analytics in Power BI dashboards. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard.
 
 ## - [Visualize Data from Data Lake Store](#cold)
 ## - [Visualize Data From Real-time Data Stream](#hot) 
 
 # Data
-For this solution, we have used simulated patient hospital visit records based on State Inpatient Data ([SID](https://www.hcup-us.ahrq.gov/sidoverview.jsp)) from the Healthcare Cost and Utilization Project ([HCUP](http://www.hcup-us.ahrq.gov/)). The records we produce match the HCUP [schema](https://www.hcup-us.ahrq.gov/db/state/siddist/siddistvarnote2013.jsp) to facilitate the solution's use with [real HCUP data](https://www.hcup-us.ahrq.gov/tech_assist/centdist.jsp). The solution simulates 610 patient clinical and demographic features, including age, gender, zipcode, diagnoses, procedures, charges, etc. across 23 hospitals. After processing, the solution's cumulative records are aggregated into a file named `data4visualization_latest` in the `/pbidataforPHM` subdirectory of your Azure Data Lake Store.
-
-Because your deployment of this solution may be run only briefly (e.g. hours or days, for demo purposes), the solution does not simulate or track readmission events: instead, we provide another data file called `ReadmittanceTarget`, which contains sample readmission data. During deployment, this file was copied into the `/forphmdeploymentbyadf` subdirectory of your Azure Data Lake Store.
+For this solution, we have used simulated patient hospital visit records based on State Inpatient Data ([SID](https://www.hcup-us.ahrq.gov/sidoverview.jsp)) from the Healthcare Cost and Utilization Project ([HCUP](http://www.hcup-us.ahrq.gov/)). The records we produce match the HCUP [schema](https://www.hcup-us.ahrq.gov/db/state/siddist/siddistvarnote2013.jsp) to facilitate the solution's use with [real HCUP data](https://www.hcup-us.ahrq.gov/tech_assist/centdist.jsp). The solution simulates 610 clinical and demographic features, including age, gender, zipcode, diagnoses, procedures, charges, etc. for about a million patients across 23 hospitals. We also provide another data file called 'ReadmittanceTarget' which contains metrics to be followed by a hospital to track Readmission Rate. 
 
 ### ***About HCUP and SID***
 
@@ -22,7 +20,7 @@ A population health report helps healthcare providers glean insights into the po
 
 > Note: Before beginning this section, you must download and install the (free) [Power BI Desktop](https://powerbi.microsoft.com/desktop) program. 
 
-Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near-real time as new patients get admitted to the hospital. The [provided PBI Dashboard file](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/Visualization/PopulationHealthManagement.pbix) needs to connect to two data files in Data Lake store: `data4visualization_latest.csv` and `ReadmittanceTarget.csv`. In the steps below, we will change the source of the Power BI file from local files to the csv files in Data Lake Store.
+Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near-real time as new patients get admitted to the hospital. The [provided PBI Dashboard file](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/Visualization/PopulationHealthManagement.pbix) needs to connect to two data files in Data Lake store: `data4visualization_latest.csv` and `ReadmittanceTarget.csv`. During deployment, `ReadmittanceTarget.csv` was copied into the `/forphmdeploymentbyadf` subdirectory of your Azure Data Lake Store. `data4visualization_latest.csv` is in subdirectiry `pbidataforPHM`of your Azure Data Lake Store. In the steps below, we will change the source of the Power BI file from local files to the csv files in Data Lake Store.
 
 #### 1) Get the connection credentials
 
@@ -135,5 +133,5 @@ The Power BI Dashboard created above displays statistics on the cumulative set o
 - Publish the report to a dashboard for live updates
    - Click on "File -> Save", and save the report with the name `hotpathreport`.
    - Click the "Pin Live Page" button in the upper-right corner.
-   - Pin the report to the dashboard you created in the "Visualize Data from Data Lake Store" section.
+   - Pin the report to the dashboard you created in the "Visualize Data from Data Lake Store" section. We named it "PHM demo" above.
    - Refresh while viewing the dashboard to update the visuals with real-time data.
