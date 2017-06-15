@@ -1,6 +1,6 @@
 # Visualizing the Population Health Report with Power BI
 
-After deploying the [Population Health Management Solution](https://github.com/Azure/cortana-intelligence-population-health-management), simulated patient data and predictions will begin to accumulate. This README describes the steps necessary to display and glean insights from the data using Power BI. First, you will configure a pre-existing dashboard to visualize the data created from your Azure Stream Analytics "cold path" from [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop/). After uploading this dashboard to [Power BI Online](https://powerbi.microsoft.com/en-us/landing/signin/), you will add visualizations based on the real-time Azure Stream Analytics "hot path" data.
+After deploying the [Population Health Management Solution](https://github.com/Azure/cortana-intelligence-population-health-management), simulated patient data and predictions will begin to accumulate. This README describes the steps necessary to display and glean insights from the data using Power BI. Below you will find instructions on how to connect your Power BI to: 1) the data in your Data Lake Store and 2) real time stream through your Azure Stream Analytics. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard. After uploading this dashboard to [Power BI Online](https://powerbi.microsoft.com/en-us/landing/signin/), you will add visualizations based on the real-time Azure Stream Analytics "hot path" data.
 
 ## - [Visualize Data from Data Lake Store](#cold)
 ## - [Visualize Data From Real-time Data Stream](#hot) 
@@ -20,7 +20,7 @@ A population health report helps healthcare providers glean insights into the po
 <a name="cold"></a>
 # Visualize Data from Data Lake Store
 
-> Note:  1) Before beginning this section, you must download and install the (free) [Power BI Desktop](https://powerbi.microsoft.com/desktop) program. 2) We recommend that you start this process 2-3 hours after you deploy the solution, so that you have more data points to visualize.
+> Note: Before beginning this section, you must download and install the (free) [Power BI Desktop](https://powerbi.microsoft.com/desktop) program. 
 
 Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near-real time as new patients get admitted to the hospital. The [provided PBI Dashboard file](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/Visualization/PopulationHealthManagement.pbix) needs to connect to two data files in Data Lake store: `data4visualization_latest.csv` and `ReadmittanceTarget.csv`. In the steps below, we will change the source of the Power BI file from local files to the csv files in Data Lake Store.
 
