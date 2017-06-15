@@ -32,7 +32,7 @@ Readmissions increase hospital costs by billions of dollars. According to the Ag
 
 # **Intervention Profile**
 
-Hospital readmissions has been identified as one of the key areas that has the potential for cost savings. Readmissions not only place patients at greater risk of complications and healthcare-associated infections, they are very costly. Nearly one in five hospital patients covered by Medicare are readmitted within 30 days, accounting for $15 billion a year<sup>[ref](https://www.ahrq.gov/news/blog/ahrqviews/112015.html)</sup>. In this report, we identify the [conditions](https://www.hcup-us.ahrq.gov/reports/statbriefs/sb172-Conditions-Readmissions-Payer.pdf) that cause the most readmissions and related costs, broken down by [payer and age](https://www.hcup-us.ahrq.gov/reports/statbriefs/sb199-Readmissions-Payer-Age.pdf). These insights can help identify population to target with interventions to prevent or reduce readmission, enhancing care quality and improving cost-reduction efforts. We also look at prevalence of chronic conditions by age.
+Hospital readmissions has been identified as one of the key areas that has the potential for cost savings. Readmissions not only place patients at greater risk of complications and healthcare-associated infections, they are very costly. Nearly one in five hospital patients covered by Medicare are readmitted within 30 days, accounting for $15 billion a year<sup>[ref](https://www.ahrq.gov/news/blog/ahrqviews/112015.html)</sup>. In this report, we identify the [conditions](https://www.hcup-us.ahrq.gov/reports/statbriefs/sb172-Conditions-Readmissions-Payer.pdf) that cause the most readmissions and related costs, broken down by [payer and age](https://www.hcup-us.ahrq.gov/reports/statbriefs/sb199-Readmissions-Payer-Age.pdf). These insights can help identify populations to target with interventions that prevent or reduce readmission, enhancing care quality and improving cost-reduction efforts. This report also examines prevalence of chronic conditions by age.
 
 ![](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/pbi_InterventionProfile.PNG?raw=true)
 
@@ -50,6 +50,6 @@ In this report, we look at geographic distribution of some chronic conditions. B
 
 ![](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/pbi_HotSpots.PNG?raw=true)
 
-**DISCLAIMER**: The visuals in these reports are based on simulated data. While the simulation reflects some trends present in real-world  data, the results should be treated as fictitious. Any insights you may derive are for illustrative and demo purposes only and should not be used as facts or alternative facts.
+**DISCLAIMER**: The visuals in these reports are based on simulated data. While the simulation reflects some trends present in real-world  data, the results should be treated as fictitious. Any insights derived from these data are for illustrative and demo purposes only, and should not be used as facts or alternative facts.
 
 If you have questions on the visualizations or underlying data, please contact @Shaheen_Gauher.
