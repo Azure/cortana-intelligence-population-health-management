@@ -1,0 +1,30 @@
+-------- AzCopy Commands for copying to your blob ------------
+
+AzCopy /Source:https://phm.blob.core.windows.net/generatordata /Dest:https://<storageaccountname>.blob.core.windows.net/data  /SourceSAS:"?st=2017-06-01T18%3A33%3A00Z&se=2027-06-01T18%3A33%3A00Z&sp=rl&sv=2016-05-31&sr=c&sig=B47dQmtSVRiM92UcBZIyrbFzQwY6T3fmfl8Ra9vpgj4%3D" /DestKey:EnterYourStorageAccountkeyhere /s
+
+AzCopy /Source:https://phm.blob.core.windows.net/scripts /Dest:https://<storageaccountname>.blob.core.windows.net/scripts  /SourceSAS:"?st=2017-06-01T19%3A09%3A00Z&se=2027-06-01T19%3A09%3A00Z&sp=rl&sv=2016-05-31&sr=c&sig=HoJCDuwpFCcEntG6jfitcd5gSiBOPSipfgLXe8joRss%3D" /DestKey:EnterYourStorageAccountkeyhere /s
+
+AzCopy /Source:https://phm.blob.core.windows.net/forphmdeploymentbyadf /Dest:https://<storageaccountname>.blob.core.windows.net/forphmdeploymentbyadf  /SourceSAS:"?st=2017-06-01T19%3A09%3A00Z&se=2027-06-01T19%3A09%3A00Z&sp=rl&sv=2016-05-31&sr=c&sig=uoDbP%2FoDE%2Ffqvsk46U5q9bxib%2B59HrQkWeD3YucQGYk%3D" /DestKey:EnterYourStorageAccountkeyhere /s
+
+-------- adlcopy Command for copying to your Data Lake Store ------------
+
+adlcopy /source https://<storageaccountname>.blob.core.windows.net/forphmdeploymentbyadf/ /dest adl://<adlsaccountname>.azuredatalakestore.net/forphmdeploymentbyadf/ /sourcekey EnterYourStorageAccountkeyhere
+
+
+-------- Information you will need to collect for editing .config file for Data Generator ------------
+
+In the HealthCareGenerator.exe.config (depending on your editor) you will edit lines 12,13 and 21,22. 
+
+    <add key="EventHubName" value="[EventHubName]" />
+    <add key="EventHubConnectionString" value="[EventHubConnectionString]" />
+
+    <add key="StorageAccountName" value="[StorageAccountName]" />
+    <add key="StorageAccountKey" value="[StorageAccountPrimaryKey]" />	
+
+[EventHubName]             : Enter the name used to create the Azure Event Hub (not the Event Hub Namespace).
+[EventHubConnectionString] : Enter the value of CONNECTION STRING -PRIMARY KEY (not the PRIMARY KEY value) that was collected after creating the Azure Event Hub namespace.
+[StorageAccountName]       : Enter the value of STORAGE ACCOUNT NAME that was collected after creating the Azure Storage account.
+[StorageAccountKey]        : Enter the value of PRIMARY ACCESS KEY that was collected after creating the Azure Storage account.
+
+----------------------------------------------------------------------
+	
