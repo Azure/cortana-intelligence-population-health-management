@@ -36,6 +36,7 @@ Recent legislative changes have standardized payments for procedures performed, 
 - Manage bed occupancy  
 - Effectively schedule elective admissions  
 - Improve patient satisfaction during their hospital stay     
+
 Extended lengths of stay costs hospitals millions of dollars a year. By identifying patients at risk for an extended stay, the hospital can take proactive measures to formulate a treatment plan to reduce the expected length of stay.
 
 ### When should the prediction be used?
