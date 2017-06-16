@@ -4,7 +4,7 @@
 - [Problem Statement](#prob)
 - [Create length of stay model using lm()](#lm) 
 - [Create length of stay model using xgboost()](#xg) 
-- [Extending U-SQL with R](#usqlr)
+- [Azure Data Lake Analytics and R Integration](#usqlr)
 
 
 <a name="hcup"></a>
