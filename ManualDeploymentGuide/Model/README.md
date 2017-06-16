@@ -4,6 +4,7 @@
 - [Problem Statement](#prob)
 - [Create length of stay model using lm()](#lm) 
 - [Create length of stay model using xgboost()](#xg) 
+- [Extending U-SQL with R](#usqlr)
 
 
 <a name="hcup"></a>
@@ -50,3 +51,8 @@ See notebook [here](https://github.com/Azure/cortana-intelligence-population-hea
 <a name="xg"></a>
 ## Length of stay model using xgboost
 See notebook [here](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/Model/Length%20Of%20Stay%20Models%20-%20xgboost.ipynb).
+
+<a name="usqlr"></a>
+## Azure Data Lake Analytics and R Integration
+R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end to end data science scenarios covering: merging various data files, feature engineering (FE), partitioned data model building, and post deployment, massively parallel FE and scoring. In order to deploy R code in we need to install the usqlext in our azure data lake analytics account and within the usql script use the REFERENCE ASSEMBLY statement to enable R extensions for the U-SQL Script. Currently we do not have the capability to train the models in Data Lake. In this solution we upload the trained models ([notebooks](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/Model/Length%20Of%20Stay%20Models%20-%20lm.ipynb) to create the models above) to our Data Lake Store and declare it as a resource in the U-SQL [script](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql). More sample codes for using R can also be found in the following folder in your Data Lake Store:<your_account_address>/usqlext/samples/R.
+
