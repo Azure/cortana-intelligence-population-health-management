@@ -24,11 +24,7 @@ In this Population Health Management solution guide, we will be leveraging clini
 
 This solution package contains materials to help both technical and business audiences understand our Population Health Management solution for health care built on the [Cortana Intelligence Suite](https://www.microsoft.com/en-us/server-cloud/cortana-intelligence-suite/Overview.aspx).
 
-## Business Audiences
 
-In this repository you will find a folder labeled [*Solution Overview for Business Audiences*](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/SolutionOverviewforBusinessAudiences) which contains a presentation covering this solution and the benefits of using the Cortana Intelligence Suite.
-
-For more information on how to tailor Cortana Intelligence to your needs, [connect with one of our partners](http://aka.ms/CISFindPartner).
 
 ## Technical Audiences
 
@@ -37,6 +33,5 @@ For technical audiences, we have put together a manual deployment guide as well 
 ### [Manual Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide)
 In this folder, you will find instructions on how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite.  It will walk you through how to manually set up and deploy all the individual services used in this solution (e.g. Azure Event Hub, Data Lake Store, Azure Stream Analytics etc.). 
 
-### [Automated Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/AutomatedDeploymentGuide)
-There is also a deployable Population Health Management solution in the Cortana Intelligence Gallery (offering one-click deployment of all services required for this solution!). In this folder, you will find instructions on how to monitor the progress of your automated deployment (takes about 20 minutes to deploy) and carry out some post-deployment steps.
+
  
