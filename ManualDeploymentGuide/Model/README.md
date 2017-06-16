@@ -35,8 +35,8 @@ See notebook [here](https://github.com/Azure/cortana-intelligence-population-hea
 Recent legislative changes have standardized payments for procedures performed, regardless of the number of days a patient actually spends in the hospital. Hospitals are therefore strongly incentivized to use resources more efficiently and find ways to accommodate more patients with the same volume of resources. An accurate prediction of each patient's length of stay can help hospitals:  
 - Manage bed occupancy  
 - Effectively schedule elective admissions  
-- Improve patient satisfaction during their hospital stay  
-Extended lengths of stay costs hospitals millions of dollars a year. By identifying patients at risk for an extended stay, they can take proactive measures to formulate a treatment plan to reduce the expected length of stay.
+- Improve patient satisfaction during their hospital stay     
+Extended lengths of stay costs hospitals millions of dollars a year. By identifying patients at risk for an extended stay, the hospital can take proactive measures to formulate a treatment plan to reduce the expected length of stay.
 
 ### When should the prediction be used?
 Hospitals want to predict the length of each patient's stay at the time of admission and provide this information to the admitting nurse or staff for resource allocation purposes. The models are created using only features that are available for each patient at the time of their admission.
