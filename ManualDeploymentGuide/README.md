@@ -44,18 +44,18 @@ This deployment guide walks the readers through the creation of each of the Cort
 As there are usually many interdependent components in a solution, [Azure Resource Manager](https://azure.microsoft.com/en-gb/features/resource-manager/) enables you to 
 group all Azure services in one solution into a resource group. Each component in the resource group is called a resource. We want to use a common name for the different 
 services we are creating. However, several services, such as Azure Storage, require a unique name for the storage account across a region and hence a naming convention 
-is needed that should provide the user with a unique identifier. The idea is to create a unique string (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (**healthcare**) and 
+is needed that should provide the user with a unique identifier. The idea is to create a ***unique string*** (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (**healthcare**) and 
 user's specific details like name and/or a custom numeric ID:  
 
  **healthcare[UI][N]**  
   
 where [UI] is the user's initials (in lowercase), N is a random integer(01-99) that you choose.  
   
-To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. A user, say, *Mary Jane* might use a base service name of healthcare**mj01**, and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
+To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. A user, say, *Mary Jane* might create a ***unique string*** by using a base service name of healthcare**mj01** and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
 Hub" below: 
 
 - healthcareehns should actually be spelled healthcare**mj01**ehns 
-- healthcareeh should actually be spelled healthcare**mj01**eh  
+- healthcareehub should actually be spelled healthcare**mj01**ehub  
 
 ### Accessing Files in the Git Repository
 
