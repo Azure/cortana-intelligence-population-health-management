@@ -12,8 +12,8 @@ For this solution, we have used simulated patient hospital visit records based o
 
 The Healthcare Cost and Utilization Project (HCUP) is a group of healthcare databases that contain the the largest collection of longitudinal hospital care data in the United States. It is a national information resource for encounter-level health care data that captures information extracted from administrative data (patients' billing records) after a patient is discharged from the hospital. HCUP's State Inpatient Databases (SID) contain inpatient care records from community hospitals in each state. With forty-eight states participating, SID now encompass about 97 percent of all U.S. community hospital discharges. The SID files contain a core set of clinical and demographic information on all patients, providing a unique view of inpatient care over time. 
 
-# [Population Health Report](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization/PopulationHealthReport)
-A population health report helps healthcare providers glean insights into the population they serve and get actionable information. In this solution we have created some reports for you based on the data described above. Screenshots and brief descriptions of the reports included can be found [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization/PopulationHealthReport).
+# [Population Health Report](../../ManualDeploymentGuide/Visualization/PopulationHealthReport)
+A population health report helps healthcare providers glean insights into the population they serve and get actionable information. In this solution we have created some reports for you based on the data described above. Screenshots and brief descriptions of the reports included can be found [here](../../ManualDeploymentGuide/Visualization/PopulationHealthReport).
 
 <a name="cold"></a>
 # Visualize Data from Data Lake Store
@@ -29,7 +29,7 @@ To connect to the data in your Azure Data Lake Store, you will need to supply Po
 - Log into [Azure Portal](https://portal.azure.com/).
 - Use the search bar at the top of the screen to search for your resource group by name.
 - After clicking on your resource group in the search results, find your Data Lake Store in the resource group pane and click on it.
-- In the Data Lake Store's overview pane, copy the **ADL URI**. It will look similar to [this](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/adlsuri1.PNG?raw=true):
+- In the Data Lake Store's overview pane, copy the **ADL URI**. It will look similar to [this](../../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true):
     `adl://************.adlsdefault.azuredatalakestore.net/`. 
 
 #### 2)	Get the query connection strings
@@ -42,7 +42,7 @@ Before you can update the sample Power BI dashboard we have supplied, you will n
     - In the "Get data" dialog box, select "Azure", then choose "Azure Data Lake Store". Click "Connect".
     - In the next dialog box, enter your **ADL URI** as the URL and click the "OK" button.
     - On the next screen, you will see a summary of your Data Lake Store (consisting of the folders in the root directory). Click the "Load" button at the bottom of the screen.
-        - After the data has been successfully loaded into Power BI, you will see that the "Fields" menu at right has been populated automatically with a [table named Query1](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/pbiconnect1.PNG?raw=true) that contains elements like Content, Date accessed, Date Created, etc.
+        - After the data has been successfully loaded into Power BI, you will see that the "Fields" menu at right has been populated automatically with a [table named Query1](../../ManualDeploymentGuide/media/pbiconnect1.PNG?raw=true) that contains elements like Content, Date accessed, Date Created, etc.
     -	In the ribbon at the top of your screen, ensure that the "Home" tab is selected, then click "Edit Queries".
         - In the Query Editor, you will see a table in which the first column is "Content", the second column is "Name", and so forth.
     -	Find the row in this table that contains the value "pbidataforPHM" in the "Name" column (row 3). Click on the "Table" hyperlink in the "Content" column of that row.
