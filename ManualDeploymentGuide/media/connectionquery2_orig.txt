@@ -1,7 +1,0 @@
-let
-    Source = Csv.Document(File.Contents("C:\Users\shaheen\Documents\Healthcare\PBI\ReadmittanceTarget.csv"),[Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
-    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Readmittance_conditions", type text}, {"nationalrate", type text}, {"TargetValue", type number}, {"startyellowzone", type number}, {"endyellowzone", type number}, {"StartValue", Int64.Type}, {"EndValue", Int64.Type}}),
-    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Readmittance_conditions", "Readmission Conditions"}})
-in
-    #"Renamed Columns"

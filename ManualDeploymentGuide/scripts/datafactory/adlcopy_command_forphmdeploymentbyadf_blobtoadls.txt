@@ -1,1 +1,0 @@
-adlcopy /source https://<storageaccountname>.blob.core.windows.net/forphmdeploymentbyadf/ /dest adl://<adlsaccountname>.azuredatalakestore.net/forphmdeploymentbyadf/ /sourcekey EnterYourStorageAccountkeyhere

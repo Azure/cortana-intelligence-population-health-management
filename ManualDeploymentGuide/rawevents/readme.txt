@@ -1,1 +1,0 @@
-These 4 csv files in folder files_datagenarator are used by the generator to simulate steaming data. They need to be uploaded to your storage account. Using the AzCopy command provided azCopy_command_data.txt they can be transferred to your container.
