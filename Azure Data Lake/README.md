@@ -19,6 +19,7 @@ In this Population Health Management solution guide, we will be leveraging clini
 
 <p>The snapshot below shows how we use PowerBI for Population Health reporting:
 ![](ManualDeploymentGuide/media/PHMmainpage.PNG?raw=true)
+![Solution Diagram Picture](ManualDeploymentGuide/media/PHMarchitecture.PNG?raw=true)
 
 # Getting Started #
 
