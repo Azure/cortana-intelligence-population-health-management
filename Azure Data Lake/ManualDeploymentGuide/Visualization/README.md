@@ -1,6 +1,6 @@
 # Visualizing the Population Health Report with Power BI
 
-After deploying the [Population Health Management Solution](https://github.com/Azure/cortana-intelligence-population-health-management), simulated patient data and predictions will begin to accumulate. This README describes the steps necessary to display and glean insights from the data using Power BI. The instructions below outline how to connect your Power BI to the data in your Data Lake Store and display real-time data streaming through your Azure Stream Analytics in Power BI dashboards. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard.
+After deploying the [Population Health Management Solution](../../ManualDeploymentGuide/), simulated patient data and predictions will begin to accumulate. This README describes the steps necessary to display and glean insights from the data using Power BI. The instructions below outline how to connect your Power BI to the data in your Data Lake Store and display real-time data streaming through your Azure Stream Analytics in Power BI dashboards. We have provided a power BI file with an example Population Health report and will guide you though creating some visuals and publishing a dashboard.
 
 ## - [Visualize Data from Data Lake Store](#cold)
 ## - [Visualize Data From Real-time Data Stream](#hot) 
@@ -20,7 +20,7 @@ A population health report helps healthcare providers glean insights into the po
 
 > Note: Before beginning this section, you must download and install the (free) [Power BI Desktop](https://powerbi.microsoft.com/desktop) program. 
 
-Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near-real time as new patients get admitted to the hospital. The [provided PBI Dashboard file](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/Visualization/PopulationHealthManagement.pbix) needs to connect to two data files in Data Lake store: `data4visualization_latest.csv` and `ReadmittanceTarget.csv`. During deployment, `ReadmittanceTarget.csv` was copied into the `/forphmdeploymentbyadf` subdirectory of your Azure Data Lake Store. `data4visualization_latest.csv` is in subdirectiry `pbidataforPHM`of your Azure Data Lake Store. In the steps below, we will change the source of the Power BI file from local files to the csv files in Data Lake Store.
+Once data is flowing into you Data Lake Store, [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop) can be used to build visualizations. Power BI can directly connect to an Azure Data Lake Store as its data source, where the historical data as well as the prediction results are stored.  The goal is to visualize the historic data and length of stay predictions in near-real time as new patients get admitted to the hospital. The [provided PBI Dashboard file](../../ManualDeploymentGuide/Visualization/PopulationHealthManagement.pbix) needs to connect to two data files in Data Lake store: `data4visualization_latest.csv` and `ReadmittanceTarget.csv`. During deployment, `ReadmittanceTarget.csv` was copied into the `/forphmdeploymentbyadf` subdirectory of your Azure Data Lake Store. `data4visualization_latest.csv` is in subdirectiry `pbidataforPHM`of your Azure Data Lake Store. In the steps below, we will change the source of the Power BI file from local files to the csv files in Data Lake Store.
 
 #### 1) Get the connection credentials
 
@@ -68,17 +68,17 @@ Before you can update the sample Power BI dashboard we have supplied, you will n
 - Record the query strings
     - Click on the "Edit Queries" button in the ribbon at the top of your screen.
     - Select "Query1" in the list at left, then click on "Advanced Editor" in the ribbon at the top of your screen.
-        - An editor will pop out containing the connection query. It should look similar to [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/media/connectionquery1.txt).
+        - An editor will pop out containing the connection query. It should look similar to [this](../../ManualDeploymentGuide/media/connectionquery1.txt).
     - Copy the contents of the editor to a notepad.
     - Close the advanced editor.
     - Select "Query2" in the list at left, then click on "Advanced Editor" in the ribbon at the top of your screen.
-        - An editor will pop out with the connection query for the second table (similar to [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/media/connectionquery2.txt)).
+        - An editor will pop out with the connection query for the second table (similar to [this](../../ManualDeploymentGuide/media/connectionquery2.txt)).
     - Copy the contents of the editor in a notepad.
     - With the two connection queries collected in your notepad, close the advanced editor and close this dashboard (saving is not necessary).
   
 #### 3)	Update the data source of the Power BI file
 
-- Download the example dashboard file 'PopulationHealthManagement.pbix' from [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization) and open it.
+- Download the example dashboard file 'PopulationHealthManagement.pbix' from [here](../../ManualDeploymentGuide/Visualization) and open it.
     - **Note:** If you see an error message, please make sure you have installed the latest version of [Power BI Desktop](https://powerbi.microsoft.com/desktop). 
 - Click on "Edit Queries" in the ribbon at the top of your screen.
 - Select `data4PBI_simulated` in the query list at left, and click on "Advanced Editor".
