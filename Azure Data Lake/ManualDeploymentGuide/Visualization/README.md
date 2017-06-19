@@ -29,7 +29,7 @@ To connect to the data in your Azure Data Lake Store, you will need to supply Po
 - Log into [Azure Portal](https://portal.azure.com/).
 - Use the search bar at the top of the screen to search for your resource group by name.
 - After clicking on your resource group in the search results, find your Data Lake Store in the resource group pane and click on it.
-- In the Data Lake Store's overview pane, copy the **ADL URI**. It will look similar to [this](../../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true):
+- In the Data Lake Store's overview pane, copy the **ADL URI**. It will look similar to [this](../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true):
     `adl://************.adlsdefault.azuredatalakestore.net/`. 
 
 #### 2)	Get the query connection strings
