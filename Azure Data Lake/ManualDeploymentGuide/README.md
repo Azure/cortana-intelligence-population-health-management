@@ -487,27 +487,27 @@ Let's look closely at these activities and what they are doing.
 
 #### Joining
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters -- *queryTime*, *queryLength* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result is a single output file with the results for the 15 minute window this activity should cover. 
+  This activity executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamjoin.usql) located in the Azure Storage account and accepts three parameters -- *queryTime*, *queryLength* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to join the 4 data streams (severity, charges, core, and dxpr) according to an id field and a time. The result is a single output file with the results for the 15 minute window this activity should cover. 
 
   The output of this activity is used as the input of the *Scoring* activity, which will not execute until this activity is complete. 
   
 #### Scoring
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters -- *inputFile* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to perform feature engineering, score the data, and output the results of that work to a single output file with the scoring results for the 15 minute window this activity should cover.
+  This activity executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamscore.usql) located in the Azure Storage account and accepts two parameters -- *inputFile* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to perform feature engineering, score the data, and output the results of that work to a single output file with the scoring results for the 15 minute window this activity should cover.
 
   The output of this activity is used as the input of the *Process for PBI* activity, which will not execute until this activity is complete.  
 
 #### Processing for PBI
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to create data for visualization, and output the results of that work to a single output file for the 15 minute window this activity should cover.
+  This activity executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamforpbi.usql) located in the Azure Storage account and accepts two parameters - *inputFile* and *outputFile*. You can learn more about the parameters and the exact work going on internally by reading the USQL query, but the effect is to create data for visualization, and output the results of that work to a single output file for the 15 minute window this activity should cover.
 
 #### Appending
 
-  This activity executes a [USQL script](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
+  This activity executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) located in the Azure Storage account and does not accept any input parameters. This activity in effect appends the data created for visualization above to the historic visualization data, and output the latest records to a single output file. 
 
 #### Activity Period
 
-  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the pipeline JSON template provided [here](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such:
+  Every pipeline has an activity period associated with it. This is the period in time in which the pipeline should be actively processing data. Those time stamps are in the properties *start* and *end* located at the bottom of the pipeline editor. These times are in UTC. In the pipeline JSON template provided [here](../ManualDeploymentGuide/scripts/datafactoryobjects/pipeline.json) the start and end are listed as such:
   ```
   "start": "yyyy-mm-ddT00:00:00Z",      
   "end": "yyyy-mm-ddT19:51:55Z",
