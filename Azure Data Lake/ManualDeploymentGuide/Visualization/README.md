@@ -12,8 +12,9 @@ For this solution, we have used simulated patient hospital visit records based o
 
 The Healthcare Cost and Utilization Project (HCUP) is a group of healthcare databases that contain the the largest collection of longitudinal hospital care data in the United States. It is a national information resource for encounter-level health care data that captures information extracted from administrative data (patients' billing records) after a patient is discharged from the hospital. HCUP's State Inpatient Databases (SID) contain inpatient care records from community hospitals in each state. With forty-eight states participating, SID now encompass about 97 percent of all U.S. community hospital discharges. The SID files contain a core set of clinical and demographic information on all patients, providing a unique view of inpatient care over time. 
 
-# [Population Health Report](../../ManualDeploymentGuide/Visualization/PopulationHealthReport)
-A population health report helps healthcare providers glean insights into the population they serve and get actionable information. In this solution we have created some reports for you based on the data described above. The report can be found [here](../../ManualDeploymentGuide/Visualization/PopulationHealthReport/).
+# Population Health Report
+
+A population health report helps the health care providers gain insight into the population they serve and get actionable intelligence. It sheds light on the quality of care being provided and allows monitoring and bench-marking of critical metrics. For this solution, we have created some example reports showing the types of summarization and tracking we can do with this kind of data. Some of the reports created can be found [here](https://msit.powerbi.com/view?r=eyJrIjoiNWJjM2U0OTItNDIzZi00MTA2LWJkMzktY2ZlYjlkMzM0OTEzIiwidCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsImMiOjV9).
 
 <a name="cold"></a>
 # Visualize Data from Data Lake Store
