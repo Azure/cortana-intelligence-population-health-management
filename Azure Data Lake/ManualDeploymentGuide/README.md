@@ -125,23 +125,23 @@ Next we will create some containers and move the necessary files into the newly 
     - Click __+ Container__.
        - Enter the name `data` and change the *Access type* to **Blob**.
        - Click ***Create***. You should see `data` appear in the list of containers.
-    - On the [AzCopy terminal](../ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command.
+    - On the [AzCopy terminal](../ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](../ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command.
        - Replace `EnterYourStorageAccountkeyhere` with your storage account key and `<storageaccountname>` with your storage account name in the command before executing. 
-    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `data`. You should see that [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files have appeared in your container `data`.
+    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `data`. You should see that [these](../ManualDeploymentGuide/rawevents/files_datagenerator) csv files have appeared in your container `data`.
 - Copy the USQL scripts:
     - Click __+ Container__.
         - Enter the name `scripts` and change the *Access type* to **Blob**.
         - Click ***Create***. You should see `scripts` appear in the list of containers.
-    - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt) command.
+    - On the [AzCopy terminal](../ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](../ManualDeploymentGuide/scripts/datafactory/azCopy_command_scripts_toblob.txt) command.
         - Replace `EnterYourStorageAccountkeyhere` with your storage account key and `<storageaccountname>` with your storage account name in the command before executing.
-    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `scripts`. You should see the [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory/scripts_blob) four USQL files have appeared in your container `scripts`.
+    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `scripts`. You should see the [these](../ManualDeploymentGuide/scripts/datafactory/scripts_blob) four USQL files have appeared in your container `scripts`.
 - Copy the supporting files for ADF:
     - Click __+ Container__.
         - Enter the name `forphmdeploymentbyadf` and change the *Access type* to **Blob**.
         - Click ***Create***. You should see `forphmdeploymentbyadf` appear in the list of containers.
-    - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt) command.
+    - On the [AzCopy terminal](../ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](../ManualDeploymentGuide/scripts/datafactory/azCopy_command_forphmdeploymentbyadf_toblob.txt) command.
         - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
-    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `forphmdeploymentbyadf`. You should see seventeen files listed [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/scripts/datafactory) appear in your container `forphmdeploymentbyadf`. 
+    - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `forphmdeploymentbyadf`. You should see seventeen files listed [here](../ManualDeploymentGuide/scripts/datafactory) appear in your container `forphmdeploymentbyadf`. 
   
   
 <a name="azureeh"></a>
