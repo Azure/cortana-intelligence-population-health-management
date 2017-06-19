@@ -1,0 +1,15 @@
+{
+    "name": "PredictionsSQL",
+    "properties": {
+        "type": "AzureSqlTable",
+        "linkedServiceName": "AzureSqlLinkedService",
+        "structure": [],
+        "typeProperties": {
+            "tableName": "predictions"
+        },
+        "availability": {
+            "frequency": "Hour",
+            "interval": 1
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{  
+    "name":"PredictionsCopy",
+    "properties":{  
+    "activities":[  
+      {
+        "name": "PredictionsBlobToSQL",
+        "type": "Copy",
+        "inputs": [
+          {
+            "name": "PredictionsBlob"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "PredictionsSQL"
+          }
+        ],
+        "typeProperties": {
+          "source": {
+            "type": "BlobSource"
+          },
+          "sink": {
+            "type": "SqlSink"
+          }
+        },
+       "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        }
+      }
+     ],
+	"start":"2017-04-19T00:18:00",
+    "end":"2017-04-22T00:18:00"
+   }
+}

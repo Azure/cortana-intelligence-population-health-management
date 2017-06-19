@@ -1,0 +1,20 @@
+{
+    "name": "OutputDataset",
+    "properties": {
+        "published": false,
+        "type": "AzureBlob",
+        "linkedServiceName": "AzureStorageLinkedService",
+        "typeProperties": {
+            "fileName": "placeholder.txt",
+            "folderPath": "predictions/output",
+            "format": {
+                "type": "TextFormat",
+                "columnDelimiter": "\t"
+            }
+        },
+        "availability": {
+            "frequency": "Day",
+            "interval": 1
+        }
+    }
+}

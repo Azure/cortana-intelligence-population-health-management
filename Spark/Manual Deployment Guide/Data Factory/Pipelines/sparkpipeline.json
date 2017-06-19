@@ -1,0 +1,34 @@
+{
+    "name": "SparkPipeline",
+    "properties": {
+        "activities": [
+            {
+                "type": "HDInsightSpark",
+                "typeProperties": {
+                    "rootPath": "model",
+                    "entryFilePath": "predict.py",
+                    "arguments": [
+                        "<your unique string>",
+                        "<your storage account key>"
+                    ],
+                    "getDebugInfo": "Always"
+                },
+                "outputs": [
+                    {
+                        "name": "OutputDataset"
+                    }
+                ],
+                "scheduler": {
+                    "frequency": "Day",
+                    "interval": 1
+                },
+                "name": "MySparkActivity",
+                "linkedServiceName": "HDInsightLinkedService"
+            }
+        ],
+        "start": "2017-04-19T00:00:00Z",
+        "end": "2017-04-22T00:00:00Z",
+        "isPaused": false,
+        "pipelineMode": "Scheduled"
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "name": "PredictionsBlob",
+    "properties": {
+        "type": "AzureBlob",
+        "linkedServiceName": "AzureStorageLinkedService",
+        "structure": [
+            {
+                "name": "patient_nbr",
+                "type": "String"
+            },
+            {
+                "name": "discharge_date",
+                "type": "Datetime"
+            },
+            {
+                "name": "probability",
+                "type": "decimal"
+            }
+        ],
+        "typeProperties": {
+            "folderPath": "predictions",
+            "format": {
+                "type": "TextFormat",
+                "firstRowAsHeader": true
+            }
+        },
+        "availability": {
+            "frequency": "Hour",
+            "interval": 1
+        },
+         "external": true
+    }
+}
