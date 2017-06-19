@@ -1,0 +1,41 @@
+SELECT
+System.TIMESTAMP AS TIME,
+CAST(recordTime AS datetime) as recordTime,
+[key] as id,
+age,
+atype,
+dispub04,
+drg,
+dshospid,
+dx1,
+dxccs1,
+dxpoa1,
+female,
+hospst,
+homeless,
+los,
+mdc,
+medincstq,
+nchronic,
+ndx,
+necode,
+npr,
+pay1,
+pr1,
+prccs1,
+pstate,
+pointoforiginub04,
+race,
+totchg,
+tran_in,
+tran_out,
+visitlink,
+year,
+zip,
+ayear
+INTO
+  PBIoutputcore
+FROM
+  HotPathInput
+  WHERE class = 'core'
+

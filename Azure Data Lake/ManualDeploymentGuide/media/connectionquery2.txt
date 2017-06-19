@@ -1,0 +1,9 @@
+let
+    Source = DataLake.Contents("adl://<datalakestorename>.azuredatalakestore.net"),
+    historic_meta = Source{[Name="historic_meta"]}[Content],
+    #"ReadmittanceTarget csv" = historic_meta{[Name="ReadmittanceTarget.csv"]}[Content],
+    #"Imported CSV" = Csv.Document(#"ReadmittanceTarget csv",[Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Readmittance_conditions", type text}, {"nationalrate", type text}, {"TargetValue", type number}, {"startyellowzone", type number}, {"endyellowzone", type number}, {"StartValue", Int64.Type}, {"EndValue", Int64.Type}})
+in
+    #"Changed Type"

@@ -1,0 +1,17 @@
+{
+    "name": "<replace name with instructions>",
+    "properties": {
+        "published": false,
+        "type": "AzureDataLakeStore",
+        "linkedServiceName": "AzureDataLakeStoreLinkedService",
+        "typeProperties": {
+            "folderPath": "dummyfolder/"
+        },
+        "availability": {
+            "frequency": "Minute",
+            "interval": 15
+        },
+        "external": false,
+        "policy": {}
+    }
+}

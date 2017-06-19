@@ -1,0 +1,961 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+// Copyright  Microsoft Corporation ("Microsoft").
+// 
+// Microsoft grants you the right to use this software in accordance with your subscription agreement, if any, to use software 
+// provided for use with Microsoft Azure ("Subscription Agreement").  All software is licensed, not sold.  
+// 
+// If you do not have a Subscription Agreement, or at your option if you so choose, Microsoft grants you a nonexclusive, perpetual, 
+// royalty-free right to use and modify this software solely for your internal business purposes in connection with Microsoft Azure 
+// and other Microsoft products, including but not limited to, Microsoft R Open, Microsoft R Server, and Microsoft SQL Server.  
+// 
+// Unless otherwise stated in your Subscription Agreement, the following applies.  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT 
+// WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL MICROSOFT OR ITS LICENSORS BE LIABLE 
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SAMPLE CODE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//
+// hcadfstreamscore.usql
+// Script summary:
+// This usql script is used to submit ADLA job that constitutes the second activity in ADF
+// In this usql script, we will extract the joined data.
+// We will pass this data to an R script, which will return the Predcitions
+// Finally we will join the predictions to the original data in usql.
+// We will deploy the following reosurces
+// - R script that does the scoring - hcadfstreamscore.R
+//   these should be in your data lake store in folder /forphmdeploymentbyadf
+// - The pretrained models "hosp_1_LOSmodel.rds", "hosp_1_LOSmodel.rds", etc.
+//   these should be in your data lake store in folder /forphmdeploymentbyadf 
+// This usql script will return the predictions with some more columns necessary for creating data for visualization in the next step
+// inputFile and outputFile variables are used in the script but not explicitly declared!
+// This is because these are defined by activities parameters of the adf pipeline json definition (source).
+
+
+REFERENCE ASSEMBLY [ExtR];
+
+//for row based operations, we can choose to split the data (DoBalancedComputing_Flag=true) among PartitionCount workers
+DECLARE @DoBalancedComputing_Flag bool = false;
+DECLARE @PartitionCount int = 10;
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Deploy the following Resouce: R scripts, schema csv file, pretrained models. 
+///////////////////////////////////////////////////////////////////////////////////
+
+DECLARE @path_Rscipt string            = @"/forphmdeploymentbyadf" ;   
+DECLARE @RScriptName string            = @"hcadfstreamscore.R";  
+DECLARE @RScriptFullName string        = @path_Rscipt + @"/" + @RScriptName;
+DEPLOY RESOURCE @RScriptFullName;
+
+
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/allotherhosp_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_1_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_2_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_3_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_4_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_5_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_6_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_7_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_8_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_9_LOSmodel.rds";
+DEPLOY RESOURCE @"/forphmdeploymentbyadf/hosp_10_LOSmodel.rds";
+
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Extract Data in variable @InputData from @inputFile (defined through adf)
+///////////////////////////////////////////////////////////////////////////////////
+
+@InputData = 
+    EXTRACT 
+	mydate string,
+	id string,
+	cm_aids string,
+	cm_alcohol string,
+	cm_anemdef string,
+	cm_arth string,
+	cm_bldloss string,
+	cm_chf string,
+	cm_chrnlung string,
+	cm_coag string,
+	cm_depress string,
+	cm_dm string,
+	cm_dmcx string,
+	cm_drug string,
+	cm_htn_c string,
+	cm_hypothy string,
+	cm_liver string,
+	cm_lymph string,
+	cm_lytes string,
+	cm_mets string,
+	cm_neuro string,
+	cm_obese string,
+	cm_para string,
+	cm_perivasc string,
+	cm_psych string,
+	cm_pulmcirc string,
+	cm_renlfail string,
+	cm_tumor string,
+	cm_ulcer string,
+	cm_valve string,
+	cm_wghtloss string,
+	nrevcd string,
+	revcd1 string,
+	revcd2 string,
+	revcd3 string,
+	revcd4 string,
+	revcd5 string,
+	revcd6 string,
+	revcd7 string,
+	revcd8 string,
+	revcd9 string,
+	revcd10 string,
+	revcd11 string,
+	revcd12 string,
+	revcd13 string,
+	revcd14 string,
+	revcd15 string,
+	revcd16 string,
+	revcd17 string,
+	revcd18 string,
+	revcd19 string,
+	revcd20 string,
+	revcd21 string,
+	revcd22 string,
+	revcd23 string,
+	revcd24 string,
+	revcd25 string,
+	revcd26 string,
+	revcd27 string,
+	revcd28 string,
+	revcd29 string,
+	revcd30 string,
+	revcd31 string,
+	revcd32 string,
+	revcd33 string,
+	revcd34 string,
+	revcd35 string,
+	revcd36 string,
+	revcd37 string,
+	revcd38 string,
+	revcd39 string,
+	revcd40 string,
+	revcd41 string,
+	revcd42 string,
+	revcd43 string,
+	revcd44 string,
+	revcd45 string,
+	revcd46 string,
+	revcd47 string,
+	revcd48 string,
+	revcd49 string,
+	revcd50 string,
+	revcd51 string,
+	revchg1 string,
+	revchg2 string,
+	revchg3 string,
+	revchg4 string,
+	revchg5 string,
+	revchg6 string,
+	revchg7 string,
+	revchg8 string,
+	revchg9 string,
+	revchg10 string,
+	revchg11 string,
+	revchg12 string,
+	revchg13 string,
+	revchg14 string,
+	revchg15 string,
+	revchg16 string,
+	revchg17 string,
+	revchg18 string,
+	revchg19 string,
+	revchg20 string,
+	revchg21 string,
+	revchg22 string,
+	revchg23 string,
+	revchg24 string,
+	revchg25 string,
+	revchg26 string,
+	revchg27 string,
+	revchg28 string,
+	revchg29 string,
+	revchg30 string,
+	revchg31 string,
+	revchg32 string,
+	revchg33 string,
+	revchg34 string,
+	revchg35 string,
+	revchg36 string,
+	revchg37 string,
+	revchg38 string,
+	revchg39 string,
+	revchg40 string,
+	revchg41 string,
+	revchg42 string,
+	revchg43 string,
+	revchg44 string,
+	revchg45 string,
+	revchg46 string,
+	revchg47 string,
+	revchg48 string,
+	revchg49 string,
+	revchg50 string,
+	revchg51 string,
+	unit1 string,
+	unit2 string,
+	unit3 string,
+	unit4 string,
+	unit5 string,
+	unit6 string,
+	unit7 string,
+	unit8 string,
+	unit9 string,
+	unit10 string,
+	unit11 string,
+	unit12 string,
+	unit13 string,
+	unit14 string,
+	unit15 string,
+	unit16 string,
+	unit17 string,
+	unit18 string,
+	unit19 string,
+	unit20 string,
+	unit21 string,
+	unit22 string,
+	unit23 string,
+	unit24 string,
+	unit25 string,
+	unit26 string,
+	unit27 string,
+	unit28 string,
+	unit29 string,
+	unit30 string,
+	unit31 string,
+	unit32 string,
+	unit33 string,
+	unit34 string,
+	unit35 string,
+	unit36 string,
+	unit37 string,
+	unit38 string,
+	unit39 string,
+	unit40 string,
+	unit41 string,
+	unit42 string,
+	unit43 string,
+	unit44 string,
+	unit45 string,
+	unit46 string,
+	unit47 string,
+	unit48 string,
+	unit49 string,
+	unit50 string,
+	unit51 string,
+	age string,
+	ageday string,
+	agemonth string,
+	ahour string,
+	amonth string,
+	atype string,
+	aweekend string,
+	billtype string,
+	dhour string,
+	died string,
+	dispub04 string,
+	dispuniform string,
+	disp_x string,
+	dqtr string,
+	drg string,
+	drg24 string,
+	drgver string,
+	drg_nopoa string,
+	dshospid string,
+	dx1 string,
+	dx2 string,
+	dx3 string,
+	dx4 string,
+	dx5 string,
+	dx6 string,
+	dx7 string,
+	dx8 string,
+	dx9 string,
+	dx10 string,
+	dx11 string,
+	dx12 string,
+	dx13 string,
+	dx14 string,
+	dx15 string,
+	dx16 string,
+	dx17 string,
+	dx18 string,
+	dx19 string,
+	dx20 string,
+	dx21 string,
+	dx22 string,
+	dx23 string,
+	dx24 string,
+	dx25 string,
+	dxccs1 string,
+	dxccs2 string,
+	dxccs3 string,
+	dxccs4 string,
+	dxccs5 string,
+	dxccs6 string,
+	dxccs7 string,
+	dxccs8 string,
+	dxccs9 string,
+	dxccs10 string,
+	dxccs11 string,
+	dxccs12 string,
+	dxccs13 string,
+	dxccs14 string,
+	dxccs15 string,
+	dxccs16 string,
+	dxccs17 string,
+	dxccs18 string,
+	dxccs19 string,
+	dxccs20 string,
+	dxccs21 string,
+	dxccs22 string,
+	dxccs23 string,
+	dxccs24 string,
+	dxccs25 string,
+	dxpoa1 string,
+	dxpoa2 string,
+	dxpoa3 string,
+	dxpoa4 string,
+	dxpoa5 string,
+	dxpoa6 string,
+	dxpoa7 string,
+	dxpoa8 string,
+	dxpoa9 string,
+	dxpoa10 string,
+	dxpoa11 string,
+	dxpoa12 string,
+	dxpoa13 string,
+	dxpoa14 string,
+	dxpoa15 string,
+	dxpoa16 string,
+	dxpoa17 string,
+	dxpoa18 string,
+	dxpoa19 string,
+	dxpoa20 string,
+	dxpoa21 string,
+	dxpoa22 string,
+	dxpoa23 string,
+	dxpoa24 string,
+	dxpoa25 string,
+	daystoevent string,
+	ecode1 string,
+	ecode2 string,
+	ecode3 string,
+	ecode4 string,
+	ecode5 string,
+	ecode6 string,
+	ecode7 string,
+	ecode8 string,
+	e_ccs1 string,
+	e_ccs2 string,
+	e_ccs3 string,
+	e_ccs4 string,
+	e_ccs5 string,
+	e_ccs6 string,
+	e_ccs7 string,
+	e_ccs8 string,
+	e_poa1 string,
+	e_poa2 string,
+	e_poa3 string,
+	e_poa4 string,
+	e_poa5 string,
+	e_poa6 string,
+	e_poa7 string,
+	e_poa8 string,
+	female string,
+	hcup_ed string,
+	hcup_os string,
+	hispanic_x string,
+	hospbrth string,
+	hospst string,
+	homeless string,
+	hospitalunit string,
+	los string,
+	los_x string,
+	mdc string,
+	mdc24 string,
+	mdc_nopoa string,
+	mdnum1_r string,
+	mdnum2_r string,
+	mdnum3_r string,
+	mdnum4_r string,
+	medincstq string,
+	nchronic string,
+	ndx string,
+	necode string,
+	neomat string,
+	npr string,
+	orproc string,
+	os_time string,
+	pay1 string,
+	pay1_x string,
+	pay2 string,
+	pay2_x string,
+	pay3 string,
+	pay3_x string,
+	pl_cbsa string,
+	pl_nchs string,
+	pl_rucc string,
+	pl_uic string,
+	pl_ur_cat4 string,
+	pr1 string,
+	pr2 string,
+	pr3 string,
+	pr4 string,
+	pr5 string,
+	pr6 string,
+	pr7 string,
+	pr8 string,
+	pr9 string,
+	pr10 string,
+	pr11 string,
+	pr12 string,
+	pr13 string,
+	pr14 string,
+	pr15 string,
+	pr16 string,
+	pr17 string,
+	pr18 string,
+	pr19 string,
+	pr20 string,
+	pr21 string,
+	pr22 string,
+	pr23 string,
+	pr24 string,
+	pr25 string,
+	prccs1 string,
+	prccs2 string,
+	prccs3 string,
+	prccs4 string,
+	prccs5 string,
+	prccs6 string,
+	prccs7 string,
+	prccs8 string,
+	prccs9 string,
+	prccs10 string,
+	prccs11 string,
+	prccs12 string,
+	prccs13 string,
+	prccs14 string,
+	prccs15 string,
+	prccs16 string,
+	prccs17 string,
+	prccs18 string,
+	prccs19 string,
+	prccs20 string,
+	prccs21 string,
+	prccs22 string,
+	prccs23 string,
+	prccs24 string,
+	prccs25 string,
+	prday1 string,
+	prday2 string,
+	prday3 string,
+	prday4 string,
+	prday5 string,
+	prday6 string,
+	prday7 string,
+	prday8 string,
+	prday9 string,
+	prday10 string,
+	prday11 string,
+	prday12 string,
+	prday13 string,
+	prday14 string,
+	prday15 string,
+	prday16 string,
+	prday17 string,
+	prday18 string,
+	prday19 string,
+	prday20 string,
+	prday21 string,
+	prday22 string,
+	prday23 string,
+	prday24 string,
+	prday25 string,
+	proctype string,
+	pstate string,
+	pstco2 string,
+	pointoforiginub04 string,
+	pointoforigin_x string,
+	race string,
+	race_x string,
+	totchg string,
+	totchg_x string,
+	tran_in string,
+	tran_out string,
+	visitlink string,
+	year string,
+	zip3 string,
+	zipinc_qrtl string,
+	zip string,
+	ayear string,	
+	chron1 string,
+	chron2 string,
+	chron3 string,
+	chron4 string,
+	chron5 string,
+	chron6 string,
+	chron7 string,
+	chron8 string,
+	chron9 string,
+	chron10 string,
+	chron11 string,
+	chron12 string,
+	chron13 string,
+	chron14 string,
+	chron15 string,
+	chron16 string,
+	chron17 string,
+	chron18 string,
+	chron19 string,
+	chron20 string,
+	chron21 string,
+	chron22 string,
+	chron23 string,
+	chron24 string,
+	chron25 string,
+	chronb1 string,
+	chronb2 string,
+	chronb3 string,
+	chronb4 string,
+	chronb5 string,
+	chronb6 string,
+	chronb7 string,
+	chronb8 string,
+	chronb9 string,
+	chronb10 string,
+	chronb11 string,
+	chronb12 string,
+	chronb13 string,
+	chronb14 string,
+	chronb15 string,
+	chronb16 string,
+	chronb17 string,
+	chronb18 string,
+	chronb19 string,
+	chronb20 string,
+	chronb21 string,
+	chronb22 string,
+	chronb23 string,
+	chronb24 string,
+	chronb25 string,
+	dxmccs1 string,
+	dxmccs2 string,
+	dxmccs3 string,
+	dxmccs4 string,
+	dxmccs5 string,
+	dxmccs6 string,
+	dxmccs7 string,
+	dxmccs8 string,
+	dxmccs9 string,
+	dxmccs10 string,
+	dxmccs11 string,
+	dxmccs12 string,
+	dxmccs13 string,
+	dxmccs14 string,
+	dxmccs15 string,
+	dxmccs16 string,
+	dxmccs17 string,
+	dxmccs18 string,
+	dxmccs19 string,
+	dxmccs20 string,
+	dxmccs21 string,
+	dxmccs22 string,
+	dxmccs23 string,
+	dxmccs24 string,
+	dxmccs25 string,
+	e_mccs1 string,
+	e_mccs2 string,
+	e_mccs3 string,
+	e_mccs4 string,
+	e_mccs5 string,
+	e_mccs6 string,
+	e_mccs7 string,
+	e_mccs8 string,
+	injury string,
+	injury_cut string,
+	injury_drown string,
+	injury_fall string,
+	injury_fire string,
+	injury_firearm string,
+	injury_machinery string,
+	injury_mvt string,
+	injury_nature string,
+	injury_poison string,
+	injury_struck string,
+	injury_suffocation string,
+	intent_assault string,
+	intent_self_harm string,
+	intent_unintentional string,
+	multinjury string,
+	pclass1 string,
+	pclass2 string,
+	pclass3 string,
+	pclass4 string,
+	pclass5 string,
+	pclass6 string,
+	pclass7 string,
+	pclass8 string,
+	pclass9 string,
+	pclass10 string,
+	pclass11 string,
+	pclass12 string,
+	pclass13 string,
+	pclass14 string,
+	pclass15 string,
+	pclass16 string,
+	pclass17 string,
+	pclass18 string,
+	pclass19 string,
+	pclass20 string,
+	pclass21 string,
+	pclass22 string,
+	pclass23 string,
+	pclass24 string,
+	pclass25 string,
+	prmccs1 string,
+	prmccs2 string,
+	prmccs3 string,
+	prmccs4 string,
+	prmccs5 string,
+	prmccs6 string,
+	prmccs7 string,
+	prmccs8 string,
+	prmccs9 string,
+	prmccs10 string,
+	prmccs11 string,
+	prmccs12 string,
+	prmccs13 string,
+	prmccs14 string,
+	prmccs15 string,
+	prmccs16 string,
+	prmccs17 string,
+	prmccs18 string,
+	prmccs19 string,
+	prmccs20 string,
+	prmccs21 string,
+	prmccs22 string,
+	prmccs23 string,
+	prmccs24 string,
+	prmccs25 string,
+	u_blood string,
+	u_cath string,
+	u_ccu string,
+	u_chestxray string,
+	u_ctscan string,
+	u_dialysis string,
+	u_echo string,
+	u_ed string,
+	u_eeg string,
+	u_ekg string,
+	u_epo string,
+	u_icu string,
+	u_lithotripsy string,
+	u_mhsa string,
+	u_mrt string,
+	u_newbn2l string,
+	u_newbn3l string,
+	u_newbn4l string,
+	u_nucmed string,
+	u_observation string,
+	u_occtherapy string,
+	u_organacq string,
+	u_othimplants string,
+	u_pacemaker string,
+	u_phytherapy string,
+	u_radtherapy string,
+	u_resptherapy string,
+	u_speechtherapy string,
+	u_stress string,
+	u_ultrasound string	
+    FROM @inputFile
+    USING Extractors.Csv();  
+
+/////////////////////////////////////////////////////////////////
+/////////////  Feature Engineering(FE)  /////////////////////////
+/////////////////////////////////////////////////////////////////
+
+// create a column num_DXPOA
+
+@cols_dxpoa = SELECT
+id ,
+Convert.ToDecimal((dxpoa1 ==  "Y") ? "1" : ((dxpoa1 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa2 ==  "Y") ? "1" : ((dxpoa2 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa3 ==  "Y") ? "1" : ((dxpoa3 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa4 ==  "Y") ? "1" : ((dxpoa4 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa5 ==  "Y") ? "1" : ((dxpoa5 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa6 ==  "Y") ? "1" : ((dxpoa6 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa7 ==  "Y") ? "1" : ((dxpoa7 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa8 ==  "Y") ? "1" : ((dxpoa8 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa9 ==  "Y") ? "1" : ((dxpoa9 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa10 ==  "Y") ? "1" : ((dxpoa10 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa11 ==  "Y") ? "1" : ((dxpoa11 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa12 ==  "Y") ? "1" : ((dxpoa12 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa13 ==  "Y") ? "1" : ((dxpoa13 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa14 ==  "Y") ? "1" : ((dxpoa14 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa15 ==  "Y") ? "1" : ((dxpoa15 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa16 ==  "Y") ? "1" : ((dxpoa16 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa17 ==  "Y") ? "1" : ((dxpoa17 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa18 ==  "Y") ? "1" : ((dxpoa18 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa19 ==  "Y") ? "1" : ((dxpoa19 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa20 ==  "Y") ? "1" : ((dxpoa20 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa21 ==  "Y") ? "1" : ((dxpoa21 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa22 ==  "Y") ? "1" : ((dxpoa22 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa23 ==  "Y") ? "1" : ((dxpoa23 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa24 ==  "Y") ? "1" : ((dxpoa24 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((dxpoa25 ==  "Y") ? "1" : ((dxpoa25 == "1") ? "1" : "0")) AS 
+num_DXPOA
+FROM @InputData;
+
+@cols_dxpoa2 = SELECT
+id ,
+num_DXPOA.ToString() AS num_DXPOA
+FROM @cols_dxpoa;
+
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+// create a column num_e_poa
+
+@cols_e_poa = SELECT
+id ,
+Convert.ToDecimal((e_poa1 ==  "Y") ? "1" : ((e_poa1 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa2 ==  "Y") ? "1" : ((e_poa2 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa3 ==  "Y") ? "1" : ((e_poa3 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa4 ==  "Y") ? "1" : ((e_poa4 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa5 ==  "Y") ? "1" : ((e_poa5 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa6 ==  "Y") ? "1" : ((e_poa6 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa7 ==  "Y") ? "1" : ((e_poa7 == "1") ? "1" : "0")) + 
+Convert.ToDecimal((e_poa8 ==  "Y") ? "1" : ((e_poa8 == "1") ? "1" : "0")) 
+AS num_e_poa
+FROM @InputData;
+
+@cols_e_poa2 = SELECT
+id ,
+num_e_poa.ToString() AS num_e_poa
+FROM @cols_e_poa;
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
+// create a column num_uCHRONB
+
+@cols_chronb  = SELECT
+id ,
+Convert.ToDecimal((chronb1 ==  "-9") ? "0" : ((chronb1 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb2 ==  "-9") ? "0" : ((chronb2 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb3 ==  "-9") ? "0" : ((chronb3 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb4 ==  "-9") ? "0" : ((chronb4 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb5 ==  "-9") ? "0" : ((chronb5 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb6 ==  "-9") ? "0" : ((chronb6 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb7 ==  "-9") ? "0" : ((chronb7 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb8 ==  "-9") ? "0" : ((chronb8 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb9 ==  "-9") ? "0" : ((chronb9 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb10 ==  "-9") ? "0" : ((chronb10 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb11 ==  "-9") ? "0" : ((chronb11 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb12 ==  "-9") ? "0" : ((chronb12 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb13 ==  "-9") ? "0" : ((chronb13 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb14 ==  "-9") ? "0" : ((chronb14 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb15 ==  "-9") ? "0" : ((chronb15 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb16 ==  "-9") ? "0" : ((chronb16 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb17 ==  "-9") ? "0" : ((chronb17 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb18 ==  "-9") ? "0" : ((chronb18 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb19 ==  "-9") ? "0" : ((chronb19 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb20 ==  "-9") ? "0" : ((chronb20 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb21 ==  "-9") ? "0" : ((chronb21 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb22 ==  "-9") ? "0" : ((chronb22 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb23 ==  "-9") ? "0" : ((chronb23 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb24 ==  "-9") ? "0" : ((chronb24 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((chronb25 ==  "-9") ? "0" : ((chronb25 == "0") ? "0" : "1")) 
+AS num_uCHRONB
+FROM @InputData;
+
+@cols_chronb2 = SELECT
+id ,
+num_uCHRONB.ToString() AS num_uCHRONB
+FROM @cols_chronb;
+
+////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+// create a column num_pay
+
+@cols_pay  = SELECT
+id ,
+Convert.ToDecimal((pay1 ==  "NA") ? "0" : ((pay1 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((pay2 ==  "NA") ? "0" : ((pay2 == "0") ? "0" : "1")) + 
+Convert.ToDecimal((pay3 ==  "NA") ? "0" : ((pay3 == "0") ? "0" : "1"))
+AS num_pay
+FROM @InputData;
+
+@cols_pay2  = SELECT
+id ,
+num_pay.ToString() AS num_pay
+FROM @cols_pay;
+
+////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+// create a column num_CM
+
+@cols_CM = SELECT
+id ,
+Convert.ToDecimal(cm_aids) + Convert.ToDecimal(cm_alcohol) + Convert.ToDecimal(cm_anemdef) + Convert.ToDecimal(cm_arth) + Convert.ToDecimal(cm_bldloss) + Convert.ToDecimal(cm_chf) + Convert.ToDecimal(cm_chrnlung) + Convert.ToDecimal(cm_coag) + Convert.ToDecimal(cm_depress) + Convert.ToDecimal(cm_dm) + Convert.ToDecimal(cm_dmcx) + Convert.ToDecimal(cm_drug) + Convert.ToDecimal(cm_htn_c) + Convert.ToDecimal(cm_hypothy) + Convert.ToDecimal(cm_liver) + Convert.ToDecimal(cm_lymph) + Convert.ToDecimal(cm_lytes) + Convert.ToDecimal(cm_mets) + Convert.ToDecimal(cm_neuro) + Convert.ToDecimal(cm_obese) + Convert.ToDecimal(cm_para) + Convert.ToDecimal(cm_perivasc) + Convert.ToDecimal(cm_psych) + Convert.ToDecimal(cm_pulmcirc) + Convert.ToDecimal(cm_renlfail) + Convert.ToDecimal(cm_tumor) + Convert.ToDecimal(cm_ulcer) + Convert.ToDecimal(cm_valve) + Convert.ToDecimal(cm_wghtloss) AS num_CM
+FROM @InputData;
+
+@cols_CM2 = SELECT
+id ,
+num_CM.ToString() AS num_CM
+FROM @cols_CM;
+
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+
+// create a column zip3
+
+@cols_zip = SELECT
+id ,
+//zip AS zip,
+zip.Remove(zip.Length - 2, 2) AS zip3
+FROM @InputData;
+
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
+// select the subset of columns that are needed
+
+@cols_20 = SELECT
+id.ToString() AS id , visitlink.ToString() AS visitlink , dshospid.ToString() AS dshospid , age.ToString() AS  age, female.ToString() AS female , race.ToString() AS race , atype.ToString() AS atype , amonth.ToString() AS amonth , pointoforiginub04.ToString() AS pointoforiginub04, tran_in.ToString() AS tran_in , medincstq.ToString() AS medincstq , pstate.ToString() AS pstate , zip.ToString() AS zip , hospst.ToString() AS hospst , pay1.ToString() AS pay1 , los.ToString() AS los, ndx.ToString() AS ndx , nchronic.ToString() AS nchronic , dxccs1.ToString() AS dxccs1 , dxmccs1.ToString() AS dxmccs1
+FROM @InputData;
+
+// [1] "KEY"               "VisitLink"         "DSHOSPID"          "AGE"               "FEMALE"            "RACE"              "ATYPE"            
+// [8] "AMONTH"            "PointOfOriginUB04" "TRAN_IN"           "MEDINCSTQ"         "PSTATE"            "PAY1"              "LOS"              
+//[15] "NDX"               "NCHRONIC"          "DXCCS1"            "DXMCCS1"           "num_DXPOA"         "num_E_POA"         "num_uCHRONB"      
+//[22] "num_PAY"           "num_CM"            "ZIP3"   
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+@InputDataFE = SELECT 
+
+A.id, A.visitlink, A.dshospid, A.age, A.female, A.race, A.atype, A.amonth, A.pointoforiginub04, A.tran_in, A.medincstq, A.pstate, A.pay1, A.los, A.ndx, A.nchronic, A.dxccs1, A.dxmccs1,
+B.num_DXPOA,
+C.num_e_poa,
+D.num_uCHRONB,
+E.num_pay,
+F.num_CM,
+G.zip3
+
+FROM @cols_20 AS A
+JOIN @cols_dxpoa2 AS B
+  ON A.id == B.id
+JOIN @cols_e_poa2 AS C
+  ON A.id == C.id
+JOIN @cols_chronb2 AS D
+  ON A.id == D.id
+JOIN @cols_pay2 AS E
+  ON A.id == E.id
+JOIN @cols_CM2 AS F
+  ON A.id == F.id
+JOIN @cols_zip AS G
+  ON A.id == G.id;
+  
+  
+//////////////////////////////////////////////////
+
+@InputDataFEcomplete = SELECT 
+*
+FROM @InputDataFE 
+WHERE !String.IsNullOrEmpty( visitlink ) AND !String.IsNullOrEmpty( dshospid ) AND !String.IsNullOrEmpty( age ) AND !String.IsNullOrEmpty( female ) AND !String.IsNullOrEmpty( race ) AND !String.IsNullOrEmpty( atype ) AND !String.IsNullOrEmpty( amonth ) AND !String.IsNullOrEmpty( pointoforiginub04 ) AND !String.IsNullOrEmpty( tran_in ) AND !String.IsNullOrEmpty( medincstq ) AND !String.IsNullOrEmpty( pstate ) AND !String.IsNullOrEmpty( pay1 ) AND !String.IsNullOrEmpty( los ) AND !String.IsNullOrEmpty( ndx ) AND !String.IsNullOrEmpty( nchronic ) AND !String.IsNullOrEmpty( dxccs1 ) AND !String.IsNullOrEmpty( dxmccs1 ) AND !String.IsNullOrEmpty( num_DXPOA ) AND !String.IsNullOrEmpty( num_e_poa ) AND !String.IsNullOrEmpty( num_uCHRONB ) AND !String.IsNullOrEmpty( num_pay ) AND !String.IsNullOrEmpty( num_CM ) AND !String.IsNullOrEmpty( zip3 );
+
+
+//////////////////////////////////////////////////////////
+
+IF @DoBalancedComputing_Flag == true 
+THEN
+	@ExtendedData =
+            SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount) AS Par,
+		   *
+	    FROM @InputDataFEcomplete;
+ELSE 
+	@ExtendedData =
+	    SELECT  0 AS Par,
+		   *
+	    FROM @InputDataFEcomplete;
+END;
+
+/////////////////////////////////////////////////////////////////
+//    Reduce the data and pass it to R script deployed above
+// 
+/////////////////////////////////////////////////////////////////
+
+@RScriptOutput = REDUCE @ExtendedData ON Par
+PRODUCE Par, 
+id string, 
+los_pred string
+READONLY Par
+USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
+
+
+/////////////////////////////////////////////////////////////////
+//     Merge the predictions with the raw data
+//     join @RScriptOutput and @InputData
+/////////////////////////////////////////////////////////////////  
+
+@ScoredOutput = 
+    SELECT 
+	streamData.id, 
+streamData.age, 
+streamData.female, 
+streamData.race, 
+streamData.homeless, 
+streamData.pstate, 
+streamData.medincstq, 
+streamData.zip, 
+streamData.dshospid, 
+streamData.visitlink, 
+streamData.hospst, 
+streamData.pay1, 
+streamData.tran_in, 
+streamData.ayear, 
+streamData.amonth, 
+streamData.atype, 
+streamData.pointoforiginub04, 
+streamData.dispub04, 
+streamData.los, 
+streamData.mdc, 
+streamData.drg, 
+streamData.dx1, 
+streamData.dxccs1, 
+streamData.dxmccs1, 
+streamData.pr1, 
+streamData.prccs1, 
+streamData.prmccs1, 
+streamData.totchg, 
+
+scoredStreamData.los_pred
+FROM @InputData AS streamData
+	  JOIN 
+	 @RScriptOutput AS scoredStreamData
+	 ON streamData.id == scoredStreamData.id;
+
+/////////////////////////////////////////////////////////////////
+//      Write the output to outputFile (defined through adf)
+/////////////////////////////////////////////////////////////////  
+	  
+OUTPUT @ScoredOutput 
+       TO @outputFile 
+	   USING Outputters.Csv(outputHeader : true, quoting : false);
+

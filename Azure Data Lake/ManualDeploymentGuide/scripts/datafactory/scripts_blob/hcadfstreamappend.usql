@@ -1,0 +1,317 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+// Copyright  Microsoft Corporation ("Microsoft").
+// 
+// Microsoft grants you the right to use this software in accordance with your subscription agreement, if any, to use software 
+// provided for use with Microsoft Azure ("Subscription Agreement").  All software is licensed, not sold.  
+// 
+// If you do not have a Subscription Agreement, or at your option if you so choose, Microsoft grants you a nonexclusive, perpetual, 
+// royalty-free right to use and modify this software solely for your internal business purposes in connection with Microsoft Azure 
+// and other Microsoft products, including but not limited to, Microsoft R Open, Microsoft R Server, and Microsoft SQL Server.  
+// 
+// Unless otherwise stated in your Subscription Agreement, the following applies.  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT 
+// WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL MICROSOFT OR ITS LICENSORS BE LIABLE 
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SAMPLE CODE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//
+// hcadfstreamappend.usql
+// Script summary:
+// This usql script is used to submit ADLA job that constitutes the fourth activity in ADF pipeline
+// It will create a csv file with specified number of rows. The PBI will connect to this file for visualization. 
+// In this usql script, we will collect all datasets created in stream/forPBI since aquisition start date and concatenate them together.
+// We will append this to the historic data and output the most recent specified number of rows.
+
+
+DECLARE @numrowsforpbi int          = 1000000;                  // number of rows used for PBI visualization
+DECLARE @dataAquisitionStart string = @"05/01/2017 21:25:00";   // set it some date in the past before the streaming started
+DECLARE @HistoricalDataFile string  = @"/forphmdeploymentbyadf/data4visualization_hist.csv";   // location of historic data
+DECLARE @inputFile string           = "/stream/forPBI/{folderDate:yyyy}/{folderDate:MM}/{folderDate:dd}/{folderDate:HH}/{folderDate:mm}_forPBI.csv";
+DECLARE @outputFile                 = @"/pbidataforPHM/data4visualization_latest.csv"; // location of output data
+
+//////////////////////////////////////////////////////////
+//           Extract all streamed data forPBI
+/////////////////////////////////////////////////////////// 
+
+@InputDataAll = 
+    EXTRACT 
+	dshospid string,
+	id string,
+	age string,
+	amonth string,
+	atype string,
+	dispub04 string,
+	drg string,
+	dx1 string,
+	dxccs1 string,
+	hospst string,
+	homeless string,
+	los string,
+	mdc string,
+	medincstq string,
+	pr1 string,
+	prccs1 string,
+	pstate string,
+	pointoforiginub04 string,
+	race string,
+	totchg string,
+	visitlink string,
+	zip string,
+	ayear string,
+	dxmccs1 string,
+	prmccs1 string,
+	readmitted string,
+	dxccs_name string,
+	prccs_name string,
+	prmccs_name string,
+	dxmccs_name string,
+	transfer_in string,
+	mdc_name string,
+	totchg_bin string,
+	los_bin string,
+	chgperday string,
+	age_bin string,
+	age_bin2 string,
+	payer1 string,
+	gender string,
+	hospzip string,
+	readmitted_num string,
+	myrownum string,
+	ecol1 string,
+	ecol2 string,
+	ecol3 string,
+	ecol4 string,
+	ecol5 string,
+	ecol6 string,
+	ecol7 string,
+	chronic_conditions string,
+	ecol8 string,
+	ecol9 string,
+	ecol10 string,
+	readmittance_conditions string,
+	folderDate DateTime 
+    FROM @inputFile
+    USING Extractors.Csv(skipFirstNRows: 1, silent: true);  
+
+///////////////////////////////////////////////////////////////////////
+//    Select all streamed data forPBI since @dataAquisitionStart
+////////////////////////////////////////////////////////////////////// 
+
+ @InputData = 
+    SELECT   	
+	id ,
+	dshospid ,
+	age ,
+	amonth ,
+	atype ,
+	dispub04 ,
+	drg ,
+	dx1 ,
+	dxccs1 ,
+	hospst ,
+	homeless ,
+	los ,
+	mdc ,
+	medincstq ,
+	pr1 ,
+	prccs1 ,
+	pstate ,
+	pointoforiginub04 ,
+	race ,
+	totchg ,
+	visitlink ,
+	zip ,
+	ayear ,
+	dxmccs1 ,
+	prmccs1 ,
+	readmitted ,
+	dxccs_name ,
+	prccs_name ,
+	prmccs_name ,
+	dxmccs_name ,
+	transfer_in ,
+	mdc_name ,
+	totchg_bin ,
+	los_bin ,
+	chgperday ,
+	age_bin ,
+	age_bin2 ,
+	payer1 ,
+	gender ,
+	hospzip ,
+	readmitted_num ,
+	myrownum ,
+	ecol1 ,
+	ecol2 ,
+	ecol3 ,
+	ecol4 ,
+	ecol5 ,
+	ecol6 ,
+	ecol7 ,
+	chronic_conditions ,
+	ecol8 ,
+	ecol9 ,
+	ecol10 ,
+	readmittance_conditions
+    FROM @InputDataAll
+    WHERE folderDate >= DateTime.Parse(@dataAquisitionStart);    
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Extract historical data ("data4visualization_hist.csv") for PBI. This should be in /historic_meta 
+////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+        
+@HistoricData =
+     EXTRACT 	
+	id string,
+	dshospid string,
+	age string,
+	amonth string,
+	atype string,
+	dispub04 string,
+	drg string,
+	dx1 string,
+	dxccs1 string,
+	hospst string,
+	homeless string,
+	los string,
+	mdc string,
+	medincstq string,
+	pr1 string,
+	prccs1 string,
+	pstate string,
+	pointoforiginub04 string,
+	race string,
+	totchg string,
+	visitlink string,
+	zip string,
+	ayear string,
+	dxmccs1 string,
+	prmccs1 string,
+	readmitted string,
+	dxccs_name string,
+	prccs_name string,
+	prmccs_name string,
+	dxmccs_name string,
+	transfer_in string,
+	mdc_name string,
+	totchg_bin string,
+	los_bin string,
+	chgperday string,
+	age_bin string,
+	age_bin2 string,
+	payer1 string,
+	gender string,
+	hospzip string,
+	readmitted_num string,
+	myrownum string,
+	ecol1 string,
+	ecol2 string,
+	ecol3 string,
+	ecol4 string,
+	ecol5 string,
+	ecol6 string,
+	ecol7 string,
+	chronic_conditions string,
+	ecol8 string,
+	ecol9 string,
+	ecol10 string,
+	readmittance_conditions string
+    FROM @HistoricalDataFile
+    USING Extractors.Csv(skipFirstNRows: 1);
+
+////////////////////////////////////////////////////////////////////	 
+//  Concatenate streamed data for PBI and historic data for PBI
+////////////////////////////////////////////////////////////////// 
+
+@AppendedData =    
+     SELECT * FROM @HistoricData
+     UNION ALL         
+     SELECT * FROM @InputData;
+
+////////////////////////////////////////////////////////////////////	 
+//  select the most recent  rows from streamed and historic data 
+///////////////////////////////////////////////////////////////////   
+
+@MostCurrentData = 
+    SELECT *
+    FROM @AppendedData
+	ORDER BY ayear DESC, amonth DESC   
+    FETCH @numrowsforpbi ROWS;  //grabs the top like head
+	
+
+////////////////////////////////////////////	 
+//  header information
+////////////////////////////////////////////   
+
+@withheaders = 
+SELECT
+	dshospid AS  [DSHOSPID],
+	id AS  [KEY],
+	age AS  [AGE],
+	amonth AS  [AMONTH],
+	atype AS  [ATYPE],
+	dispub04 AS  [DISPUB04],
+	drg AS  [DRG],
+	dx1 AS  [DX1],
+	dxccs1 AS  [DXCCS1],
+	hospst AS  [HOSPST],
+	homeless AS  [Homeless],
+	los AS  [LOS],
+	mdc AS  [MDC],
+	medincstq AS  [MEDINCSTQ],
+	pr1 AS  [PR1],
+	prccs1 AS  [PRCCS1],
+	pstate AS  [PSTATE],
+	pointoforiginub04 AS  [PointOfOriginUB04],
+	race AS  [RACE],
+	totchg AS  [TOTCHG],
+	visitlink AS  [VisitLink],
+	zip AS  [ZIP],
+	ayear AS  [AYEAR],
+	dxmccs1 AS  [DXMCCS1],
+	prmccs1 AS  [PRMCCS1],
+	readmitted AS  [Readmitted],
+	dxccs_name AS  [DXCCS_name],
+	prccs_name AS  [PRCCS_name],
+	prmccs_name AS  [PRMCCS_name],
+	dxmccs_name AS  [DXMCCS_name],
+	transfer_in AS  [TRANSFER_IN],
+	mdc_name AS  [MDC_name],
+	totchg_bin AS  [TOTCHG_bin],
+	los_bin AS  [LOS_bin],
+	chgperday AS  [CHGperday],
+	age_bin AS  [AGE_bin],
+	age_bin2 AS  [AGE_bin2],
+	payer1 AS  [PAYER1],
+	gender AS  [GENDER],
+	hospzip AS  [HOSPZIP],
+	readmitted_num AS  [Readmitted_num],
+	myrownum AS  [myrownum],
+	ecol1 AS  [ecol1],
+	ecol2 AS  [ecol2],
+	ecol3 AS  [ecol3],
+	ecol4 AS  [ecol4],
+	ecol5 AS  [ecol5],
+	ecol6 AS  [ecol6],
+	ecol7 AS  [ecol7],
+	chronic_conditions AS  [CHRONIC_conditions],
+	ecol8 AS  [ecol8],
+	ecol9 AS  [ecol9],
+	ecol10 AS [ecol10],
+	readmittance_conditions AS  [Readmittance_conditions]
+FROM @MostCurrentData;
+
+
+/////////////////////////////////////////////////////
+// save final data
+/////////////////////////////////////////////////////
+
+OUTPUT @withheaders 
+    TO @outputFile 
+	USING Outputters.Csv(outputHeader : true, quoting:false);  
+
+
+	 

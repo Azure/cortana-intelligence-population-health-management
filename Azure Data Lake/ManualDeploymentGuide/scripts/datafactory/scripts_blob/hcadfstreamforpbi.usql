@@ -1,0 +1,258 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+// Copyright  Microsoft Corporation ("Microsoft").
+// 
+// Microsoft grants you the right to use this software in accordance with your subscription agreement, if any, to use software 
+// provided for use with Microsoft Azure ("Subscription Agreement").  All software is licensed, not sold.  
+// 
+// If you do not have a Subscription Agreement, or at your option if you so choose, Microsoft grants you a nonexclusive, perpetual, 
+// royalty-free right to use and modify this software solely for your internal business purposes in connection with Microsoft Azure 
+// and other Microsoft products, including but not limited to, Microsoft R Open, Microsoft R Server, and Microsoft SQL Server.  
+// 
+// Unless otherwise stated in your Subscription Agreement, the following applies.  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT 
+// WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL MICROSOFT OR ITS LICENSORS BE LIABLE 
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SAMPLE CODE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//
+// hcadfstreampbi.usql
+// Script summary:
+// This usql script is used to submit ADLA job that constitutes the third activity in ADF pipeline
+// In this usql script, the input is scored ouput.
+// We will pass this data to an R script, which will return curated data for visualisation
+// Finally we will drop the first column- the partition column before writing the output
+// We will deploy the following reosurces
+// - R script that creates data for visualisation - "hcadfstreamforpbi.R"
+//   these should be in your data lake store in folder /forphmdeploymentbyadf
+// - Two files for mapping "Single_LevelCCS_Diagnoses_csv.csv.csv" and "Single_LevelCCS_Procedures_csv.csv"
+//   these should be in your data lake store in folder /forphmdeploymentbyadf
+// This usql script will return data to build Population Health Report
+// inputFile and outputFile variables are used in the script but not explicitly declared!!
+// This is because these are defined by activities parameters of the adf pipeline json definition (source).
+
+
+REFERENCE ASSEMBLY [ExtR];
+
+//for row based operations, we can choose to split the data (DoBalancedComputing_Flag=true) among PartitionCount workers
+DECLARE @DoBalancedComputing_Flag bool = false;
+DECLARE @PartitionCount int = 10;
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Deploy the following Resouce: R scripts, schema csv file, mapping csv files
+///////////////////////////////////////////////////////////////////////////////////
+
+
+DECLARE @path_Rscipt string     = @"/forphmdeploymentbyadf" ;   
+DECLARE @RScriptName string     = @"hcadfstreamforpbi.R";  
+DECLARE @RScriptFullName string = @path_Rscipt + @"/" + @RScriptName;
+DEPLOY RESOURCE @RScriptFullName;
+
+
+
+DECLARE @MapFile1 string        = @"/forphmdeploymentbyadf/Single_LevelCCS_Diagnoses_csv.csv";
+DEPLOY RESOURCE @MapFile1; 
+DECLARE @MapFile2 string        = @"/forphmdeploymentbyadf/Single_LevelCCS_Procedures_csv.csv";
+DEPLOY RESOURCE @MapFile2; 
+
+
+//we can choose to receive the DF returned from R as a string (ReturnDF_Flag==true) or as a proper DF (ReturnDF_Flag==true)
+DECLARE @ReturnDF_Flag bool = true;
+
+//we process everything in R UDO using the deployed schema (col names and types) so 
+//data type and col names in USQL is irrelevant hence we use 'string' for everything. 
+
+///////////////////////////////////////////////////////////////////////////////////
+//   Extract Data in variable @InputData from @inputFile (defined through adf)
+///////////////////////////////////////////////////////////////////////////////////
+
+@InputData = 
+    EXTRACT  	
+V1  string,
+V2  string,
+V3  string,
+V4  string,
+V5  string,
+V6  string,
+V7  string,
+V8  string,
+V9  string,
+V10  string,
+V11  string,
+V12  string,
+V13  string,
+V14  string,
+V15  string,
+V16  string,
+V17  string,
+V18  string,
+V19  string,
+V20  string,
+V21  string,
+V22  string,
+V23  string,
+V24  string,
+V25  string,
+V26  string,
+V27  string,
+V28  string,
+V29  string
+    FROM @inputFile
+    USING Extractors.Csv(skipFirstNRows: 1);  
+
+	
+/////////////////////////////////////////////////////////////////
+
+IF @DoBalancedComputing_Flag == true 
+THEN
+	@ExtendedData =
+            SELECT Extension.R.RandomNumberGenerator.GetRandomNumber(@PartitionCount) AS Par,
+		   *
+	    FROM @InputData;
+ELSE 
+	@ExtendedData =
+	    SELECT  0 AS Par,
+		   *
+	    FROM @InputData;
+END;
+
+/////////////////////////////////////////////////////////////////
+//    Reduce the data and pass it to R script deployed above
+// 
+/////////////////////////////////////////////////////////////////
+
+@RScriptOutput = REDUCE @ExtendedData ON Par
+PRODUCE 
+Par, 
+	V1  string,
+	V2  string,
+	V3  string,
+	V4  string,
+	V5  string,
+	V6  string,
+	V7  string,
+	V8  string,
+	V9  string,
+	V10  string,
+	V11  string,
+	V12  string,
+	V13  string,
+	V14  string,
+	V15  string,
+	V16  string,
+	V17  string,
+	V18  string,
+	V19  string,
+	V20  string,
+	V21  string,
+	V22  string,
+	V23  string,
+	V24  string,
+	V25  string,
+	V26  string,
+	V27  string,
+	V28  string,
+	V29  string,
+	V30  string,
+	V31  string,
+	V32  string,
+	V33  string,
+	V34  string,
+	V35  string,
+	V36  string,
+	V37  string,
+	V38  string,
+	V39  string,
+	V40  string,
+	V41  string,
+	V42  string,
+	V43  string,
+	V44  string,
+	V45  string,
+	V46  string,
+	V47  string,
+	V48  string,
+	V49  string,
+	V50  string,
+	V51  string,
+	V52  string,
+	V53  string,
+	V54  string
+	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
+
+
+/////////////////////////////////////////////////////////////////
+//               Drop the PAR column from @RScriptOutput
+///////////////////////////////////////////////////////////////// 
+@SavedData =
+    SELECT 	
+V1 AS [DSHOSPID] , 
+V2 AS [KEY] , 
+V3 AS [AGE] , 
+V4 AS [AMONTH] , 
+V5 AS [ATYPE] , 
+V6 AS [DISPUB04] , 
+V7 AS [DRG] , 
+V8 AS [DX1] , 
+V9 AS [DXCCS1] , 
+V10 AS [HOSPST] , 
+V11 AS [Homeless] , 
+V12 AS [LOS] , 
+V13 AS [MDC] , 
+V14 AS [MEDINCSTQ] , 
+V15 AS [PR1] , 
+V16 AS [PRCCS1] , 
+V17 AS [PSTATE] , 
+V18 AS [PointOfOriginUB04] , 
+V19 AS [RACE] , 
+V20 AS [TOTCHG] , 
+V21 AS [VisitLink] , 
+V22 AS [ZIP] , 
+V23 AS [AYEAR] , 
+V24 AS [DXMCCS1] , 
+V25 AS [PRMCCS1] , 
+V26 AS [Readmitted] , 
+V27 AS [DXCCS_name] , 
+V28 AS [PRCCS_name] , 
+V29 AS [PRMCCS_name] , 
+V30 AS [DXMCCS_name] , 
+V31 AS [TRANSFER_IN] , 
+V32 AS [MDC_name] , 
+V33 AS [TOTCHG_bin] , 
+V34 AS [LOS_bin] , 
+V35 AS [CHGperday] , 
+V36 AS [AGE_bin] , 
+V37 AS [AGE_bin2] , 
+V38 AS [PAYER1] , 
+V39 AS [GENDER] , 
+V40 AS [HOSPZIP] , 
+V41 AS [Readmitted_num] , 
+V42 AS [myrownum] , 
+V43 AS [ecol1] , 
+V44 AS [ecol2] , 
+V45 AS [ecol3] , 
+V46 AS [ecol4] , 
+V47 AS [ecol5] , 
+V48 AS [ecol6] , 
+V49 AS [ecol7] , 
+V50 AS [CHRONIC_conditions] , 
+V51 AS [ecol8] , 
+V52 AS [ecol9] , 
+V53 AS [ecol10] , 
+V54 AS [Readmittance_conditions]
+    FROM @RScriptOutput;
+
+
+/////////////////////////////////////////////////////////////////
+//      Write the output to outputFile (defined through adf)
+/////////////////////////////////////////////////////////////////  
+
+OUTPUT @SavedData 
+    TO @outputFile 
+	USING Outputters.Csv(outputHeader : true, quoting:false);    
+
+   
+	
+  

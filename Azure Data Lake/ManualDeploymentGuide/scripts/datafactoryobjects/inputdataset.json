@@ -1,0 +1,23 @@
+{
+    "name": "01StreamedData",
+    "properties": {
+        "published": false,
+        "type": "AzureDataLakeStore",
+        "linkedServiceName": "AzureDataLakeStoreLinkedService",
+        "typeProperties": {
+            "fileName": "dummyinputset.csv",
+            "folderPath": "dummyfolder/",
+            "format": {
+                "type": "TextFormat",
+                "rowDelimiter": "\n",
+                "columnDelimiter": ","
+            }
+        },
+        "availability": {
+            "frequency": "Minute",
+            "interval": 15
+        },
+        "external": true,
+        "policy": {}
+    }
+}
