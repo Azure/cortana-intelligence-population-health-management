@@ -113,7 +113,7 @@ The creation step may take several minutes. Navigate back to your resource group
 - On the storage account blade, select [**Access keys**](media/storageaccountcredentials.PNG?raw=true) from the menu on the left.
 - Record the *STORAGE ACCOUNT NAME*, *KEY* and *CONNECTION STRING* values for *key1*.
 
-You will need these three credentials to upload files to your storage account below, when starting the data generator and when setting up a Linked Service to access the files in your blob through Azure Data Factory. We suggest you download the [deployment_notepad.txt](../deployment_notepad.txt) from above and store these credentials for future reference.
+You will need these three credentials to upload files to your storage account below, when starting the data generator and when setting up a Linked Service to access the files in your blob through Azure Data Factory. We suggest you download the [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) from above and store these credentials for future reference.
 
 ### Move resources to the storage account
   
