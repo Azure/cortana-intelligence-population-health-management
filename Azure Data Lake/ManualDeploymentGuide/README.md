@@ -174,8 +174,8 @@ Once the Event Hub is created, we will create Consumer Groups. In a stream proce
 
 From the **healthcareehns** resource (i.e. the event hub namespace that you created first), you will collect the following information required in future steps to set up Stream Analytics Jobs:
 
-- On the ***healthcareeehns*** blade, choose [*Shared access policies*](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
-- Select [**RootManageSharedAccessKey**](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
+- On the ***healthcareeehns*** blade, choose [*Shared access policies*](../ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
+- Select [**RootManageSharedAccessKey**](../ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
 
 <a name="azuredls"></a>
 ## Create an Azure Data Lake Store
@@ -525,7 +525,7 @@ Let's look closely at these activities and what they are doing.
 
 ## Visualization
 
-  Congratulations! You have successfully deployed a Cortana Intelligence Solution. The hot path stream created above is pushing data to Power BI for real-time visualization. Our Power BI dashboard will also connect to the streaming data and predictions being stored in the Data Lake Store (cold path) along with historic data for visualization. A picture is worth a thousand words. Let's head over to the [visualization](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
+  Congratulations! You have successfully deployed a Cortana Intelligence Solution. The hot path stream created above is pushing data to Power BI for real-time visualization. Our Power BI dashboard will also connect to the streaming data and predictions being stored in the Data Lake Store (cold path) along with historic data for visualization. A picture is worth a thousand words. Let's head over to the [visualization](../ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
  
   
 
