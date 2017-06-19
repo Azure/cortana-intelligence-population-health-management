@@ -125,7 +125,7 @@ Next we will create some containers and move the necessary files into the newly 
     - Click __+ Container__.
        - Enter the name `data` and change the *Access type* to **Blob**.
        - Click ***Create***. You should see `data` appear in the list of containers.
-    - On the [AzCopy terminal](https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command.
+    - On the [AzCopy terminal](../ManualDeploymentGuide/media/azcopy2.PNG?raw=true) command prompt, type [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/ManualDeploymentGuide/rawevents/azCopy_command_data.txt) command.
        - Replace `EnterYourStorageAccountkeyhere` with your storage account key and `<storageaccountname>` with your storage account name in the command before executing. 
     - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `data`. You should see that [these](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide/rawevents/files_datagenerator) csv files have appeared in your container `data`.
 - Copy the USQL scripts:
