@@ -59,7 +59,7 @@ Hub" below:
 
 ### Accessing Files in the Git Repository
 
-This tutorial will refer to files available in the Manual Deployment Guide section of the [Population Health Management  git repository](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/ManualDeploymentGuide). You can download all of these files at once by clicking the "Clone or download" button on the repository.
+This tutorial will refer to files available in the Manual Deployment Guide section of the [Population Health Management  git repository](../ManualDeploymentGuide). You can download all of these files at once by clicking the "Clone or download" button on the repository.
 
 You can download or view individual files by navigating through the repository folders. If you choose this option, be sure to download the "raw" version of each file by clicking the filename to view it, then cliking Download.
 
