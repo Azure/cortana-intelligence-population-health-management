@@ -4,7 +4,7 @@ To see the entire Population Health Management for Health care using Cortana Int
 
 
 ## Architecture
-![Solution Diagram Picture](https://raw.githubusercontent.com/Azure/cortana-intelligence-population-health-management/master/ManualDeploymentGuide/media/PHMarchitecture.PNG?token=AKE1nQp0MlvhmbGYyR7efkWZ-NRcCQXIks5ZEIgZwA%3D%3D)
+![Solution Diagram Picture](../ManualDeploymentGuide/media/PHMarchitecture.PNG?raw=true)
 
 All the resources listed above besides Power BI are already deployed in your subscription. The following instructions will guide you on how to monitor things that you have deployed and carry out some post deployment steps.
 
