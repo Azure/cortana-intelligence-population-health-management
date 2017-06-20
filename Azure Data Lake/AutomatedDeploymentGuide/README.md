@@ -10,13 +10,13 @@ The architecture diagram above shows the solution design for Population Health M
  by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart). Results of the scoring are then stored in Azure Data Lake Store and visualized using Power BI. All the resources listed above besides Power BI are already deployed in your subscription. The following instructions will guide you on how to monitor things that you have deployed and carry out some post deployment steps.
 
 ## Post Deployment Steps
-  Once the solution is deployed to the subscription, you can see the various services deployed by clicking the resource group name on the final deployment screen. Alternatively you can use [Azure management portal](https://portal.azure.com/) to see the resources provisioned in your resource group in your subscription. The source code of the solution as well as manual deployment instructions can be found [here](../ManualDeploymentGuide/). There are a few manual steps however that are required for the whole pipeline to be completed. The post deployment steps constitute monitoring the progress of your deployment and visualizing Data from Data Lake Store and Real-time Data Stream by connecting Power BI to these data sources.
+  Once the solution is deployed to the subscription, you can see the various services deployed by clicking the resource group name on the final deployment screen. Alternatively you can use [Azure management portal](https://portal.azure.com/) to see the resources provisioned in your resource group in your subscription. The source code of the solution as well as manual deployment instructions can be found [here](../ManualDeploymentGuide/). There are a few manual steps however that are required for the whole pipeline to be completed. The post deployment steps constitute monitoring the health of your deployment and visualizing Data from Data Lake Store and Real-time Data Stream by connecting Power BI to these data sources.
  
-### Monitor Progress
-  After successful deployment, the entire solution is automatically started on cloud. You can monitor the progress from the following resources. 
-  1.	The simulated data is streamed by the newly deployed **Azure Web Jobs**. 
+### Monitor
+  After successful deployment, the entire solution is automatically started on cloud. There are several ways you can monitor the health of your deployment and ensure that data is flowing in uninterrupted and being stored and processed correctly. 
+  1. The simulated data is streamed by the newly deployed **Azure Web Jobs**. 
 
-  2.	This synthetic data feeds into the **Azure Event Hubs** as data points/events, that will be consumed in the rest of the solution flow and stored in **Azure Data Lake Store**.
+  2. This synthetic data feeds into the **Azure Event Hubs** as data points/events, that will be consumed in the rest of the solution flow and stored in **Azure Data Lake Store**.
 
 ### [Visualization](../ManualDeploymentGuide/Visualization)
 
