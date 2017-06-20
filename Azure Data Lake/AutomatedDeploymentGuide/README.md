@@ -24,8 +24,10 @@ The architecture diagram above shows the solution design for Population Health M
    - The WebJob *HealthcareGenerator* from the deployment will appear in the WebJobs list.
    - Select the WebJob and click on Logs at the top of the screen. You should [see](../ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages like below:   
     ```
-    EVENTHUB: Upload 600 Records Complete   
+    EVENTHUB: Upload 600 Records Complete 
+  
     EVENTHUB: Starting Raw Upload    
+
     EVENTHUB: Upload 600 Records Complete    
     ```
 
