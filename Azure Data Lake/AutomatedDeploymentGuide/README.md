@@ -42,7 +42,7 @@ The architecture diagram above shows the solution design for Population Health M
 #### Azure Data Factory  
   - The last activity in Azure Data Factory pipeline executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) that in effect creates a file at the location `/pbidataforPHM/data4visualization_latest.csv` in your Azure Data Lake Store. If you see this file being created and has a finite size, your Data Factory is running correctly.
    - Navigate to your Resource group in [Azure Management Portal](https://portal.azure.com/) and from the list of services provisioned by your deployment select the Data Lake Store just created.
-   - Click on `Data Explorer' at the top of the page.
+   - Click on `Data Explorer` at the top of the page.
    - You should see the folder `pbidataforPHM` in the list. This folder will appear ~ 15-20 mins after the deployment.
    - Click on the folder when it appears and select the file `data4visualization_latest.csv` to look at the data.
    - For more on how to monitor and manage Data Factory pipelines, read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines).
