@@ -11,7 +11,7 @@
 ## Read HCUP Data
 
 
-![](../ManualDeploymentGuide/media/hcuplogo3.PNG?raw=true)
+![](../../ManualDeploymentGuide/media/hcuplogo3.PNG?raw=true)
 
 ![](../ManualDeploymentGuide/media/hcuplogo2.PNG?raw=true)
 
