@@ -6,47 +6,20 @@ We described [here](../ManualDeploymentGuide/README.md) what constitutes Populat
 ## Architecture
 ![Solution Diagram Picture](../ManualDeploymentGuide/media/PHMarchitecture.PNG?raw=true)
 
-The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. The solution is composed of several Azure components that perform various tasks, viz. data ingest, data storage, data movement, advanced analytics and visualization.  [Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is the ingestion point of raw records that will be processed in this solution. These are then pushed to Data Lake Store for storage and further processing by [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/). A second Stream Analytics job sends selected data to [PowerBI](https://powerbi.microsoft.com/) for near real time visualizations. [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the Azure Stream Analytics job
- by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart). Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) and visualized using Power BI.
-All the resources listed above besides Power BI are already deployed in your subscription. The following instructions will guide you on how to monitor things that you have deployed and carry out some post deployment steps.
+The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. The solution is composed of several Azure components that perform various tasks, viz. data ingestion, data storage, data movement, advanced analytics and visualization. [Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview) App is used to host the onine data generator web job that feeds the system with data. [Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is the ingestion point of raw records that will be processed in this solution. It is used to ingest the data from the online data generator. [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) is used to process the data from event hub and redirect the data to multiple outputs. The first Stream Analytics job pushes the incoming data to Data Lake Store for storage and further processing. [Azure Data Lake Store](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-overview) is used as durable storage for raw and processed events. A second Stream Analytics job sends selected data to [PowerBI](https://powerbi.microsoft.com/) for near real time visualizations. [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the Azure Stream Analytics job
+ by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart). Results of the scoring are then stored in Azure Data Lake Store and visualized using Power BI. All the resources listed above besides Power BI are already deployed in your subscription. The following instructions will guide you on how to monitor things that you have deployed and carry out some post deployment steps.
 
-
-## Monitor Progress
-Once the solution is deployed to the subscription, you can see the services deployed by clicking the resource group name on the final deployment screen in the CIS.
-
-This will show all the resources under this resource groups on [Azure management portal](https://portal.azure.com/).
-
-After successful deployment, the entire solution is automatically started on cloud. You can monitor the progress from the following resources.
- 
 ## Post Deployment Steps
-  Data is now streaming into the Azure Event Hub and the HealthCareColdPath Azure Stream Analytics job is pushing data to the gsciqs1w6yadls Azure Data Lake Store account. There are a few manual steps that are required for the whole pipeline to be completed. The source code of the solution as well as manual deployment instructions can be found here.
+  Once the solution is deployed to the subscription, you can see the services deployed by clicking the resource group name on the final deployment screen. The source code of the solution as well as manual deployment instructions can be found [here](../ManualDeploymentGuide/). There are a few manual steps that are required for the whole pipeline to be completed. The post deployment steps constitute monitoring the progress of your deployment and connecting your Power BI to the data
+ 
+### Monitor Progress
+  After successful deployment, the entire solution is automatically started on cloud. You can monitor the progress from the following resources. This will show all the resources under this resource groups on [Azure management portal](https://portal.azure.com/).
  
 
-## Authorize Stream Analytics Outputs for Hot Path
+### Visualization
 
- - Go to the Azure Stream Analytics Hot Path job here 
- - Click on Outputs 
- - For the stream analytics outputs LosDataset1 and LosDataset2
- - Click on the output in the Outputs list
- - Click on Renew authorization
- - Complete authorization
- - Click Save
- - Authorize Stream Analytics Outputs for Cold Path
-   
-## Authorize Stream Analytics Outputs for Cold Path
-  
-  - Go to the Azure Stream Analytics Cold Path job here 
-  - Click on Outputs
-  - For the stream analytics outputs ChargesOutput, CoreOutput, SeverityOutput, and DxprOutput
-  - Click on the output in the Outputs list
-  - Click on Renew authorization
-  - Complete authorization
-  - Click Save
+ Once the Cortana Intelligence Solution for Population Health is successfully deployed simulated patient data and predictions will begin to accumulate. We want to display and glean insights from the data using Power BI. A picture is worth a thousand words. Lets head over to the [visualization](../ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data!
 
-## Visualization
-
- Congratulations! You have successfully deployed a Cortana Intelligence Solution. By authorizing the hot path, streaming data has started flowing into your Power BI. By authorzing the cold path, the PBI can connect to data stored in Data Lake Store for visualization. A picture is worth a thousand words. Lets head over to the [visualization](../ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data!
-
-## Customization
+### Customization
 
 For solution customization, you can refer to the manual deployment guide offered [here](../ManualDeploymentGuide/) to gain an inside view of how the solution is built, the function of each component and access to all the source codes used in the demo solution. You can customize the components accordingly to satisfy the business needs of your organization. Or you can [connect with one of our partners](https://appsource.microsoft.com/en-us/product/cortana-intelligence/microsoft-cortana-intelligence.quality-assurance-for-manufacturing?tab=Partners) for more information on how to tailor Cortana Intelligence to your needs.
