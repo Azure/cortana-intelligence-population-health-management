@@ -30,7 +30,7 @@ The architecture diagram above shows the solution design for Population Health M
    EVENTHUB: Starting Raw Upload  
    ```
    
-   - Monitoring the logs can also help troubleshoot in the event of an interruption.
+- Monitoring the logs can also help troubleshoot in the event of an interruption.
 
 #### Azure Event Hub  
   - This synthetic data feeds into the Azure Event Hubs as data points/events, that will be consumed in the rest of the solution flow and stored in Azure Data Lake Store. 
