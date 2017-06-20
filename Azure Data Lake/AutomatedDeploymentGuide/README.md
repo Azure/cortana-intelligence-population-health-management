@@ -22,16 +22,27 @@ The architecture diagram above shows the solution design for Population Health M
    - Under `GENERAL SETTINGS` click on `All settings`.
    - Search for WebJobs in the App Service menu on the left under `SETTINGS` and select it. 
    - The WebJob *HealthcareGenerator* from the deployment will appear in the WebJobs list.
-   - Select the WebJob and click on Logs at the top of the screen. You should [see](../ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages like below:   
-    ```
+   - Select the WebJob and click on Logs at the top of the screen. You should [see](../ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages like below: 
+   ```
+  EVENTHUB: Upload 600 Records Complete   
+  EVENTHUB: Starting Raw Upload  
+  EVENTHUB: Upload 600 Records Complete
+  ```
 
+   ```
     EVENTHUB: Upload 600 Records Complete 
   
     EVENTHUB: Starting Raw Upload    
 
     EVENTHUB: Upload 600 Records Complete    
-    ```
-
+   ```
+- Select the WebJob and click on Logs at the top of the screen. You should [see](../ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages like below   
+   ```
+   EVENTHUB: Starting Raw Upload  
+   EVENTHUB: Upload 600 Records Complete  
+   EVENTHUB: Starting Raw Upload  
+   ```
+   
    - Monitoring the logs can also help troubleshoot in the event of an interruption.
 
 #### Azure Event Hub  
