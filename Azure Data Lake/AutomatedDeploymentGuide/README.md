@@ -16,7 +16,7 @@ The architecture diagram above shows the solution design for Population Health M
   After successful deployment, the entire solution is automatically started on cloud. There are several ways you can monitor the health of your deployment and ensure that data is flowing in uninterrupted and being stored and processed correctly. 
 
 #### Azure Web Job  
-  - The simulated data is streamed by the newly deployed **Azure Web Jobs**. To ensure data is flowing we will look at the Web Job logs. 
+  - The simulated data is streamed by the newly deployed Azure Web Jobs. To ensure data is flowing we will look at the Web Job logs. 
    - Navigate to your Resource group in [Azure Management Portal](https://portal.azure.com/) and from the list of services provisioned by your deployment select the App Service just created. You can also click on `Azure Function App` link from the last screen of your deployment.
    - Across the top of the right blade pick `Platform features`.
    - Under `GENERAL SETTINGS` click on `All settings`.
@@ -24,20 +24,21 @@ The architecture diagram above shows the solution design for Population Health M
    - The WebJob *HealthcareGenerator* from the deployment will appear in the WebJobs list.
    - Select the WebJob and click on Logs at the top of the screen. You should [see](../ManualDeploymentGuide/media/webjob2.PNG?raw=true) similar messages like below:   
     ```
-    EVENTHUB: Upload 600 Records Complete   
-    EVENTHUB: Starting Raw Upload    
-    EVENTHUB: Upload 600 Records Complete    
+    EVENTHUB: Upload 600 Records Complete     
+    EVENTHUB: Starting Raw Upload      
+    EVENTHUB: Upload 600 Records Complete      
     ```
-   - Monitoring the logs can also help you troubleshoot in the event of an interruption.
+   - Monitoring the logs can also help troubleshoot in the event of an interruption.
 
 #### Azure Event Hub  
-  - This synthetic data feeds into the **Azure Event Hubs** as data points/events, that will be consumed in the rest of the solution flow and stored in **Azure Data Lake Store**. 
+  - This synthetic data feeds into the Azure Event Hubs as data points/events, that will be consumed in the rest of the solution flow and stored in Azure Data Lake Store. 
    - Navigate to your Resource group in [Azure Management Portal](https://portal.azure.com/) and from the list of services provisioned by your deployment select the Event Hub just created.
    - In the Event Hub `Overview`, you should [see](../ManualDeploymentGuide/media/datageneratorstarted.PNG?raw=true) finite `INCOMING MESSAGES`.
+   - After the Stream Analytics job *HealthCareColdPath* is started, the `OUTGOING MESSAGES` will be finite as well.
    
  
 #### Azure Data Factory  
-  - The last activity in Azure Data Factory pipeline executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) that in effect creates a file at the location `/pbidataforPHM/data4visualization_latest.csv` in your **Azure Data Lake Store**. If you see this file being created and has a finite size, your Data Factory is running correctly.
+  - The last activity in Azure Data Factory pipeline executes a [USQL script](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/hcadfstreamappend.usql) that in effect creates a file at the location `/pbidataforPHM/data4visualization_latest.csv` in your Azure Data Lake Store. If you see this file being created and has a finite size, your Data Factory is running correctly.
    - Navigate to your Resource group in [Azure Management Portal](https://portal.azure.com/) and from the list of services provisioned by your deployment select the Data Lake Store just created.
    - Click on `Data Explorer' at the top of the page.
    - You should see the folder `pbidataforPHM` in the list. This folder will appear ~ 15-20 mins after the deployment.
