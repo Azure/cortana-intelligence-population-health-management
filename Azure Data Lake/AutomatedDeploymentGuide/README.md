@@ -18,7 +18,7 @@ The architecture diagram above shows the solution design for Population Health M
 
   2.	This synthetic data feeds into the **Azure Event Hubs** as data points/events, that will be consumed in the rest of the solution flow and stored in **Azure Data Lake Store**.
 
-### Visualization
+### [Visualization](../ManualDeploymentGuide/Visualization)
 
  Once the Cortana Intelligence Solution for Population Health is successfully deployed simulated patient data and predictions will begin to accumulate. We want to display and glean insights from the data using Power BI. Lets head over to the [visualization](../ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data and create a Population Health Report! 
 
