@@ -36,7 +36,7 @@ The architecture diagram above shows the solution design for Population Health M
   - This synthetic data feeds into the Azure Event Hubs as data points/events, that will be consumed in the rest of the solution flow and stored in Azure Data Lake Store. 
    - Navigate to your Resource group in [Azure Management Portal](https://portal.azure.com/) and from the list of services provisioned by your deployment select the Event Hub just created.
    - In the Event Hub `Overview`, you should [see](../ManualDeploymentGuide/media/datageneratorstarted.PNG?raw=true) finite `INCOMING MESSAGES`.
-   - After the Stream Analytics job *HealthCareColdPath* is started, the `OUTGOING MESSAGES` will be finite as well.
+   - At the end of the deployment, the manual step of authorizing Stream Analytics Outputs for Cold Path was to be carried out and the *HealthCareColdPath* job was to be started. After starting the job, the `OUTGOING MESSAGES` will be finite as well.
    
  
 #### Azure Data Factory  
