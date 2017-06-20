@@ -12,7 +12,7 @@ The architecture diagram above shows the solution design for Population Health M
  by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://www.r-project.org/about.html). Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) and visualized using Power BI.
 
 ----------
-
+<a name="dsteps"></a>
 [Deployment Steps:](#dsteps)
 ====================
 
@@ -40,7 +40,8 @@ Before we start deploying, there are some prerequisites required and naming conv
    (a [one-month free
    trial](https://azure.microsoft.com/en-us/pricing/free-trial/) is
    available for new users)
-- A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.    
+- AzCopy installation.
+- AdlCopy installation.
  
 ### Naming Convention  
 
@@ -63,7 +64,8 @@ Hub" below:
 
 AzCopy is a Windows command-line utility designed for copying data to and from Microsoft Azure storage. Download AzCopy from [here](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy). Open this desktop App you just installed by [searching](media/azcopy1.jpg?raw=true) for ‘Microsoft Azure Storage command line’ or simple ‘azure storage command’. Open this app and you will get a [command prompt](media/azcopy2.PNG?raw=true). We will use this utility to transfer files to and from blob.
 
-
+### Installing AdlCopy Command-Line Utility
+AdlCopy is a command line tool to copy data from Azure Storage Blobs into Data Lake Store and between two Azure Data Lake Store accounts. The installation instructions are provided below.
 
 Now that the prerequisites are fulfilled we can start the deployment process.
 
