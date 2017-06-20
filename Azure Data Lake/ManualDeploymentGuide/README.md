@@ -13,8 +13,12 @@ The architecture diagram above shows the solution design for Population Health M
 
 ----------
 
+[Deployment Steps:](#dsteps)
+====================
+
 To build the pipeline above for this solution, we will need to carry out the following steps:
 
+- [Prerequisites](#prereq)
 - [Create an Azure Resource Group for the solution](#azurerg)
 - [Create Azure Storage Account](#azuresa) 
 - [Create an Azure Event Hub](#azureeh) 
@@ -25,18 +29,18 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create Azure Data Lake Analytics](#azuredla)
 - [Create Azure Data Factory](#azuredf) 
 
-Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
+Detailed instructions to carry out these steps can be found below under Deployment Steps. 
 
-### Prerequisites
+<a name="prereq"></a>
+## Prerequisites
 
-This tutorial will require:
+Before we start deploying, there are some prerequisites required and naming conventions to be followed. This tutorial will require:
 
 - An Azure subscription, which will be used to deploy the project 
    (a [one-month free
    trial](https://azure.microsoft.com/en-us/pricing/free-trial/) is
    available for new users)
-- A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.
-- Download a copy of this repository to gain access to the necessary files that will be used in certain setup steps.     
+- A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.    
  
 ### Naming Convention  
 
@@ -46,35 +50,22 @@ group all Azure services in one solution into a resource group. Each component i
 services we are creating. However, several services, such as Azure Storage, require a unique name for the storage account across a region and hence a naming convention 
 is needed that should provide the user with a unique identifier. The idea is to create a ***unique string*** (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (**healthcare**) and 
 user's specific details like name and/or a custom numeric ID:  
-
- **healthcare[UI][N]**  
-  
+**healthcare[UI][N]**  
 where [UI] is the user's initials (in lowercase), N is a random integer(01-99) that you choose.  
   
 To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. A user, say, *Mary Jane* might create a ***unique string*** by using a base service name of healthcare**mj01** and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
-Hub" below: 
-
-- healthcareehns should actually be spelled healthcare**mj01**ehns 
-- healthcareehub should actually be spelled healthcare**mj01**ehub  
-
-### Accessing Files in the Git Repository
-
-This tutorial will refer to files available in the Manual Deployment Guide section of the [Population Health Management  git repository](../ManualDeploymentGuide). You can download all of these files at once by clicking the "Clone or download" button on the repository.
-
-You can download or view individual files by navigating through the repository folders. If you choose this option, be sure to download the "raw" version of each file by clicking the filename to view it, then cliking Download.
+Hub" below:   
+- healthcareehns should actually be spelled healthcare**mj01**ehns   
+- healthcareehub should actually be spelled healthcare**mj01**ehub   
+ 
 
 ### Installing AzCopy Command-Line Utility
 
 AzCopy is a Windows command-line utility designed for copying data to and from Microsoft Azure storage. Download AzCopy from [here](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy). Open this desktop App you just installed by [searching](media/azcopy1.jpg?raw=true) for ‘Microsoft Azure Storage command line’ or simple ‘azure storage command’. Open this app and you will get a [command prompt](media/azcopy2.PNG?raw=true). We will use this utility to transfer files to and from blob.
 
 
-----------
 
-Deployment Steps:
-====================
-
-
-This section will walk you through the steps to manually create the population health management solution in your Azure subscription.
+Now that the prerequisites are fulfilled we can start the deployment process.
 
 <a name="azurerg"></a>
 ## Create an Azure Resource Group for the solution
