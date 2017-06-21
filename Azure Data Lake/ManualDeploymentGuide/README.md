@@ -30,7 +30,7 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create Azure Data Factory](#azuredf) 
 - [Visualization](#vis) 
 
-Detailed instructions to carry out these steps can be found below under Deployment Steps. 
+Below you will find the detailed instructions to carry out these steps.
 
 <a name="prereq"></a>
 ## Prerequisites
