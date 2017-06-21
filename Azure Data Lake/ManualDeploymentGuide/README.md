@@ -69,6 +69,7 @@ AdlCopy is a command line tool to copy data from Azure Storage Blobs into Data L
 
 Now that the prerequisites are fulfilled we can start the deployment process.
 
+[..](#dsteps)
 <a name="azurerg"></a>
 ## Create an Azure Resource Group for the solution
   The Azure Resource Group is used to logically group the resources needed for this architecture. To better understand the Azure Resource Manager click [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview). 
@@ -83,6 +84,7 @@ Now that the prerequisites are fulfilled we can start the deployment process.
 
 **NOTE** : It may be helpful for future steps to record the resource group name and location for later steps in this manual. 
 
+[..](#dsteps)
 <a name="azuresa"></a>
 ## Create Azure Storage Account 
   The Azure Storage Account is required for several parts of this solution:
