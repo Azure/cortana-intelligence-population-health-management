@@ -1,7 +1,7 @@
 ----------------- Resource Group --------
 
 Record the resource group name 
-Record the resource group location
+Record the resource group location  (We want to provision the various services in the same location as much as possible)
 
 ----------------- Storage Account credentials to store --------
 STORAGE ACCOUNT NAME
