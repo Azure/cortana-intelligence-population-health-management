@@ -408,6 +408,7 @@ After some time, this new dataset *hotpathcore* will appear in the Datasets sect
 - In the Sample Scripts [blade](../ManualDeploymentGuide/media/adla_install.PNG?raw=true), click on ***Install U-SQL Extensions*** to install U-SQL Extensions to your account.
   - This step will enable R (and Python) extensions to work with ADLA.
   - This step may take several minutes to complete.
+  - Record the name of the Data Lake Analytics account just created in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt)
 
 [..](#dsteps)
 <a name="azuredf"></a>
@@ -435,7 +436,7 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade, choose *New data store* and select *Azure Storage* from the list. You will be presented with a draft.
-- Replace `<accountname>` with the name of your storage account, `healthcarestorage` (e.g. Mary Jane would use `healthcaremj01`).
+- Replace `<accountname>` with the name of your storage account  you recorded earlier in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt).
 - Replace `<accountkey>` with the storage account key you recorded earlier.
 - At the top of the blade, click *Deploy*.
 
@@ -443,7 +444,7 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade choose *New data store* and select *Azure Data Lake Store* from the list. You will be presented with a draft.
-- For the *dataLakeStoreUri* setting, copy in the *ADL URI* value saved during the creation of the Azure Data Lake Store. 
+- For the *dataLakeStoreUri* setting, copy in the *ADL URI* value saved during the creation of the Azure Data Lake Store and recorded in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt). 
 - Remove the properties marked as [Optional]. (These would be *accountName*, *resourceGroupName*, and *subscriptionId*.)
 - At the top of the page, click ***Authorize***. You will notice some fields will get auto-filled after authorization. 
 - At the top of the blade, click ***Deploy***.
@@ -452,7 +453,7 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade, click on ***...More***. Select *New compute* from the drop-down list, then choose *Azure Data Lake Analytics*. You will be presented with a draft.
-- For the *accountName* setting, enter the Azure Data Lake Analytics resource name you provided earlier (`healthcareadla`).
+- For the *accountName* setting, enter the Azure Data Lake Analytics resource name saved during the creation of the Azure Data Lake Analytics account and recorded in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt)..
 - You **must** remove the properties marked as [Optional]. (These would be *resourceGroupName* and *subscriptionId*.)
 - At the top of the page, click ***Authorize***. You will notice some fields will get auto filled after authorization. 
 - At the top of the blade, click ***Deploy***.

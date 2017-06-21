@@ -12,6 +12,9 @@ CONNECTION STRING values for key1
 EventHubName
 EventHub CONNECTION STRING -PRIMARY KEY (in the third row, not the PRIMARY KEY value)
 
+--------------- Data Lake Analytics account name ---------------
+Record the name of the Data Lake Analytics account
+
 --------------- Data Lake Store uri to store ---------------
 This will be in the form adl://***********.azuredatalakestore.net
 
