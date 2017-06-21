@@ -13,7 +13,7 @@ EventHubName
 EventHub CONNECTION STRING -PRIMARY KEY (in the third row, not the PRIMARY KEY value)
 
 --------------- Data Lake Store uri to store ---------------
-This be in the form adl://***********.azuredatalakestore.net
+This will be in the form adl://***********.azuredatalakestore.net
 
 -------- AzCopy Commands for copying to your blob ------------
 
