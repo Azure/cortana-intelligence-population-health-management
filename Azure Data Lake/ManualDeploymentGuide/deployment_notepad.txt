@@ -1,10 +1,22 @@
+----------------- Resource Group --------
+
+Record the resource group name 
+Record the resource group location  (We want to provision the various services in the same location as much as possible)
+
 ----------------- Storage Account credentials to store --------
 STORAGE ACCOUNT NAME
 KEY
 CONNECTION STRING values for key1
 
+----------------- Event Hub credentials to store --------
+EventHubName
+EventHub CONNECTION STRING -PRIMARY KEY (in the third row, not the PRIMARY KEY value)
+
+--------------- Data Lake Analytics account name ---------------
+Record the name of the Data Lake Analytics account
+
 --------------- Data Lake Store uri to store ---------------
-This be in the form adl://***********.azuredatalakestore.net
+This will be in the form adl://***********.azuredatalakestore.net
 
 -------- AzCopy Commands for copying to your blob ------------
 

@@ -9,12 +9,16 @@ Solution architecture
 ![Solution Diagram Picture](media/PHMarchitecture.PNG?raw=true)
 
 The architecture diagram above shows the solution design for Population Health Management Solution for Healthcare. The solution is composed of several Azure components that perform various tasks, viz. data ingestion, data storage, data movement, advanced analytics and visualization.  [Azure Event Hub](https://azure.microsoft.com/en-us/services/event-hubs/) is the ingestion point of raw records that will be processed in this solution. These are then pushed to Data Lake Store for storage and further processing by [Azure Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/). A second Stream Analytics job sends selected data to [PowerBI](https://powerbi.microsoft.com/) for near real time visualizations. [Azure Data Factory](https://azure.microsoft.com/en-us/services/data-factory/) orchestrates, on a schedule, the scoring of the raw events from the Azure Stream Analytics job
- by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-r-quickstart). Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) and visualized using Power BI.
+ by utilizing [Azure Data Lake Analytics](https://azure.microsoft.com/en-us/services/data-lake-analytics/) for processing with both [USQL](https://msdn.microsoft.com/en-us/library/azure/mt591959.aspx) and [R](https://www.r-project.org/about.html). Results of the scoring are then stored in [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/) and visualized using Power BI.
 
 ----------
+<a name="dsteps"></a>
+[Deployment Steps:](#dsteps)
+====================
 
 To build the pipeline above for this solution, we will need to carry out the following steps:
 
+- [Prerequisites](#prereq)
 - [Create an Azure Resource Group for the solution](#azurerg)
 - [Create Azure Storage Account](#azuresa) 
 - [Create an Azure Event Hub](#azureeh) 
@@ -24,21 +28,23 @@ To build the pipeline above for this solution, we will need to carry out the fol
 - [Create Azure Stream Analytics Job](#azurestra) 
 - [Create Azure Data Lake Analytics](#azuredla)
 - [Create Azure Data Factory](#azuredf) 
+- [Visualization](#vis) 
 
-Detailed instructions to carry out these steps can be found below under Deployment Steps. Before we start deploying, there are some prerequisites required and naming conventions to be followed.
+Below you will find the detailed instructions to carry out these steps.
 
-### Prerequisites
+<a name="prereq"></a>
+## Prerequisites
 
-This tutorial will require:
+Before we start deploying, there are some prerequisites required and naming conventions to be followed. This tutorial will require:
 
 - An Azure subscription, which will be used to deploy the project 
    (a [one-month free
    trial](https://azure.microsoft.com/en-us/pricing/free-trial/) is
    available for new users)
-- A Windows Desktop or a Windows based [Azure Virtual Machine](https://azure.microsoft.com/en-us/services/virtual-machines/) to run a data generation tool.
-- Download a copy of this repository to gain access to the necessary files that will be used in certain setup steps.     
+- AzCopy installation.
+- AdlCopy installation.
  
-### Naming Convention  
+### Naming Convention - Create a unique string
 
 This deployment guide walks the readers through the creation of each of the Cortana Intelligence Suite services in the solution architecture shown above. 
 As there are usually many interdependent components in a solution, [Azure Resource Manager](https://azure.microsoft.com/en-gb/features/resource-manager/) enables you to 
@@ -46,36 +52,25 @@ group all Azure services in one solution into a resource group. Each component i
 services we are creating. However, several services, such as Azure Storage, require a unique name for the storage account across a region and hence a naming convention 
 is needed that should provide the user with a unique identifier. The idea is to create a ***unique string*** (that has not been chosen by another Azure user) that will be incorporated into the name of each Azure resource you create. This string can include only lowercase letters and numbers, and must be less than 20 characters in length. To address this, we suggest employing a base service name based on solution scope (**healthcare**) and 
 user's specific details like name and/or a custom numeric ID:  
-
- **healthcare[UI][N]**  
-  
+**healthcare[UI][N]**  
 where [UI] is the user's initials (in lowercase), N is a random integer(01-99) that you choose.  
   
 To achieve this, all names used in this guide that contain string **healthcare** should be actually spelled as healthcare[UI][N]. A user, say, *Mary Jane* might create a ***unique string*** by using a base service name of healthcare**mj01** and all services names below should follow the same naming pattern. For example, in the section "Create an Azure Event 
-Hub" below: 
-
-- healthcareehns should actually be spelled healthcare**mj01**ehns 
-- healthcareehub should actually be spelled healthcare**mj01**ehub  
-
-### Accessing Files in the Git Repository
-
-This tutorial will refer to files available in the Manual Deployment Guide section of the [Population Health Management  git repository](../ManualDeploymentGuide). You can download all of these files at once by clicking the "Clone or download" button on the repository.
-
-You can download or view individual files by navigating through the repository folders. If you choose this option, be sure to download the "raw" version of each file by clicking the filename to view it, then cliking Download.
+Hub" below:   
+- healthcareehns should actually be spelled healthcare**mj01**ehns   
+- healthcareehub should actually be spelled healthcare**mj01**ehub   
+ 
 
 ### Installing AzCopy Command-Line Utility
 
 AzCopy is a Windows command-line utility designed for copying data to and from Microsoft Azure storage. Download AzCopy from [here](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy). Open this desktop App you just installed by [searching](media/azcopy1.jpg?raw=true) for ‘Microsoft Azure Storage command line’ or simple ‘azure storage command’. Open this app and you will get a [command prompt](media/azcopy2.PNG?raw=true). We will use this utility to transfer files to and from blob.
 
+### Installing AdlCopy Command-Line Utility
+AdlCopy is a command line tool to copy data from Azure Storage Blobs into Data Lake Store and between two Azure Data Lake Store accounts. The installation instructions are provided below.
 
-----------
+Now that the prerequisites are fulfilled we can start the deployment process.
 
-Deployment Steps:
-====================
-
-
-This section will walk you through the steps to manually create the population health management solution in your Azure subscription.
-
+[..](#dsteps)
 <a name="azurerg"></a>
 ## Create an Azure Resource Group for the solution
   The Azure Resource Group is used to logically group the resources needed for this architecture. To better understand the Azure Resource Manager click [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview). 
@@ -87,9 +82,10 @@ This section will walk you through the steps to manually create the population h
     - South Central US
     - West Europe
     - Southeast Asia  
+- Record the resource group name and location for later steps in this manual. We suggest you download the [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) from above and store these there for future reference.
 
-**NOTE** : It may be helpful for future steps to record the resource group name and location for later steps in this manual. 
 
+[..](#dsteps)
 <a name="azuresa"></a>
 ## Create Azure Storage Account 
   The Azure Storage Account is required for several parts of this solution:
@@ -111,9 +107,9 @@ This section will walk you through the steps to manually create the population h
 The creation step may take several minutes. Navigate back to your resource group's blade and click "Refresh" until the storage account appears. Then follow the instructions below to collect important information that will be required in future steps:
 - Click on the storage account's name in your resource group to load the storage account blade.
 - On the storage account blade, select [**Access keys**](media/storageaccountcredentials.PNG?raw=true) from the menu on the left.
-- Record the *STORAGE ACCOUNT NAME*, *KEY* and *CONNECTION STRING* values for *key1*.
+- Record the *STORAGE ACCOUNT NAME*, *KEY* and *CONNECTION STRING* values for *key1* in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) you downloaded earlier.
 
-You will need these three credentials to upload files to your storage account below, when starting the data generator and when setting up a Linked Service to access the files in your blob through Azure Data Factory. We suggest you download the [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) from above and store these credentials for future reference.
+You will need these three credentials to upload files to your storage account below, when starting the data generator and when setting up a Linked Service to access the files in your blob through Azure Data Factory. 
 
 ### Move resources to the storage account
   
@@ -143,7 +139,7 @@ Next we will create some containers and move the necessary files into the newly 
         - Replace 'EnterYourStorageAccountkeyhere' with your storage account key and \<storageaccountname\> with your storage account name in the command before executing.
     - Return to the storage account's *Blobs* pane in Azure Portal and click on the container name `forphmdeploymentbyadf`. You should see seventeen files listed [here](../ManualDeploymentGuide/scripts/datafactory) appear in your container `forphmdeploymentbyadf`. 
   
-  
+[..](#dsteps)  
 <a name="azureeh"></a>
 ## Create an Azure Event Hub
   The Azure Event Hub is the ingestion point of raw records that will be processed in this solution. The role of Event Hub in solution architecture is as the "front door" for an event pipeline. It is often called an event ingestor.
@@ -176,7 +172,9 @@ From the **healthcareehns** resource (i.e. the event hub namespace that you crea
 
 - On the ***healthcareeehns*** blade, choose [*Shared access policies*](../ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
 - Select [**RootManageSharedAccessKey**](../ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
+- We suggest you record these in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) downloaded earlier.
 
+[..](#dsteps)
 <a name="azuredls"></a>
 ## Create an Azure Data Lake Store
   The Azure Data Lake store is used as to hold raw and scored results from the raw data points generated by the data generator and streamed in through Stream Analytics job.
@@ -193,7 +191,7 @@ From the **healthcareehns** resource (i.e. the event hub namespace that you crea
 
 The creation step may take several minutes. When deployment has finished, retrieve the Data Lake Store's URI as follows:
 - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
-- In the main pane, record the *ADL URI* value, which will be in the [form](../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**.  
+- In the main pane, record the *ADL URI* value, which will be in the [form](../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**. We suggest you record this in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) downloaded earlier.
 
 You will need this URI to connect Power BI to the data in your Data Lake Store. 
 
@@ -212,6 +210,7 @@ You will need this URI to connect Power BI to the data in your Data Lake Store.
 
 In ~5 minutes (depending on the bandwidth) the files will be transferred to your folder `forphmdeploymentbyadf` in your Data Lake Store. These files must be in place before the Azure Data Factory pipelines (described below) can be run.
 
+[..](#dsteps)
 ##   Start the Data Generator now 
 With the [input data for the generator](../ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and the Data Lake Store created, we are ready to start the data generator. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
 
@@ -240,6 +239,7 @@ Next we will **test that that data generator is working correctly** by running i
 
 Look for the zipped file in the folder and rename it if you like. This zipped file will be uploaded to Azure Portal for the Web Job.
 
+[..](#dsteps)
 <a name="webjob"></a>
 ## Create an Azure WebJob
 We will use an Azure [App Service](https://docs.microsoft.com/en-us/azure/app-service/app-service-value-prop-what-is) to create a Web App to run Data Generator Web Job which will simulate streaming data from hospitals. [Azure WebJobs](https://docs.microsoft.com/en-us/azure/app-service-web/websites-webjobs-resources) provide an easy way to run scripts or programs as background processes. We can upload and run an executable file such as cmd, bat, exe (.NET), ps1, sh, php, py, js, and jar. These programs run as WebJobs and can be configured to run on a schedule, on demand or continuously. Below we show how to use Azure Portal to create a Web App with a new App Service Plan (S1 standard) and then create a WebJob. We will upload the zip file (created above after modifying the settings in .config file) and set the Web Job as continuous and single instance.
@@ -276,6 +276,7 @@ We will use an Azure [App Service](https://docs.microsoft.com/en-us/azure/app-se
 
 Once the data generator is running, you should [see](../ManualDeploymentGuide/media/datageneratorstarted.PNG?raw=true) incoming data in your Event Hub within a few minutes. ***NOTE:*** The PowerBI Dashboards (see HotPath) will only be dynamically updated when the WebJob is running.  
 
+[..](#dsteps)
 <a name="azurestra"></a>
 ## Create Azure Stream Analytics Job - Cold and Hot Paths
   [Azure Stream Analytics](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction) facilitates setting up real-time analytic computations on streaming data. Azure Stream Analytics job can be authored by specifying the input source of the streaming data, the output sink for the results of your job, and a data transformation expressed in a SQL-like language. In this solution, for the incoming streaming data, we will have two different output sinks - Data Lake Store (the *Cold Path*) and Power BI (the *Hot Path*). Below we will outline the steps to set up the cold path stream and the hot path stream. 
@@ -386,9 +387,10 @@ The deployment step may take several minutes.  When deployment has finished, we 
 
 After some time, this new dataset *hotpathcore* will appear in the Datasets section of your Power BI account.
  
+[..](#dsteps)
 <a name="azuredla"></a>
 ## Create Azure Data Lake Analytics 
-  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [USQL](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The USQL script for various jobs (joining, scoring etc.) can be found at [scripts/datafactory/scripts_storage/](../ManualDeploymentGuide/scripts/datafactory/scripts_storage) folder of this repository and was uploaded to storage in a previous step, from whence Azure Data Factory will access them to automatically submit the various jobs. The USQL scripts will deploy various resources (viz. R scripts, trained models, CSV files with historic and metadata etc.) to your Data Lake Store in the folders `adfrscripts`, `historicdata` and `models`. We created these folders in the steps above when we created the Data Lake Store and uploaded the contents to these folders. One additional important step is to install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end-to-end data science scenarios covering: merging various data files, feature engineering, partitioned data model building and, post-deployment, massively parallel FE and scoring.
+  Azure Data Lake Analytics is an on-demand analytics job service to simplify big data analytics. It is used here to process the raw records and perform other jobs such as feature engineering, scoring etc. You must have a Data Lake Analytics account before you can run any jobs. A job in ADLA is submitted using a [USQL](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-usql-activity) script. The USQL script for various jobs (joining, scoring etc.) can be found at [scripts/datafactory/scripts_blob/](../ManualDeploymentGuide/scripts/datafactory/scripts_blob/) folder of this repository and was uploaded to storage in a previous step using azcopy, from whence Azure Data Factory will access them to automatically submit the various jobs. The USQL scripts will deploy various resources (viz. R scripts, trained models, CSV files with historic and metadata etc.) from the folder `forphmdeploymentbyadf` in your Data Lake Store. We created this folder in the step above when we created the Data Lake Store and uploaded the contents to this folder using [adlcopy](../ManualDeploymentGuide/scripts/datafactory/adlcopy_command_forphmdeploymentbyadf_blobtoadls.txt). One additional **important step** is to install U-SQL Extensions in your account. R Extensions for U-SQL enable developers to perform massively parallel execution of R code for end-to-end data science scenarios covering: merging various data files, feature engineering, partitioned data model building and, post-deployment, massively parallel FE and scoring.
 
 - Log into the [Azure Management Portal](https://ms.portal.azure.com) and click on *Resource groups* in the left-hand menu.
 - Locate the resource group you created for this project and click on it, displaying the resources associated with the group in the resource group blade.
@@ -405,7 +407,9 @@ After some time, this new dataset *hotpathcore* will appear in the Datasets sect
 - In the Sample Scripts [blade](../ManualDeploymentGuide/media/adla_install.PNG?raw=true), click on ***Install U-SQL Extensions*** to install U-SQL Extensions to your account.
   - This step will enable R (and Python) extensions to work with ADLA.
   - This step may take several minutes to complete.
+  - Record the name of the Data Lake Analytics account just created in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt)
 
+[..](#dsteps)
 <a name="azuredf"></a>
 ## Create Azure Data Factory
   Azure Data Factory is a cloud-based data integration service that automates the movement and transformation of data and other steps necessary to convert raw stream data to useful insights. Using Azure Data Factory, you can create and schedule data-driven workflows called "pipelines." A pipeline is a logical grouping of activities that together perform a task. The activities in a pipeline define actions to perform on your data. In this data factory, we will have only one pipeline with four different activities. The compute service we will be using for data transformation in this Data Factory is Data Lake Analytics.
@@ -431,7 +435,7 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade, choose *New data store* and select *Azure Storage* from the list. You will be presented with a draft.
-- Replace `<accountname>` with the name of your storage account, `healthcarestorage` (e.g. Mary Jane would use `healthcaremj01`).
+- Replace `<accountname>` with the name of your storage account  you recorded earlier in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt).
 - Replace `<accountkey>` with the storage account key you recorded earlier.
 - At the top of the blade, click *Deploy*.
 
@@ -439,7 +443,7 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade choose *New data store* and select *Azure Data Lake Store* from the list. You will be presented with a draft.
-- For the *dataLakeStoreUri* setting, copy in the *ADL URI* value saved during the creation of the Azure Data Lake Store. 
+- For the *dataLakeStoreUri* setting, copy in the *ADL URI* value saved during the creation of the Azure Data Lake Store and recorded in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt). 
 - Remove the properties marked as [Optional]. (These would be *accountName*, *resourceGroupName*, and *subscriptionId*.)
 - At the top of the page, click ***Authorize***. You will notice some fields will get auto-filled after authorization. 
 - At the top of the blade, click ***Deploy***.
@@ -448,7 +452,7 @@ The deployment step may take several minutes. Wait until deployment has finished
 - Navigate back to the resource group blade and click on the *healthcareadf* data factory.
 - Under *Actions*, click *Author and deploy*.
 - At the top of the blade, click on ***...More***. Select *New compute* from the drop-down list, then choose *Azure Data Lake Analytics*. You will be presented with a draft.
-- For the *accountName* setting, enter the Azure Data Lake Analytics resource name you provided earlier (`healthcareadla`).
+- For the *accountName* setting, enter the Azure Data Lake Analytics resource name saved during the creation of the Azure Data Lake Analytics account and recorded in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt)..
 - You **must** remove the properties marked as [Optional]. (These would be *resourceGroupName* and *subscriptionId*.)
 - At the top of the page, click ***Authorize***. You will notice some fields will get auto filled after authorization. 
 - At the top of the blade, click ***Deploy***.
@@ -523,6 +527,8 @@ Let's look closely at these activities and what they are doing.
 
   Now that Azure Data Factory has been deployed, joined results will start to appear in the Azure Data Lake Store in `stream/joined` followed by scored results in `stream/scoring` etc. For more on how to monitor the pipeline, read [here](https://docs.microsoft.com/en-us/azure/data-factory/data-factory-monitor-manage-pipelines). 
 
+[..](#dsteps)
+<a name="vis"></a>
 ## Visualization
 
   Congratulations! You have successfully deployed a Cortana Intelligence Solution. The hot path stream created above is pushing data to Power BI for real-time visualization. Our Power BI dashboard will also connect to the streaming data and predictions being stored in the Data Lake Store (cold path) along with historic data for visualization. A picture is worth a thousand words. Let's head over to the [visualization](../ManualDeploymentGuide/Visualization) folder where you will find instructions on how to use [Power BI](https://powerbi.microsoft.com/) to build reports and dashboards using your data. 
