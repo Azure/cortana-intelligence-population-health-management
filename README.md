@@ -3,7 +3,7 @@
 ## The state of Health Care
 According to the [Centers for Medicaid and Medicare Services](https://www.cms.gov/research-statistics-data-and-systems/statistics-trends-and-reports/nationalhealthexpenddata/nationalhealthaccountshistorical.html), U.S. health care spending reached $3.2 trillion -- or $9,990 per person -- in 2015, accounting for 17.8 percent of the Gross Domestic Product. One-third of this health care expenditure comes from hospital inpatient care. With spending [projected](https://www.cms.gov/research-statistics-data-and-systems/statistics-trends-and-reports/medicare-provider-charge-data/downloads/publiccomments.pdf) to reach $4.8 trillion in 2021, health care has become the [top concern](http://big.assets.huffingtonpost.com/tabsHPTrumpIssues20170320.pdf) for Americans, even surpassing the economy. Concerted efforts are being made to reduce spending. The recent shift in government [payment models](https://www.healthcatalyst.com/hospital-transitioning-fee-for-service-value-based-reimbursements) from fee-for-service to pay-for-value is aimed specifically at reducing the government’s spending on health care and curtailing the growing budget deficits. Under this model, disease prevention and management is rewarded while poor outcomes are penalized. This shift from fee-for-service payments to value-based care is transforming the US health care industry and forcing providers to provide better care at a lower cost, impacting their bottom line. 
 
-<<<<<<< HEAD
+
 ## What is Population Health Management
 
 Population Health Management is an important tool that is increasingly being used by health care providers to manage and control the escalating costs. The crux of Population Health Management is to use data to improve health outcomes. Tracking, monitoring and bench marking are the three bastions of Population Health Management, aimed at improving clinical and health outcomes while managing and reducing cost. 
@@ -28,5 +28,3 @@ In this solution guide, we present two use cases under the umbrella of Populatio
 
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-=======
->>>>>>> origin
