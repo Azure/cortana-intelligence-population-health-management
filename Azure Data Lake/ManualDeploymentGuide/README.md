@@ -44,7 +44,7 @@ Before we start deploying, there are some prerequisites required and naming conv
 - AzCopy installation.
 - AdlCopy installation.
  
-### Naming Convention  
+### Naming Convention - Create a unique string
 
 This deployment guide walks the readers through the creation of each of the Cortana Intelligence Suite services in the solution architecture shown above. 
 As there are usually many interdependent components in a solution, [Azure Resource Manager](https://azure.microsoft.com/en-gb/features/resource-manager/) enables you to 
