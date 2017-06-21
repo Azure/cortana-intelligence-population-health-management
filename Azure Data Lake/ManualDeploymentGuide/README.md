@@ -172,6 +172,7 @@ From the **healthcareehns** resource (i.e. the event hub namespace that you crea
 
 - On the ***healthcareeehns*** blade, choose [*Shared access policies*](../ManualDeploymentGuide/media/eventhub1.PNG?raw=true) from the menu under Settings.
 - Select [**RootManageSharedAccessKey**](../ManualDeploymentGuide/media/eventhub2.PNG?raw=true) and record the value for **CONNECTION STRING -PRIMARY KEY** in the third row. You will need this when starting the generator.
+- We suggest you record these in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) downloaded earlier.
 
 [..](#dsteps)
 <a name="azuredls"></a>
@@ -190,7 +191,7 @@ From the **healthcareehns** resource (i.e. the event hub namespace that you crea
 
 The creation step may take several minutes. When deployment has finished, retrieve the Data Lake Store's URI as follows:
 - Navigate back to the resource group blade and select the ***healthcareadls*** Data Lake Store.
-- In the main pane, record the *ADL URI* value, which will be in the [form](../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**.  
+- In the main pane, record the *ADL URI* value, which will be in the [form](../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true) **adl://__********__.azuredatalakestore.net**. We suggest you record this in [deployment_notepad.txt](../ManualDeploymentGuide/deployment_notepad.txt) downloaded earlier.
 
 You will need this URI to connect Power BI to the data in your Data Lake Store. 
 
