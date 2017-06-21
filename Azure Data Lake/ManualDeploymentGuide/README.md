@@ -214,7 +214,6 @@ In ~5 minutes (depending on the bandwidth) the files will be transferred to your
 ##   Start the Data Generator now 
 With the [input data for the generator](../ManualDeploymentGuide/rawevents/files_datagenerator) uploaded to your storage account, the Event hub set up and the Data Lake Store created, we are ready to start the data generator. Once the generator is turned on, the Event Hub will start collecting the data. We will set up Stream Analytics job in the next steps that will process events from the Azure Event Hub and store in Data Lake Store and also push the incoming data to Power BI for visualization. If the generator is not running, you will not see streaming data coming in.
 
-[..](#dsteps)
 <a name="gen"></a>
 ### Download and configure the data generator  
 - On your Windows machine, download the file ***healthcaregenerator.zip*** from the [datagenerator folder](../ManualDeploymentGuide/datagenerator) of this repository. The folder choice will keep the path length short, avoiding the 255 character limit on folder names.
