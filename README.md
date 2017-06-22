@@ -18,8 +18,8 @@ The Azure Data Lake Store & Analytics is one such technology that has all the ca
 
 In this solution guide, we present two use cases under the umbrella of Population Health Management:  
 
-- [Live Population Health Report with Hospital Length of Stay ](./Azure%20%Data%20%Lake/README.MD)prediction
-- [Patient-Specific Readmission Prediction and Intervention for Health Care](./Spark/README.MD).
+- [Live Population Health Report with Hospital Length of Stay prediction](../Azure%20%Data%20%Lake/README.MD)
+- [Patient-Specific Readmission Prediction and Intervention for Health Care](../Spark/README.MD).
 
 With different input data schema, the former use case showcase the usage of ADLA with U-SQL and R, while the latter use case makes usage of HDInsight Spark 2.0 with PySpark as the analytics engine. 
  
