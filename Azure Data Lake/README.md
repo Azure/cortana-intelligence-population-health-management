@@ -1,5 +1,5 @@
 # Population Health Management for Healthcare - A Cortana Intelligence Solution
-## Live Population Health Report with length of stay predictions.
+## Live Population Health Report with Length of Stay predictions
 
 
 ### ***What is Population Health Management*** 
