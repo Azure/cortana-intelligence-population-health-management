@@ -23,12 +23,12 @@ The snapshot below shows how we use PowerBI for Population Health reporting:
 
 ## Technical Audiences
 
-For technical audiences, we have put together a manual deployment guide as well as an automated deployment guide. The manual deployment guide is geared towards the more technically bent who want to understand how to spin up the different components and how they can be connected together to build an end-to-end pipeline. The automated deployment guide is for seeing the entire solution in action without having to do all the wiring manually.
+For technical audiences, we have put together a manual deployment guide as well as an automated deployment guide. The manual deployment guide is geared toward those who want to understand how to spin up the different components and how they can be connected together to build an end-to-end pipeline. The automated deployment guide is for seeing the entire solution in action without having to do all the wiring manually.
 
 ### [Manual Deployment Guide](ManualDeploymentGuide/)
 In this folder, you will find instructions on how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite.  It will walk you through how to manually set up and deploy all the individual services used in this solution (e.g. Azure Event Hub, Data Lake Store, Azure Stream Analytics etc.). 
 
 ### [Automated Deployment Guide](AutomatedDeploymentGuide/)
-There is also a deployable Population Health Management solution in the Cortana Intelligence Gallery (offering one-click deployment of all services required for this solution!). In this folder, you will find instructions on how to monitor the progress of your automated deployment (takes about 20 minutes to deploy) and carry out some post-deployment steps.
+There is also a deployable Population Health Management solution in the Cortana Intelligence Gallery (offering an accelerated deployment of all services required for this solution). In this folder, you will find instructions on how to monitor the progress of your automated deployment (takes about 20-40 minutes to deploy) and carry out some post-deployment steps.
  
 For more information on how to tailor Cortana Intelligence to your needs, [connect with one of our partners](http://aka.ms/CISFindPartner).
