@@ -5,9 +5,11 @@
 
 <Guide type="Summary">
 Population Health Management is an important tool that is increasingly being used by health care providers to manage and control the escalating costs. The crux of Population Health Management is to use data to improve health outcomes. Tracking, monitoring and bench marking are the three bastions of Population Health Management, aimed at improving clinical and health outcomes while managing and reducing cost.
-</Guide>
+
 
 We described [here](../ManualDeploymentGuide/README.md) what are the ingredients required for a successful Population Health Management solution and its relevance for the healthcare industry. We briefly discussed why Azure Data Lake is the right tool for creating a Population Health Management solution and also gave a summary of what is in this Cortana Intelligence solution. In the [Model folder](../ManualDeploymentGuide/Model/) we provided a detailed description of data and Machine Learning model built for this solution. In the Manual Deployment Guide section of this solution we showed you how to put together and deploy from the ground up a population Health Management solution using the Cortana Intelligence Suite for technical audience who want to do all the wiring and stitching manually. To see the entire Population Health Management for Health care using Cortana Intelligence Suit in action without having to spin up and connect all the components manually, there is also a one click deployment option available in Cortana Intelligence Gallery. To start a new solution deployment, visit the gallery page [here](https://gallery.cortanaintelligence.com/). The 'Deploy' button will launch a workflow that will deploy an instance of the solution within a Resource Group in the Azure subscription you specify. This folder contains the post-deployment instructions for the automated deployable Population Health Management solution for Health care in the Cortana Intelligence Gallery. You will also see these steps outlined in the last screen at the end of a successful automated deployment along with the list of services provisioned. 
+
+</Guide>
 
 ## Prerequisites
 <Guide type="Prerequisites">
