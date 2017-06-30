@@ -41,9 +41,9 @@ To connect to the data in your Azure Data Lake Store, you will need to supply Po
 - You will see a message "There are pending changes in your queries that haven't been applied". Ignore this message. 
 - Click on `Edit Queries` in the ribbon at the top of your screen. You will see two data sources under Queries panel at the left.
 - Select `data4PBI_simulated` in the query list at left, and click on `Advanced Editor` in the ribbon at the top of the screen.
-- You will see a query in the editor that will look like this. Replace the ADL uri "adl://phmciqs1w6adls.azuredatalakestore.net" with your ADL uri that you copied in step above and click on `Done` and close it.
+- You will see a query in the editor that will look like [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/Azure%20Data%20Lake/ManualDeploymentGuide/media/connectionquery1.txt). Replace the ADL uri "adl://phmciqs1w6adls.azuredatalakestore.net" with your ADL uri that you copied in step above and click on `Done` and close it.
 - Next, select `ReadmittanceTarget` in the query list and click on "Advanced Editor".
-- You will see a query in the editor that will look like this. Replace the ADL uri "adl://phmciqs1w6adls.azuredatalakestore.net" with your ADL uri that you copied in step above and click on `Done` and close it.
+- You will see a query in the editor that will look like [this](https://github.com/Azure/cortana-intelligence-population-health-management/raw/master/Azure%20Data%20Lake/ManualDeploymentGuide/media/connectionquery2.txt). Replace the ADL uri "adl://phmciqs1w6adls.azuredatalakestore.net" with your ADL uri that you copied in step above and click on `Done` and close it.
 - In the Query Editor click "Close & Apply" in the ribbon at the top of your screen.
     - The data sources will update and point to the files in your Data Lake Store.
 - In the backend, model is scheduled to be refreshed every 1 hour. You can click **'Refresh'** button on the top to get the latest visualization as time moves forward.
