@@ -23,7 +23,7 @@ This solution requires the creation of:
 * 1 Event Hub with, 16 partitions and 2 Consumer Groups
 * 1 Web Job 
 	
-Ensure adequate Data Lake Stores and Stream Processing units are available before provisioning. Please consider deleting any unused Data Lake Store from your subscription. You may contact Azure Support if you need to increase the limit.
+Ensure adequate Data Lake Stores and Stream Processing units are available before provisioning. Please consider deleting any unused Data Lake Store from your subscription. You may contact Azure Support if you need to increase the limit. You may contact [Azure Support](https://azure.microsoft.com/support/faq/) if you need to increase the limit.
 
 </Guide>
 
