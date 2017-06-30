@@ -1,6 +1,6 @@
 # Population Health Management - Automated Deployment Guide  
 
-<Guide type="PostDeploymentGuidance" url="https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Azure%20Data%20Lake/AutomatedDeploymentGuide"/>
+<Guide type="PostDeploymentGuidance" url="https://github.com/Azure/cortana-intelligence-population-health-management/blob/master/Azure%20Data%20Lake/AutomatedDeploymentGuide/README.md"/>
 
 
 <Guide type="Summary">
@@ -16,6 +16,7 @@ This solution requires the creation of:
 
 * 1 Data Lake Store
 * 1 Data Lake Analytics Account
+* 1 Storage account
 * 2 Stream Jobs 
 * 1 Event Hub with, 16 partitions and 2 Consumer Groups
 * 1 Web Job 
