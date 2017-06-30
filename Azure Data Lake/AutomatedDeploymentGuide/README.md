@@ -25,7 +25,7 @@ Ensure adequate Data Lake Stores and Stream Processing units are available befor
 
 </Guide>
 
-#### Estimated Provisioning Time: <Guide type="EstimatedTime">1 Hour</Guide>
+#### Estimated Provisioning Time: <Guide type="EstimatedTime">35 minutes</Guide>
 
 The architecture diagram below shows the data flow and the end-to-end pipeline for Population Health Management Solution for Healthcare.
 
