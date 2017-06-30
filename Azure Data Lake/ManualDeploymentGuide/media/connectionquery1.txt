@@ -1,5 +1,5 @@
 let
-    Source = DataLake.Contents("adl://<datalakestorename>.azuredatalakestore.net"),
+    Source = DataLake.Contents("adl://phmciqs1w6adls.azuredatalakestore.net"),
     pbidataforPHM = Source{[Name="pbidataforPHM"]}[Content],
     #"data4visualization_latest csv" = pbidataforPHM{[Name="data4visualization_latest.csv"]}[Content],
     #"Imported CSV" = Csv.Document(#"data4visualization_latest csv",[Delimiter=",", Columns=54, Encoding=1252, QuoteStyle=QuoteStyle.None]),
