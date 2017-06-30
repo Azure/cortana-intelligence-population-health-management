@@ -33,65 +33,22 @@ To connect to the data in your Azure Data Lake Store, you will need to supply Po
 - In the Data Lake Store's overview pane, copy the **ADL URI**. It will look similar to [this](../../ManualDeploymentGuide/media/adlsuri1.PNG?raw=true):
     `adl://************.adlsdefault.azuredatalakestore.net/`. 
 
-#### 2)	Get the query connection strings
-
-Before you can update the sample Power BI dashboard we have supplied, you will need to generate two Power BI query connection strings to access the files in your Data Lake Store.
-
-- Load the patient hospital visit record data into a new Power BI dashboard
-    - Open the Power BI Desktop application. A new, untitled Power BI dashboard will automatically be created for you.
-    - On the opening splash screen, click the "Get data" link at left.
-    - In the "Get data" dialog box, select "Azure", then choose "Azure Data Lake Store". Click "Connect".
-    - In the next dialog box, enter your **ADL URI** as the URL and click the "OK" button.
-    - On the next screen, you will see a summary of your Data Lake Store (consisting of the folders in the root directory). Click the "Load" button at the bottom of the screen.
-        - After the data has been successfully loaded into Power BI, you will see that the "Fields" menu at right has been populated automatically with a [table named Query1](../../ManualDeploymentGuide/media/pbiconnect1.PNG?raw=true) that contains elements like Content, Date accessed, Date Created, etc.
-    -	In the ribbon at the top of your screen, ensure that the "Home" tab is selected, then click "Edit Queries".
-        - In the Query Editor, you will see a table in which the first column is "Content", the second column is "Name", and so forth.
-    -	Find the row in this table that contains the value "pbidataforPHM" in the "Name" column (row 3). Click on the "Table" hyperlink in the "Content" column of that row.
-    -	In the next screen, click on the "Binary" hyperlink in the single-row table.
-        - You should now see a table containing the patient hospital visit records.
-    -	On the ribbon at the top of the screen, click "Close and Apply".
-        - You should now see that the "Fields" menu at right contains the fields from the patient hospital visit records, i.e. the columns from `data4visualization_latest.csv` file. We will now repeat the steps above to load the readmission data.
-- Load the readmission data into the same Power BI dashboard
-    - Open the Power BI Desktop application. A new, untitled Power BI dashboard will automatically be created for you.
-    - On the opening splash screen, click the "Get data" link at left.
-    - In the "Get data" dialog box, select "Azure", then choose "Azure Data Lake Store". Click "Connect".
-    - In the next dialog box, enter your **ADL URI** as the URL and click the "OK" button.
-    - On the next screen, you will see a summary of your Data Lake Store (consisting of the folders in the root directory). Click the "Load" button at the bottom of the screen.
-        - After the data has been successfully loaded into Power BI, you will see that the "Fields" menu at right has been populated automatically with a second table named "Query2".
-    - Click the "Edit Queries" button in the ribbon at the top of your screen.
-    - Click on "Query2" in the list at left. You will again see a summary of the folders in the root directory for your Data Lake Store.
-    - Find the row in this table that contains the value "forphmdeploymentbyadf" in the "Name" column (row 2). Click on the "Table" hyperlink in the "Content" column of that row.
-        - In the next screen, you will see a table describing the files in the `/forphmdeploymentbyadf` subdirecory of your ADLS. 
-    - Find the row in this table that contains the value "ReadmittanceTarget.csv" in the "Name" column (row 1). Click on the "Binary" hyperlink in the "Content" column of that row.
-        - You should now see a table containing data relevant to readmission.
-    - On the ribbon at the top of the screen, click "Close and Apply".
-        - You should now see that "Query2" under the "Fields" menu at right contains the readmission fields, i.e. the columns from `ReadmittanceTarget.csv` file.   
-- Record the query strings
-    - Click on the "Edit Queries" button in the ribbon at the top of your screen.
-    - Select "Query1" in the list at left, then click on "Advanced Editor" in the ribbon at the top of your screen.
-        - An editor will pop out containing the connection query. It should look similar to [this](../../ManualDeploymentGuide/media/connectionquery1.txt).
-    - Copy the contents of the editor to a notepad.
-    - Close the advanced editor.
-    - Select "Query2" in the list at left, then click on "Advanced Editor" in the ribbon at the top of your screen.
-        - An editor will pop out with the connection query for the second table (similar to [this](../../ManualDeploymentGuide/media/connectionquery2.txt)).
-    - Copy the contents of the editor in a notepad.
-    - With the two connection queries collected in your notepad, close the advanced editor and close this dashboard (saving is not necessary).
   
-#### 3)	Update the data source of the Power BI file
+#### 2)	Update the data source of the Power BI file by modifying the query connection strings
 
-- Download the example dashboard file 'PopulationHealthManagement.pbix' from [here](../../ManualDeploymentGuide/Visualization) and open it.
+- Download the example dashboard file 'PopulationHealthManagement.pbix' from [here](../../ManualDeploymentGuide/Visualization) and Open it.
     - **Note:** If you see an error message, please make sure you have installed the latest version of [Power BI Desktop](https://powerbi.microsoft.com/desktop). 
-- Click on "Edit Queries" in the ribbon at the top of your screen.
-- Select `data4PBI_simulated` in the query list at left, and click on "Advanced Editor".
-- Replace the content in the editor with what you copied in your notepad earlier for `data4visualization_latest.csv` (Query1).
-- Close the editor.
-- Next, select `ReadmittanceTarget` and click on "Advanced Editor".
-- Replace the content in the editor with what you copied in your notepad earlier for `ReadmittanceTarget.csv` (Query2).
-- Close the editor and click "Close & Apply" in the ribbon at the top of your screen.
+- You will see a message "There are pending changes in your queries that haven't been applied". Ignore this message. 
+- Click on `Edit Queries` in the ribbon at the top of your screen. You will see two data sources under Queries panel at the left.
+- Select `data4PBI_simulated` in the query list at left, and click on `Advanced Editor` in the ribbon at the top of the screen.
+- You will see a query in the editor that will look like this. Replace the ADL uri "adl://phmciqs1w6adls.azuredatalakestore.net" with your ADL uri that you copied in step above and click on `Done` and close it.
+- Next, select `ReadmittanceTarget` in the query list and click on "Advanced Editor".
+- You will see a query in the editor that will look like this. Replace the ADL uri "adl://phmciqs1w6adls.azuredatalakestore.net" with your ADL uri that you copied in step above and click on `Done` and close it.
+- In the Query Editor click "Close & Apply" in the ribbon at the top of your screen.
     - The data sources will update and point to the files in your Data Lake Store.
 - In the backend, model is scheduled to be refreshed every 1 hour. You can click **'Refresh'** button on the top to get the latest visualization as time moves forward.
 
-#### 4) Publish the dashboard to [Power BI Online](http://www.powerbi.com/)
+#### 3) Publish the dashboard to [Power BI Online](http://www.powerbi.com/)
   Note that to complete this step, you will need a (free) Power BI or Office 365 account.
 
 - Click **"Publish"** on the ribbon along the top of your screen, You will be prompted to sign into your Power BI account.
