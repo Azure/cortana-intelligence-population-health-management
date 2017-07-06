@@ -1,6 +1,6 @@
 
-# Population Health Management - Automated Deployment Guide  
-# [Population Health Management](https://gallery.cortanaintelligence.com/Solution/db7ef76032514219a88c0af06cbc4073)
+# [Population Health Management](https://gallery.cortanaintelligence.com/Solution/db7ef76032514219a88c0af06cbc4073) - Automated Deployment Guide  
+## Live Population Health Report with Length of Stay predictions
 
 This folder contains the post-deployment instructions for the deployable Population Health Management solution in the Cortana Intelligence Gallery. To start a new solution deployment, visit the gallery page [here](https://gallery.cortanaintelligence.com/Solution/db7ef76032514219a88c0af06cbc4073).
 
