@@ -31,6 +31,7 @@ Ensure adequate Data Lake Stores and Stream Processing units are available befor
 
 #### Estimated Provisioning Time: <Guide type="EstimatedTime">35 Minutes</Guide>
 <Guide type="Description">
+
 Using Cortana Intelligence Suite you can put together and deploy from the ground up a population Health Management solution by following the instructions [here](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Azure%20Data%20Lake/ManualDeploymentGuide). To see the entire Population Health Management solution for Health care using Cortana Intelligence Suit in action without having to spin up and connect all the components manually, you can use the one click deployment option available here.
 
 The 'Deploy' button on the right will launch a workflow that will deploy an instance of the solution within a Resource Group in the Azure subscription you specify. The solution includes multiple Azure services (described below) and requires a few manual steps necessary to have a working end-to-end solution with simulated in-patient data from hospitals. 
