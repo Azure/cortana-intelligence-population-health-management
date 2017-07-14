@@ -1,1 +1,1 @@
-AzCopy /Source:https://phm.blob.core.windows.net/forphmdeploymentbyadf /Dest:https://<storageaccountname>.blob.core.windows.net/forphmdeploymentbyadf  /SourceSAS:"?st=2017-06-01T19%3A09%3A00Z&se=2027-06-01T19%3A09%3A00Z&sp=rl&sv=2016-05-31&sr=c&sig=uoDbP%2FoDE%2Ffqvsk46U5q9bxib%2B59HrQkWeD3YucQGYk%3D" /DestKey:EnterYourStorageAccountkeyhere /s
+AzCopy /Source:https://bostondata.blob.core.windows.net/forphmdeploymentbyadf/ /Dest:https://<storageaccountname>.blob.core.windows.net/forphmdeploymentbyadf /DestKey:EnterYourStorageAccountkeyhere /s
