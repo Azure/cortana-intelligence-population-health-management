@@ -1,1 +1,1 @@
-AzCopy /Source:https://bostondata.blob.core.windows.net/scripts/ /Dest:https://<storageaccountname>.blob.core.windows.net/scripts /DestKey:EnterYourStorageAccountkeyhere /s
+AzCopy /Source:https://populationhm.blob.core.windows.net/scripts/ /Dest:https://<storageaccountname>.blob.core.windows.net/scripts /DestKey:EnterYourStorageAccountkeyhere /s
