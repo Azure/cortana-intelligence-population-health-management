@@ -18,12 +18,12 @@ There are several decision points when choosing between ADLA or Spark on HDInsig
 
 ## What's in this solution
 
-In this solution guide, we present two use cases under the umbrella of Population Health Management:  
+In this solution guide, we present two use cases under the umbrella of Population Health Management with the different architectures as described above:
 
 - [Live Population Health Report with Hospital Length of Stay prediction](Azure%20Data%20Lake/README.md)
 - [Patient-Specific Readmission Prediction and Intervention for Health Care](Spark/README.md)
 
-With different input data schema, the former use case showcases the usage of ADLA with U-SQL and R, while the latter use case makes usage of HDInsight Spark 2.0 with PySpark as the analytics engine. 
+With different input data schema, the former use case showcases the usage of ADLA with U-SQL and R, while the latter use case makes usage of HDInsight Spark 2.0 with PySpark as the analytics engine. Both solutions may be manually deployed following the instructions, and the first solution can be automatically deployed through the Cortana Intelligence Gallery.
  
 
 
