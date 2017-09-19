@@ -1,4 +1,4 @@
-# Population Health Management for Healthcare - A Cortana Intelligence Solution
+# [Population Health Management for Healthcare - A Cortana Intelligence Solution](https://gallery.cortanaintelligence.com/Solution/Population-Health-Management-for-Healthcare-6)
 ## Live Population Health Report with Length of Stay predictions
 
 
