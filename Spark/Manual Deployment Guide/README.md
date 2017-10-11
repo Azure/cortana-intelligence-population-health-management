@@ -116,7 +116,7 @@ We recommend creating a HDInsight Spark cluster to train, evaluate, and apply th
 1. In the "Summary" pane that appears:
     1. Click on the "Edit" link next to "Cluster size".
     1. Ensure that the number of worker nodes is set to "4". (Select the option 'View all' if you do not see this option by default).
-    1. Set the "Worker node size" and "Head node size" to "A3". (Select the option 'View all' if you do not see this option by default).
+    1. Set the "Worker node size" and "Head node size" to "D12 v2". (Select the option 'View all' if you do not see this option by default).
     1. Click "Next".
 1. Click "Next" at the bottom of the "Advanced settings" pane that appears.
 1. Click "Create" at the bottom of the "Summary" pane that appears.
@@ -315,35 +315,14 @@ Follow the steps below to create the necessary tables in your SQL database:
 <a name="train"></a>
 ## Train a Machine Learning Model with a Training Dataset
 
-<a name="dataprep"></a>
-### Prepare the Training Dataset
 For model training and validation, this tutorial uses a [diabetes dataset](https://archive.ics.uci.edu/ml/datasets/Diabetes) originally produced for the 1994 AAI Spring Symposium on Artificial Intelligence in Medicine, now generously shared by Dr. Michael Kahn on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/).
 
-To obtain this dataset and prepare it for training a model, first load and run the included Jupyter notebook by following the instructions listed below:
-1. Upload the notebook to your HDInsight cluster.
-   1. Once the HDInsight cluster deployment completes, navigate to your resource group's overview pane and click on the HDInsight resource.
-   2. In the HDInsight overview pane that appears, click on "Cluster dashboard".
-   3. Click on "Jupyter Notebook". You will be prompted for the HDInsight login credentials you selected during the initial deployment.
-   4. Click the "Upload" button at upper-right, and select the "1_Data_Preparation.ipynb" notebook from the "Manual Deployment Guide/HDInsight Spark" directory of your local copy of this git repository.
-   5. Click the blue Upload button in the Jupyter notebooks window.
-1. Find the notebook in your Jupyter notebooks listing and click the notebook's name to launch it. If prompted, choose the "PySpark" (Python 2.7) kernel.
-1. Enter your storage account name and key in the empty string variables in the first editable cell of the notebook file.
-1. Click Cell -> Run All to execute all the code cells within the notebook.
-1. After execution completes, close and halt the notebook.
+Two Jupyter notebook files are used for preparing the training data, and for training the model, respectively. We show two work flows: [train-flow-1](./HDInsight%20Spark) and [train-flow-2](./AMLworkbench) to achieve this step, and you can choose to follow either one to proceed. 
 
-You should now find some dataset and preparation pipeline information that have been added into your blob storage account's `model` container, where they can be loaded for model training and scoring on a newly-acquired dataset.
-
-<a name="model"></a>
-### Train and Evaluate the Model
-
-To train a machine learning model to predict patient readmission and evaluate its accuracy, repeat the steps listed above to upload and run the "2_Model_Training.py" notebook. After entering your storage account name and running all the cells in the notebook, you should find that the trained model's description have been added to your blob storage account's `model` container.
+Specifically, [train-flow-1](./HDInsight%20Spark) requires to upload the Jupyter notebook files into the provisioned HDI Spark cluster and to execute the files directly on the cluster. In this flow, we train the model using RandomForest algorithm with default parameter settings. On the other hand, [train-flow-2](./AMLworkbench) is performed through [Azure ML Workbench](). The benefit lies in that Azure ML Workbench provides strong support for model management. It enables data scientists to tune the models, to choose the best set of model parameters, and to select the best performed algorithms to use. In the real word use case, we suggest to adopt [train-flow-2](./AMLworkbench) to obtain the best model settings and plug it in the [train-flow-1](./HDInsight%20Spark) for production environment. 
 
 
-
-> **Note:** After the execution gets completed, close and halt the notebook. 
-Leaving two notebooks open and running will prevent your ADF prediction pipeline from executing, because no new SparkContext can be formed when both head nodes are busy.
-
-By now, you should be able to see the Azure WebJob starts to generate data, which is then ingested into Event Hub. You should also see the activity starts to show up in Stream Analytics. When you open Power BI online account, a dataset "vitalsignsmonitor" will appear in the *DATASETS* section in the corresponding workspace. Since this dataset is the output directly from Stream Analtyics, real-time visuals can be created based on this dataset. Please follow this document on creating [real-time analytics dashboard for streaming data](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-power-bi-dashboard) in Power BI.
+After finishing the model training, you should be able to see the Azure WebJob starts to generate data, which is then ingested into Event Hub. You should also see the activity starts to show up in Stream Analytics. When you open Power BI online account, a dataset "vitalsignsmonitor" will appear in the *DATASETS* section in the corresponding workspace. Since this dataset is the output directly from Stream Analtyics, real-time visuals can be created based on this dataset. Please follow this document on creating [real-time analytics dashboard for streaming data](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-power-bi-dashboard) in Power BI.
 
 <a name="predict"></a>
 ## Apply the Trained Model to Generate Predictions
