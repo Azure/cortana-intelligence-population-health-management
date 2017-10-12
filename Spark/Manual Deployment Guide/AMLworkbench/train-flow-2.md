@@ -1,16 +1,16 @@
 ## Data Simulation and Model Training
 
 
-Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](./HDInsight%20Spark) and [train-flow-2](./AMLworkbench) to achieve it, and you can choose to follow either one of them to proceed. This document shows the work flow 2.
+Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and [train-flow-2](train-flow-2.md) to achieve it, and you can choose to follow either one of them to proceed. This document shows the work flow 2. Please follow Section [Hands on Instructions](steps) for step-by-step instructions.
 
-Specifically, following tasks are performed sequentially in file [1\_Data\_Preparation\_AML.ipynb](). Please follow Section [Prepare the Training Dataset](dataprep) for step-by-step instructions.
+Specifically, following tasks are performed sequentially in file 1\_Data\_Preparation\_AML.ipynb from `AMLworkbench` folder. 
 
 1. Download the source data ([diabetes dataset](https://archive.ics.uci.edu/ml/])) and save it in the provisioned Azure storage account.
 2. In addition to existing features, generate glucose readings as a new feature.  
 3. Preprocess data, including handing missing data, handing categorical features,  and generating labels.
 4. Generate new patients and streaming glucose level readings as scoring data, and save into the Blob Storage. The purpose is to demonstrate how the trained model can be applied to incoming patient data in the scoring pipeline.
 
-In Section [Train and Evaluate the Model](model), we show step-by-step instructions for tasks performed in file [2\_ Model\_Training\_AML.ipynb]. 
+Following tasks are performed in file 2\_ Model\_Training\_AML.ipynb `AMLworkbench` folder. 
 
 1. Split the preprocessed data into 80% training data and 20% testing data.
 2. Train the model using the training data with RandomForest algorithm.
@@ -18,9 +18,10 @@ In Section [Train and Evaluate the Model](model), we show step-by-step instructi
 4. Produce model evaluation results using the testing data.
  
 
+<a name="steps"></a>
+## Hands on Instructions
 
-## Steps
-
+1. An installed copy of [Azure ML Workbench](https://docs.microsoft.com/en-us/azure/machine-learning/preview/overview-what-is-azure-ml) following the [quick start installation guide](https://docs.microsoft.com/en-us/azure/machine-learning/preview/quickstart-installation) to install the program and create a workspace.
 1. Launch Azure ML Workbench
 1. Create a new project
 1. Copy two notebook files: 1\_Data\_Preparation\_AML.ipynb and 2\_ Model\_Training\_AML.ipynb from [AMLworkbench folder](./AMLworkbench) into the newly created Azure ML project folder.
@@ -48,6 +49,7 @@ In Section [Train and Evaluate the Model](model), we show step-by-step instructi
 		
 		> The kernel will be busy (the circle on top right of the notebook page is filled with dark gray) for a while. Meanwhile the job in the Jobs pane within Azure ML workbench (click `>>` sign on the top right corner if Jobs pane is not showing) shows "starting...". When the kernel is idle (the circle on top right of the notebook page is filled with white), the job in the Job pane in the workbench shows "running...". By now it is ready to run the scripts in the notebook.
 
+	1. Fill in the `account_name` and `account_key` information of the provisioned Azure Storage account in the first cell, if any.
 	1. Click Cell -> Run All to execute all the code cells within the notebook.
 	1. After execution completes, close and halt the notebook. To halt the notebook, check the running notebook in the browser page *HOME*, and click shutdown. 
 		

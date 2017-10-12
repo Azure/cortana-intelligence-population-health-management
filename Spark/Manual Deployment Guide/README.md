@@ -13,8 +13,6 @@
    - [Create a Data Factory](#adf)
    - [Create an Azure SQL Database](#sql)
 - [Train a Machine Learning Model with a Training Dataset](#train)
-   - [Prepare the Training Dataset](#dataprep)
-   - [Train and Evaluate the Model](#model)
 - [Apply the Trained Model to Generate Predictions](#predict)
 - [Visualize the Predictions with Power BI](#powerbi)
 
@@ -317,9 +315,9 @@ Follow the steps below to create the necessary tables in your SQL database:
 
 For model training and validation, this tutorial uses a [diabetes dataset](https://archive.ics.uci.edu/ml/datasets/Diabetes) originally produced for the 1994 AAI Spring Symposium on Artificial Intelligence in Medicine, now generously shared by Dr. Michael Kahn on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/).
 
-Two Jupyter notebook files are used for preparing the training data, and for training the model, respectively. We show two work flows: [train-flow-1](./HDInsight%20Spark) and [train-flow-2](./AMLworkbench) to achieve this step. You must choose to follow one of them to proceed. 
+Two Jupyter notebook files are used for preparing the training data, and for training the model, respectively. We show two work flows: [train-flow-1](./HDInsight%20Spark/train-flow-1.md) and [train-flow-2](./AMLworkbench/train-flow-2.md) to achieve this step. You must choose to follow one of them to proceed. 
 
-Specifically, [train-flow-1](./HDInsight%20Spark) requires to upload the Jupyter notebook files into the provisioned HDI Spark cluster and to execute the files directly on the cluster. In this flow, we train the model using RandomForest algorithm with default parameter settings. On the other hand, [train-flow-2](./AMLworkbench) is performed through [Azure ML Workbench](). The benefit lies in that Azure ML Workbench provides strong support for model management. It enables data scientists to tune the models, to choose the best set of model parameters, and to select the best performed algorithms to use. In the real word use case, we suggest to adopt [train-flow-2](./AMLworkbench) to obtain the best model settings and plug it in the [train-flow-1](./HDInsight%20Spark) for production environment. 
+Specifically, train-flow-1 requires to upload the Jupyter notebook files into the provisioned HDI Spark cluster and to execute the files directly on the cluster. In this flow, we train the model using RandomForest algorithm with default parameter settings. On the other hand, train-flow-2 is performed through [Azure ML Workbench](https://docs.microsoft.com/en-us/azure/machine-learning/preview/overview-what-is-azure-ml). The benefit lies in that Azure ML Workbench provides strong support for model management. It enables data scientists to tune the models, to choose the best set of model parameters, and to select the best performed algorithms to use. In the real word use case, we suggest to adopt train-flow-2 to obtain the best model settings and plug it in the train-flow-1 for production environment. It takes 10 minutes to follow through train-flow-1, or 20 minutes to follow through train-flow-2 if you already have an installed copy of Azure ML Workbench.
 
 
 After finishing the model training, you should be able to see the Azure WebJob starts to generate data, which is then ingested into Event Hub. You should also see the activity starts to show up in Stream Analytics. When you open Power BI online account, a dataset "vitalsignsmonitor" will appear in the *DATASETS* section in the corresponding workspace. Since this dataset is the output directly from Stream Analtyics, real-time visuals can be created based on this dataset. Please follow this document on creating [real-time analytics dashboard for streaming data](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-power-bi-dashboard) in Power BI.
