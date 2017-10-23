@@ -1,16 +1,16 @@
 ## Data Simulation and Model Training
 
 
-Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1]() and [train-flow-2]() to achieve it, and you can choose to follow either one of them to proceed. This document shows the work flow 1.
+Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](train-flow-1.md) and [train-flow-2](../AMLworkbench/train-flow-2.md) to achieve it. You must choose to follow one of them to proceed. This document shows the work flow 1.
 
-Specifically, following tasks are performed sequentially in file [1\_ Data\_Preparation.ipynb](). Please follow Section [Prepare the Training Dataset](dataprep) for step-by-step instructions.
+Specifically, following tasks are performed sequentially in file 1\_ Data\_Preparation.ipynb. Please follow Section [Prepare the Training Dataset](dataprep) for step-by-step instructions.
 
 1. Download the source data ([diabetes dataset](https://archive.ics.uci.edu/ml/])) and save it in the provisioned Azure storage account.
 2. In addition to existing features, generate glucose readings as a new feature.  
 3. Proprocess data, including handing missing data, handing categorical features,  and generating labels.
 4. Generate new patients and streaming glucose level readings as scoring data, and save into the Blob Storage. The purpose is to demonstrate how the trained model can be applied to incoming patient data in the scoring pipeline.
 
-In Section [Train and Evaluate the Model](model), we show step-by-step instructions for tasks performed in file [2\_ Model\_Training.ipynb](). 
+In Section [Train and Evaluate the Model](model), we show step-by-step instructions for tasks performed in file 2\_ Model\_Training.ipynb. 
 
 1. Split the preprocessed data into 80% training data and 20% testing data.
 2. Train the model using the training data with RandomForest algorithm.
@@ -41,7 +41,7 @@ You should now find some dataset and preparation pipeline information that have 
 <a name="model"></a>
 ### Train and Evaluate the Model
 
-To train a machine learning model to predict patient readmission and evaluate its accuracy, repeat the steps listed above to upload and run the "2_Model_Training.py" notebook. After entering your storage account name and running all the cells in the notebook, you should find that the trained model's description have been added to your blob storage account's `model` container.
+To train a machine learning model to predict patient readmission and evaluate its accuracy, repeat the steps listed above to upload and run the "2_Model_Training.ipynb" notebook. After entering your storage account name and running all the cells in the notebook, you should find that the trained model's description have been added to your blob storage account's `model` container.
 
 
 

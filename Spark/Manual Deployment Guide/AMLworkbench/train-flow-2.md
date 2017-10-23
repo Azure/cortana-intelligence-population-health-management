@@ -1,7 +1,7 @@
 ## Data Simulation and Model Training
 
 
-Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and [train-flow-2](train-flow-2.md) to achieve it, and you can choose to follow either one of them to proceed. This document shows the work flow 2. Please follow Section [Hands on Instructions](steps) for step-by-step instructions.
+Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and [train-flow-2](train-flow-2.md) to achieve it. You must choose to follow one of them to proceed. This document shows the work flow 2. Please follow Section [Hands on Instructions](steps) for step-by-step instructions.
 
 Specifically, following tasks are performed sequentially in file 1\_Data\_Preparation\_AML.ipynb from `AMLworkbench` folder. 
 
