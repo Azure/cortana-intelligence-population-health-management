@@ -24,7 +24,7 @@ Before you begin, ensure that you have the following:
 - An Azure subscription ([click here](https://azure.microsoft.com/en-us/free/) to start a free trial)
 - An installed copy of [Microsoft SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms)
    - You may use any another client to connect to your SQL Server if you prefer, but instructions in this deployment guide will specifically be for SSMS (Microsoft SQL Server Managament Studio)
-- A cloned, or downloaded and extracted, copy of [this git repository](https://github.com/Azure/cortana-intelligence-readmissionprediction)
+- A cloned, or downloaded and extracted, copy of [this git repository](https://github.com/Azure/cortana-intelligence-population-health-management)
 - An installed copy of [Power BI Desktop](https://powerbi.microsoft.com/en-us/desktop/) for creating the offline visualizations
 - A [Power BI Online Account](https://powerbi.microsoft.com/en-us/get-started/) for report sharing and for creating real-time visualizations
 
@@ -55,7 +55,7 @@ To create the resource group:
     1. Select the appropriate subscription and resource group location.
     1. Check the "Pin to dashboard" checkbox option.
     1. Press "Create".
-    > **NOTE:** The resource availability in different regions depends on your subscription. When deploying you own resources, make sure all data storage and compute resources are created in the same region to avoid inter-region data movement. Azure Resource Group and Azure Data Factory do not have to be in the same region as the other resources. Azure Resource Group is a virtual group that groups all the resources into one solution. Azure Data Factory is a cloud-based data integration service that automates the movement and transformation of data. Data factory essentially orchestrates the activities of the other services. All the above mentioned resources should be deployed using the same subscription.
+    > **NOTE:** The resource availability in different regions depends on your subscription. When deploying your own resources, make sure all data storage and compute resources are created in the same region to avoid inter-region data movement. Azure Resource Group and Azure Data Factory do not have to be in the same region as the other resources. Azure Resource Group is a virtual group that groups all the resources into one solution. Azure Data Factory is a cloud-based data integration service that automates the movement and transformation of data. Data factory essentially orchestrates the activities of the other services. All the above mentioned resources should be deployed using the same subscription.
     
 You will be taken to the resource group's overview page when the deployment is complete. In the future, you can navigate to the resource group's overview page from your [Azure Portal](https://ms.portal.azure.com/) dashboard.
 
@@ -128,6 +128,8 @@ You will need the primary key for your storage account (which should be deployed
 1. Click on the resource of type "Storage account" once it has deployed. (You may need to refresh the list).
 1. In the storage account overview pane that appears, click on the "Access keys" link on the left-hand list.
 1. Press the "Click to copy" button next to "key1" to copy the primary key to your clipboard. Save this key in a memo file where you can easily access it as you continue through this guide.
+
+	> **Note:** You may expect to wait for up to 10 minutes before you see the "Access keys" link in the storage account's overview pane.
 
 You will also need to create a container inside the storage account to store glucose level readings for later:
 1. Navigate to the storage account's overview pane and click "Blobs".
