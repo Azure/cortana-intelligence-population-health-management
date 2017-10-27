@@ -13,7 +13,7 @@ Specifically, following tasks are performed sequentially in file 1\_ Data\_Prepa
 In Section [Train and Evaluate the Model](#model), we show step-by-step instructions for tasks performed in file 2\_ Model\_Training.ipynb. 
 
 1. Split the preprocessed data into 80% training data and 20% testing data.
-2. Train the model using the training data with RandomForest algorithm.
+2. Train the model using the training data with RandomForest algorithm (default parameter setting).
 3. Save the trained model into Azure storage account. This trained model is going to be used for scoring new patients in the scoring pipeline.
 4. Produce model evaluation results using the testing data.
  

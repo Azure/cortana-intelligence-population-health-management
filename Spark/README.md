@@ -41,7 +41,7 @@ The doctor report shows the patient level information to doctors who need to mak
 
 ## Getting Started
 
-See the **[Manual Deployment Guide](https://github.com/Azure/cortana-intelligence-readmissionprediction/tree/master/Spark/Technical%20Deployment%20Guide)** folder for a full set of instructions on how to deploy the end-to-end pipeline, including a step-by-step walkthrough and files containing all the scripts that you’ll need to deploy resources. **For technical problems or questions about deploying this solution, please post in the issues tab of the repository.**
+See the **[Manual Deployment Guide](https://github.com/Azure/cortana-intelligence-population-health-management/tree/master/Spark/Manual%20Deployment%20Guide)** folder for a full set of instructions on how to deploy the end-to-end pipeline, including a step-by-step walkthrough and files containing all the scripts that you’ll need to deploy resources. **For technical problems or questions about deploying this solution, please post in the issues tab of the repository.**
 
 
 

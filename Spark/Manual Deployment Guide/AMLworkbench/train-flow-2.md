@@ -1,7 +1,9 @@
 ## Data Simulation and Model Training
 
 
-Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and [train-flow-2](train-flow-2.md) to achieve it. You must choose to follow one of them to proceed. This document shows the work flow 2. Please follow Section [Hands on Instructions](steps) for step-by-step instructions.
+Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and [train-flow-2](train-flow-2.md) to achieve it. You must choose to follow one of them to proceed. This document shows the work flow 2. Please follow Section [Hands on Instructions](#steps) for step-by-step instructions.
+
+Comparing to train-flow-1, this scenario shows how to use Azure ML Workbench to scale out tuning of hyperparameters of machine learning algorithms. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters. 
 
 Specifically, following tasks are performed sequentially in file 1\_Data\_Preparation\_AML.ipynb from `AMLworkbench` folder. 
 
@@ -13,7 +15,7 @@ Specifically, following tasks are performed sequentially in file 1\_Data\_Prepar
 Following tasks are performed in file 2\_ Model\_Training\_AML.ipynb `AMLworkbench` folder. 
 
 1. Split the preprocessed data into 80% training data and 20% testing data.
-2. Train the model using the training data with RandomForest algorithm.
+2. Train the model using the training data with RandomForest algorithm. We choose the best model by performing hyper-parameter tuning combined with cross validation. 
 3. Save the trained model into Azure storage account. This trained model is going to be used for scoring new patients in the scoring pipeline.
 4. Produce model evaluation results using the testing data.
  
