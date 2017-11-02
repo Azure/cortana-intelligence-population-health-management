@@ -1,9 +1,10 @@
 ## Data Simulation and Model Training
 
 
-Two Jupyter notebook files need to be executed to finish the task. We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and [train-flow-2](train-flow-2.md) to achieve it. You must choose to follow one of them to proceed. This document shows the work flow 2. Please follow Section [Hands on Instructions](#steps) for step-by-step instructions.
+We show two work flows: [train-flow-1](../HDInsight%20Spark/train-flow-1.md) and train-[flow-2](train-flow-2.md) to achieve this task. You must choose to follow one of them to proceed. Each work flow includes two Jupyter notebook files for preparing the training data, and for training the model, respectively. 
 
-Comparing to train-flow-1, this scenario shows how to use Azure ML Workbench to scale out tuning of hyperparameters of machine learning algorithms. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters. 
+This document shows the train-work-flow-2. Comparing to train-flow-1, this scenario shows how to use Azure ML Workbench to scale out tuning of hyperparameters of machine learning algorithms. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters. Please follow Section [Hands on Instructions](#steps) for step-by-step instructions.
+
 
 Specifically, following tasks are performed sequentially in file 1\_Data\_Preparation\_AML.ipynb from `AMLworkbench` folder. 
 
@@ -25,15 +26,15 @@ Following tasks are performed in file 2\_ Model\_Training\_AML.ipynb `AMLworkben
 
 1. An installed copy of [Azure ML Workbench](https://docs.microsoft.com/en-us/azure/machine-learning/preview/overview-what-is-azure-ml) following the [quick start installation guide](https://docs.microsoft.com/en-us/azure/machine-learning/preview/quickstart-installation) to install the program and create a workspace.
 1. Launch Azure ML Workbench
-1. Create a new project
-1. Copy two notebook files: 1\_Data\_Preparation\_AML.ipynb and 2\_ Model\_Training\_AML.ipynb from [AMLworkbench folder](./AMLworkbench) into the newly created Azure ML project folder.
-1. Within Azure ML workbench GUI, click *File* and then click *Open Command Prompt*. In the appearing CLI console run following command. When the command is executed successfully, two files *myspark.compute* and *myspark.runconfig* will be generated in the *aml_config* folder of the Azure ML project folder.
+1. Create a new project. We call this newly created Azure ML Workbench project folder as `your project` folder.
+1. Copy two notebook files: 1\_Data\_Preparation\_AML.ipynb and 2\_ Model\_Training\_AML.ipynb from `AMLworkbench` folder into `your project` folder.
+1. Within Azure ML workbench GUI, click *File* and then click *Open Command Prompt*. In the appearing CLI console run following command. When the command is executed successfully, two files *myspark.compute* and *myspark.runconfig* will be generated in the `aml_config` folder of `your project` folder.
     
         az ml computetarget attach --name myspark --address <cluster name>-ssh.azurehdinsight.net  --username sshuser --password <password> --type cluster
 
 	> In above command, *myspark* indicates the name created by the user for this remote spark cluster compute environment. The user also need to replace <cluster name\> as the the name of the provisioned spark cluster. For example, when the spark cluster name is readmitguideyz, the correpsondig parameter is "readmitguideyz-ssh.azurehdinsight.net". *sshuser* indicates the cluster's SSH user name. The default value of SSH user name is `sshuser`, unless you changed it during provisioning of the cluster. Please also replace <password\> with the SSH password.  
 
-1. In the Azure ML workbench GUI, locate and open file myspark.compute in the *aml_config *folder of the project folder. 
+1. In the Azure ML workbench GUI, locate and open file myspark.compute in the *aml_config *folder of `your project` folder. 
 1. Set property "yarnDeployMode" to "client". The purpose is to enable create a Docker container in the Spark cluster. 
 
 		yarnDeployMode: client
@@ -62,7 +63,7 @@ Following tasks are performed in file 2\_ Model\_Training\_AML.ipynb `AMLworkben
 
 After successfully executing 1\_Data\_Preparation\_AML.ipynb,  you should now find some dataset and preparation pipeline information that have been added into your blob storage account's `model` container, where they can be loaded for model training and scoring on a newly-acquired dataset. Specifically, a container `preprocess`  with file diabetic\_date.csv in it will be created. In the container `model`, *si_pipe_model*, *oh_pipe_model*, *si_label*, and *trainingdata* folders/files will be created. Finally, a container `patientrecords` with new patient records in it will be created.
 
-After successfully executing 2\_ Model\_Training\_AML.ipynb, the folder/file *model* will be created within container `model` in the Blob storage account.
+After successfully executing 2\_ Model\_Training\_AML.ipynb, the folder/file `model` will be created within container `model` in the Blob storage account.
 
 
 Under the circumstance when the Jupiter notebook kernel being busy for very long time (e.g. more then half an hour), you are advised to check the job running status in the spark cluster. When the job in Azure ML workbench shows "running", correspondingly you will be able to see a job with name *Azure ML Experiment* showing in the *running application* page of the HDI hadoop cluster's page. 
