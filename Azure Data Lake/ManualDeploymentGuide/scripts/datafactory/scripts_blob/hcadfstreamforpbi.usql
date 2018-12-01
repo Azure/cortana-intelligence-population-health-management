@@ -180,6 +180,7 @@ Par,
 	V52  string,
 	V53  string,
 	V54  string
+	READONLY Par
 	USING new Extension.R.Reducer(scriptFile:@RScriptName, rReturnType:"dataframe");
 
 
